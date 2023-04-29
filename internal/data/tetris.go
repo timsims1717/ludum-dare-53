@@ -52,6 +52,15 @@ type Tetronimo struct {
 	NoRot  bool
 }
 
+func (t Tetronimo) IsValid() bool {
+	for _, b := range t.Blocks {
+		if b == nil {
+			return false
+		}
+	}
+	return true
+}
+
 type TetrisBlock struct {
 	Coords world.Coords
 	Color  TColor
@@ -66,6 +75,7 @@ type tetrisBoard struct {
 	Shape *Tetronimo
 	Timer *timing.Timer
 	Speed float64
+	Score *TetrisScore
 }
 
 func (t *tetrisBoard) Get(c world.Coords) *TetrisBlock {
@@ -86,5 +96,6 @@ func NewTetrisBoard(spd float64) {
 		Shape: nil,
 		Timer: timing.New(spd),
 		Speed: spd,
+		Score: newTetrisScore(),
 	}
 }

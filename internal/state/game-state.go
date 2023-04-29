@@ -38,7 +38,7 @@ func (s *gameState) Load(done chan struct{}) {
 	s.tetrisViewport = viewport.New(nil)
 	s.tetrisViewport.SetRect(pixel.R(0, 0, world.TileSize*constants.TetrisWidth, world.TileSize*constants.TetrisHeight))
 	s.tetrisViewport.CamPos = pixel.V(world.TileSize*0.5*(constants.TetrisWidth-1), world.TileSize*0.5*(constants.TetrisHeight-1))
-	data.NewTetrisBoard(0.4)
+	data.NewTetrisBoard(constants.DefaultSpeed)
 	systems.CreateTetronimo()
 	BuildTetrisBG()
 
@@ -84,6 +84,23 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	if tetrisInput.Get("rotate").JustPressed() {
 		systems.Rotate = true
 	}
+	if tetrisInput.Get("reset").JustPressed() {
+		if systems.FailCondition {
+			systems.FailCondition = false
+			systems.ClearBoard()
+			data.TetrisBoard.Score.FullReset()
+		}
+	}
+	if tetrisInput.Get("speedUp").JustPressed() {
+		if data.TetrisBoard.Speed > 0 {
+			data.TetrisBoard.Speed = data.TetrisBoard.Speed - 0.05
+		}
+	}
+	if tetrisInput.Get("speedDown").JustPressed() {
+		if data.TetrisBoard.Speed < 2 {
+			data.TetrisBoard.Speed = data.TetrisBoard.Speed + 0.05
+		}
+	}
 
 	if factoryInput.Get("generate").JustPressed() {
 		r1 := rand.Intn(len(data.FactoryPads))
@@ -121,7 +138,12 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	systems.DragSystem()
 	systems.ParentSystem()
 	systems.ObjectSystem()
-
+	debug.AddText(fmt.Sprintf("Tetris Score: %03d", data.TetrisBoard.Score.Score))
+	debug.AddText(fmt.Sprintf("Current Streak: %d", data.TetrisBoard.Score.Streak))
+	debug.AddText(fmt.Sprintf("Current Speed: %f", data.TetrisBoard.Speed))
+	if systems.FailCondition {
+		debug.AddText("Game Over, dun dun dun")
+	}
 	s.tetrisViewport.Update()
 	s.factoryViewPort.Update()
 }

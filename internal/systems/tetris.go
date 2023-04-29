@@ -1,16 +1,21 @@
 package systems
 
 import (
+	"timsims1717/ludum-dare-53/internal/constants"
 	"timsims1717/ludum-dare-53/internal/data"
 	"timsims1717/ludum-dare-53/internal/myecs"
 	"timsims1717/ludum-dare-53/pkg/util"
 )
 
 var (
-	PieceDone bool
+	PieceDone     bool
+	FailCondition bool
 )
 
 func TetrisSystem() {
+	if FailCondition {
+		return
+	}
 	if PieceDone {
 		// check for rows
 		var fullRows []int
@@ -24,7 +29,11 @@ func TetrisSystem() {
 			}
 			if full {
 				fullRows = append(fullRows, y)
+				data.TetrisBoard.Score.AddToScore()
 			}
+		}
+		if len(fullRows) == 0 {
+			data.TetrisBoard.Score.ResetStreak()
 		}
 		down := 0
 		for y, row := range data.TetrisBoard.Board {
@@ -45,7 +54,7 @@ func TetrisSystem() {
 			}
 		}
 		// create new piece
-		CreateTetronimo()
+		FailCondition = !CreateTetronimo()
 	}
 	PieceDone = false
 }
@@ -60,5 +69,6 @@ func ClearBoard() {
 		}
 	}
 	data.TetrisBoard.Shape = nil
+	data.TetrisBoard.Speed = constants.DefaultSpeed
 	CreateTetronimo()
 }

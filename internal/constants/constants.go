@@ -18,6 +18,7 @@ const (
 	TileSize     = 32.
 	TetrisWidth  = 10
 	TetrisHeight = 20
+	DefaultSpeed = 1
 
 	// Factory
 	FactoryTile   = 48.
