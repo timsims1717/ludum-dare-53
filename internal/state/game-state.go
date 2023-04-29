@@ -7,6 +7,7 @@ import (
 	"golang.org/x/image/colornames"
 	"timsims1717/ludum-dare-53/internal/constants"
 	"timsims1717/ludum-dare-53/internal/data"
+	"timsims1717/ludum-dare-53/internal/myecs"
 	"timsims1717/ludum-dare-53/internal/systems"
 	"timsims1717/ludum-dare-53/pkg/debug"
 	"timsims1717/ludum-dare-53/pkg/img"
@@ -55,6 +56,8 @@ func (s *gameState) Update(win *pixelgl.Window) {
 
 	tetrisInput.Update(win, viewport.MainCamera.Mat)
 	factoryInput.Update(win, viewport.MainCamera.Mat)
+	debug.AddText(fmt.Sprintf("Mouse Input: (%d,%d)", int(factoryInput.World.X), int(factoryInput.World.Y)))
+	debug.AddText(fmt.Sprintf("Factory Input: (%d,%d)", int(s.factoryViewPort.Projected(factoryInput.World).X), int(s.factoryViewPort.Projected(factoryInput.World).Y)))
 
 	if tetrisInput.Get("moveDown").JustPressed() || tetrisInput.Get("moveDown").Repeated() {
 		systems.MoveDown = true
@@ -97,17 +100,26 @@ func (s *gameState) Update(win *pixelgl.Window) {
 		}
 	}
 
+	if factoryInput.Get("generate").JustPressed() {
+		tet := systems.CreateFactoryTet(s.factoryViewPort.Projected(factoryInput.World), data.RandColor())
+		tet.Entity.AddComponent(myecs.ViewPort, s.factoryViewPort)
+		tet.Entity.AddComponent(myecs.Input, factoryInput)
+		tet.Entity.AddComponent(myecs.Click, data.NewFn(func() {
+			if tet.Entity.HasComponent(myecs.Drag) {
+				tet.Object.Pos = tet.LastPos
+				tet.Entity.RemoveComponent(myecs.Drag)
+			} else if data.DraggingPiece == nil {
+				tet.Entity.AddComponent(myecs.Drag, &factoryInput.World)
+			}
+		}))
+	}
 	if factoryInput.Get("click").JustPressed() {
-		if data.DraggingPiece == nil {
-			_ = systems.CreateFactoryBlock(s.factoryViewPort.Projected(factoryInput.World), data.RandColor())
-			//block.Entity.AddComponent(myecs.Drag, &factoryInput.World)
-			//block.Entity.AddComponent(myecs.ViewPort, s.factoryViewPort)
-		}
+
 	}
 
 	systems.BlockSystem()
 	systems.TetrisSystem()
-	systems.ClickSystem(factoryInput)
+	systems.ClickSystem()
 	systems.DragSystem()
 	systems.ParentSystem()
 	systems.ObjectSystem()

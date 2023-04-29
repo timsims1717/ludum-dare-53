@@ -28,6 +28,7 @@ var (
 	ViewPort = Manager.NewComponent()
 	Drag     = Manager.NewComponent()
 	Click    = Manager.NewComponent()
+	Input    = Manager.NewComponent()
 
 	Block = Manager.NewComponent()
 
@@ -40,8 +41,8 @@ var (
 
 	IsObject  = ecs.BuildTag(Object)
 	HasParent = ecs.BuildTag(Object, Parent)
-	IsDrag    = ecs.BuildTag(Object, Drag, ViewPort)
-	CanClick  = ecs.BuildTag(Object, Click, ViewPort)
+	IsDrag    = ecs.BuildTag(Object, Drag, Input, ViewPort)
+	CanClick  = ecs.BuildTag(Object, Click, Input, ViewPort)
 
 	IsBlock = ecs.BuildTag(Object, Block)
 )

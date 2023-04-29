@@ -41,6 +41,7 @@ var (
 		Buttons: map[string]*pxginput.ButtonSet{
 			"click":      pxginput.NewJoyless(pixelgl.MouseButtonLeft),
 			"rightClick": pxginput.NewJoyless(pixelgl.MouseButtonRight),
+			"generate":   pxginput.NewJoyless(pixelgl.KeyG),
 		},
 		Mode: pxginput.KeyboardMouse,
 	}
