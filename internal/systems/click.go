@@ -1,12 +1,10 @@
 package systems
 
 import (
-	"fmt"
 	"github.com/faiface/pixel"
 	pxginput "github.com/timsims1717/pixel-go-input"
 	"timsims1717/ludum-dare-53/internal/data"
 	"timsims1717/ludum-dare-53/internal/myecs"
-	"timsims1717/ludum-dare-53/pkg/debug"
 	"timsims1717/ludum-dare-53/pkg/object"
 	"timsims1717/ludum-dare-53/pkg/viewport"
 )
@@ -39,8 +37,6 @@ func ClickSystem() {
 			if vp != nil {
 				pos = vp.Projected(pos)
 			}
-			debug.AddText(fmt.Sprintf("Factory Input Inside: (%d,%d)", int(pos.X), int(pos.Y)))
-			debug.AddText(fmt.Sprintf("Object Pos: (%d,%d)", int(obj.Pos.X), int(obj.Pos.Y)))
 			if in.Get("click").JustPressed() {
 				if obj.PointInside(pos) && click.Fn != nil {
 					in.Get("click").Consume()

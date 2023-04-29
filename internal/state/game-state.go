@@ -5,6 +5,7 @@ import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 	"golang.org/x/image/colornames"
+	"math/rand"
 	"timsims1717/ludum-dare-53/internal/constants"
 	"timsims1717/ludum-dare-53/internal/data"
 	"timsims1717/ludum-dare-53/internal/myecs"
@@ -30,7 +31,7 @@ type gameState struct {
 }
 
 func (s *gameState) Unload() {
-
+	systems.ClearSystem()
 }
 
 func (s *gameState) Load(done chan struct{}) {
@@ -44,8 +45,9 @@ func (s *gameState) Load(done chan struct{}) {
 	s.factoryViewPort = viewport.New(nil)
 	s.factoryViewPort.SetRect(pixel.R(0, 0, constants.FactoryTile*constants.FactoryWidth, world.TileSize*constants.FactoryHeight))
 	s.factoryViewPort.CamPos = pixel.V(constants.FactoryTile*0.5*(constants.FactoryWidth-1), world.TileSize*0.5*(constants.FactoryHeight-1))
-
-	BuildFactoryBG()
+	data.NewFactoryFloor()
+	BuildFactoryFloor(s.factoryViewPort)
+	BuildFactoryPads(s.factoryViewPort)
 
 	s.UpdateViews()
 	done <- struct{}{}
@@ -84,24 +86,37 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	}
 
 	if factoryInput.Get("generate").JustPressed() {
-		tet := systems.CreateFactoryTet(s.factoryViewPort.Projected(factoryInput.World), data.RandColor())
-		tet.Entity.AddComponent(myecs.ViewPort, s.factoryViewPort)
-		tet.Entity.AddComponent(myecs.Input, factoryInput)
-		tet.Entity.AddComponent(myecs.Click, data.NewFn(func() {
-			if tet.Entity.HasComponent(myecs.Drag) {
-				tet.Object.Pos = tet.LastPos
-				tet.Entity.RemoveComponent(myecs.Drag)
-			} else if data.DraggingPiece == nil {
-				tet.Entity.AddComponent(myecs.Drag, &factoryInput.World)
+		r1 := rand.Intn(len(data.FactoryPads))
+		pad := data.FactoryPads[r1]
+		r := r1
+		for pad.Tet != nil {
+			r++
+			r %= len(data.FactoryPads)
+			if r == r1 {
+				break
 			}
-		}))
+			pad = data.FactoryPads[r]
+		}
+		if pad.Tet == nil {
+			tet := systems.CreateFactoryTet(pad.Object.Pos, data.RandColor())
+			tet.Entity.AddComponent(myecs.ViewPort, s.factoryViewPort)
+			tet.Entity.AddComponent(myecs.Input, factoryInput)
+			pad.Tet = tet
+			//tet.Entity.AddComponent(myecs.Click, data.NewFn(func() {
+			//	if tet.Entity.HasComponent(myecs.Drag) {
+			//		tet.Object.Pos = tet.LastPos
+			//		tet.Entity.RemoveComponent(myecs.Drag)
+			//	} else if data.DraggingPiece == nil {
+			//		tet.Entity.AddComponent(myecs.Drag, &factoryInput.World)
+			//	}
+			//}))
+		}
 	}
-	if factoryInput.Get("click").JustPressed() {
 
-	}
-
+	systems.FunctionSystem()
 	systems.BlockSystem()
 	systems.TetrisSystem()
+	systems.FactoryBlockSystem()
 	systems.ClickSystem()
 	systems.DragSystem()
 	systems.ParentSystem()
@@ -116,6 +131,13 @@ func (s *gameState) Draw(win *pixelgl.Window) {
 	systems.DrawSystem(win, 11)
 	systems.DrawSystem(win, 12)
 	systems.DrawSystem(win, 13)
+	systems.DrawSystem(win, 14)
+	systems.DrawSystem(win, 15)
+	systems.DrawSystem(win, 16)
+	systems.DrawSystem(win, 17)
+	systems.DrawSystem(win, 18)
+	systems.DrawSystem(win, 19)
+	systems.DrawSystem(win, 20)
 	img.Batchers[constants.BlockKey].Draw(s.factoryViewPort.Canvas)
 	img.Clear()
 	s.factoryViewPort.Canvas.Draw(win, s.factoryViewPort.Mat)
@@ -125,6 +147,7 @@ func (s *gameState) Draw(win *pixelgl.Window) {
 	img.Batchers[constants.BlockKey].Draw(s.tetrisViewport.Canvas)
 	img.Clear()
 	s.tetrisViewport.Canvas.Draw(win, s.tetrisViewport.Mat)
+	systems.TemporarySystem()
 }
 
 func (s *gameState) SetAbstract(aState *state.AbstractState) {

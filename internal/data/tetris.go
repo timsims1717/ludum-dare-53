@@ -82,7 +82,7 @@ func (t *tetrisBoard) ResetTimer() {
 
 func NewTetrisBoard(spd float64) {
 	TetrisBoard = &tetrisBoard{
-		Board: [20][10]*TetrisBlock{},
+		Board: [constants.TetrisHeight][constants.TetrisWidth]*TetrisBlock{},
 		Shape: nil,
 		Timer: timing.New(spd),
 		Speed: spd,

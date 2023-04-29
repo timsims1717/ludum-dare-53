@@ -1,9 +1,11 @@
 package systems
 
 import (
+	"fmt"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 	"timsims1717/ludum-dare-53/internal/myecs"
+	"timsims1717/ludum-dare-53/pkg/debug"
 	"timsims1717/ludum-dare-53/pkg/img"
 	"timsims1717/ludum-dare-53/pkg/object"
 	"timsims1717/ludum-dare-53/pkg/reanimator"
@@ -20,6 +22,7 @@ func AnimationSystem() {
 }
 
 func DrawSystem(win *pixelgl.Window, layer int) {
+	count := 0
 	for _, result := range myecs.Manager.Query(myecs.IsDrawable) {
 		obj, okO := result.Components[myecs.Object].(*object.Object)
 		if okO && obj.Layer == layer {
@@ -29,12 +32,15 @@ func DrawSystem(win *pixelgl.Window, layer int) {
 			} else if draws, okD := draw.([]interface{}); okD {
 				for _, d := range draws {
 					DrawThing(d, obj, win)
+					count++
 				}
 			} else {
 				DrawThing(draw, obj, win)
+				count++
 			}
 		}
 	}
+	debug.AddText(fmt.Sprintf("Layer %d: %d entities", layer, count))
 }
 
 func DrawThing(draw interface{}, obj *object.Object, win *pixelgl.Window) {
