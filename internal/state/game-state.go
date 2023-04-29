@@ -24,7 +24,7 @@ type gameState struct {
 	lastLeft bool
 
 	// factory half
-	floorViewport *viewport.ViewPort
+	factoryViewPort *viewport.ViewPort
 }
 
 func (s *gameState) Unload() {
@@ -39,9 +39,9 @@ func (s *gameState) Load(done chan struct{}) {
 	systems.CreateTetronimo()
 	BuildTetrisBG()
 
-	s.floorViewport = viewport.New(nil)
-	s.floorViewport.SetRect(pixel.R(0, 0, constants.FactoryTile*constants.FactoryWidth, world.TileSize*constants.FactoryHeight))
-	s.floorViewport.CamPos = pixel.V(constants.FactoryTile*0.5*(constants.FactoryWidth-1), world.TileSize*0.5*(constants.FactoryHeight-1))
+	s.factoryViewPort = viewport.New(nil)
+	s.factoryViewPort.SetRect(pixel.R(0, 0, constants.FactoryTile*constants.FactoryWidth, world.TileSize*constants.FactoryHeight))
+	s.factoryViewPort.CamPos = pixel.V(constants.FactoryTile*0.5*(constants.FactoryWidth-1), world.TileSize*0.5*(constants.FactoryHeight-1))
 
 	BuildFactoryBG()
 
@@ -79,29 +79,39 @@ func (s *gameState) Update(win *pixelgl.Window) {
 		systems.Rotate = true
 	}
 
+	if factoryInput.Get("click").JustPressed() {
+		if data.DraggingPiece == nil {
+			_ = systems.CreateFactoryBlock(s.factoryViewPort.Projected(factoryInput.World), data.RandColor())
+			//block.Entity.AddComponent(myecs.Drag, &factoryInput.World)
+			//block.Entity.AddComponent(myecs.ViewPort, s.factoryViewPort)
+		}
+	}
+
 	systems.BlockSystem()
 	systems.TetrisSystem()
+	systems.ClickSystem(factoryInput)
 	systems.DragSystem()
 	systems.ParentSystem()
 	systems.ObjectSystem()
 
 	s.tetrisViewport.Update()
-	s.floorViewport.Update()
+	s.factoryViewPort.Update()
 }
 
 func (s *gameState) Draw(win *pixelgl.Window) {
+	s.factoryViewPort.Canvas.Clear(colornames.Green)
+	systems.DrawSystem(win, 11)
+	systems.DrawSystem(win, 12)
+	systems.DrawSystem(win, 13)
+	img.Batchers[constants.BlockKey].Draw(s.factoryViewPort.Canvas)
+	img.Clear()
+	s.factoryViewPort.Canvas.Draw(win, s.factoryViewPort.Mat)
 	s.tetrisViewport.Canvas.Clear(colornames.Yellow)
 	systems.DrawSystem(win, 1)
 	systems.DrawSystem(win, 2)
 	img.Batchers[constants.BlockKey].Draw(s.tetrisViewport.Canvas)
 	img.Clear()
 	s.tetrisViewport.Canvas.Draw(win, s.tetrisViewport.Mat)
-	s.floorViewport.Canvas.Clear(colornames.Green)
-	systems.DrawSystem(win, 11)
-	systems.DrawSystem(win, 12)
-	img.Batchers[constants.BlockKey].Draw(s.floorViewport.Canvas)
-	img.Clear()
-	s.floorViewport.Canvas.Draw(win, s.floorViewport.Mat)
 }
 
 func (s *gameState) SetAbstract(aState *state.AbstractState) {
@@ -116,8 +126,7 @@ func (s *gameState) UpdateViews() {
 	s.tetrisViewport.PortSize = pixel.V(hRatio, hRatio)
 	s.tetrisViewport.PortPos.X += 0.5 * hRatio * s.tetrisViewport.Canvas.Bounds().W()
 
-	s.floorViewport.PortPos = portPos
-	s.floorViewport.PortSize = pixel.V(hRatio, hRatio)
-	s.floorViewport.PortPos.X -= 0.5 * hRatio * s.floorViewport.Canvas.Bounds().W()
-	s.floorViewport.PortPos.X -= 96.
+	s.factoryViewPort.PortPos = portPos
+	s.factoryViewPort.PortPos.X -= 0.25 * viewport.MainCamera.Rect.W()
+	s.factoryViewPort.SetRect(pixel.R(0, 0, viewport.MainCamera.Rect.W()*0.5, viewport.MainCamera.Rect.H()))
 }

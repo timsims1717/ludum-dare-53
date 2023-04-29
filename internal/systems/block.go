@@ -170,7 +170,7 @@ func BlockSystem() {
 }
 
 func CreateTetronimo() {
-	col := data.TColor(rand.Intn(data.Black))
+	col := data.RandColor()
 	t := data.Tetronimo{}
 	s := constants.TetrisStart
 	t.Blocks = append(t.Blocks, CreateBlock(s, col))

@@ -2,6 +2,7 @@ package data
 
 import (
 	"github.com/bytearena/ecs"
+	"math/rand"
 	"timsims1717/ludum-dare-53/internal/constants"
 	"timsims1717/ludum-dare-53/pkg/timing"
 	"timsims1717/ludum-dare-53/pkg/world"
@@ -42,10 +43,13 @@ func (c TColor) String() string {
 	return ""
 }
 
+func RandColor() TColor {
+	return TColor(rand.Intn(Black))
+}
+
 type Tetronimo struct {
 	Blocks []*TetrisBlock
 	NoRot  bool
-	Timer  *timing.Timer
 }
 
 type TetrisBlock struct {
