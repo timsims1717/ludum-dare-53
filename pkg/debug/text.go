@@ -17,12 +17,12 @@ var (
 func InitializeText(v *pixel.Vec) {
 	col := colornames.Aliceblue
 	col.A = 90
-	debugText = typeface.New(v, "basic", typeface.NewAlign(typeface.Left, typeface.Top), 1.0, 0.5, 0., 0.)
+	debugText = typeface.New(v, "basic", typeface.NewAlign(typeface.Left, typeface.Top), 1.0, 2.0, 0., 0.)
 }
 
 func DrawText(win *pixelgl.Window) {
 	debugText.SetText(lines.String())
-	debugText.Obj.Pos = pixel.V(win.Bounds().W()*-0.5+2., win.Bounds().H()*0.5)
+	debugText.Obj.Pos = pixel.V(5., win.Bounds().H()-5.)
 	debugText.Obj.Update()
 	debugText.Draw(win)
 }

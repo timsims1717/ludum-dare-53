@@ -26,11 +26,9 @@ var (
 	Object   = Manager.NewComponent()
 	Parent   = Manager.NewComponent()
 	ViewPort = Manager.NewComponent()
-	Hover    = Manager.NewComponent()
+	Drag     = Manager.NewComponent()
 
-	Tile   = Manager.NewComponent()
-	Border = Manager.NewComponent()
-	Block  = Manager.NewComponent()
+	Block = Manager.NewComponent()
 
 	IsTemp    = ecs.BuildTag(Temp, Object)
 	HasFunc   = ecs.BuildTag(Func)
@@ -41,11 +39,9 @@ var (
 
 	IsObject  = ecs.BuildTag(Object)
 	HasParent = ecs.BuildTag(Object, Parent)
-	HasHover  = ecs.BuildTag(Object, Hover)
+	IsDrag    = ecs.BuildTag(Object, Drag)
 
-	IsTile    = ecs.BuildTag(Object, Tile)
-	HasBorder = ecs.BuildTag(Object, Border)
-	IsBlock   = ecs.BuildTag(Object, Block)
+	IsBlock = ecs.BuildTag(Object, Block)
 )
 
 func UpdateManager() {

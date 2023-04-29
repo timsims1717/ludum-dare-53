@@ -3,6 +3,7 @@ package state
 import (
 	"github.com/faiface/pixel/pixelgl"
 	"timsims1717/ludum-dare-53/internal/systems"
+	"timsims1717/ludum-dare-53/pkg/debug"
 	"timsims1717/ludum-dare-53/pkg/state"
 )
 
@@ -19,7 +20,7 @@ func (s *menuState) Load(done chan struct{}) {
 }
 
 func (s *menuState) Update(win *pixelgl.Window) {
-
+	debug.AddText("Menu State")
 	systems.ParentSystem()
 	systems.ObjectSystem()
 }

@@ -1,8 +1,8 @@
 package reanimator
 
 import (
-	"gemrunner/pkg/img"
 	"time"
+	"timsims1717/ludum-dare-53/pkg/img"
 )
 
 var (

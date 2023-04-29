@@ -5,6 +5,7 @@ import (
 	"github.com/faiface/pixel/pixelgl"
 	"timsims1717/ludum-dare-53/internal/constants"
 	"timsims1717/ludum-dare-53/internal/myecs"
+	"timsims1717/ludum-dare-53/internal/systems"
 	"timsims1717/ludum-dare-53/pkg/debug"
 	"timsims1717/ludum-dare-53/pkg/img"
 	"timsims1717/ludum-dare-53/pkg/options"
@@ -15,18 +16,21 @@ import (
 
 const (
 	MenuStateKey = "menu_state"
+	GameStateKey = "game_state"
 )
 
 var (
 	MenuState = &menuState{}
+	GameState = &gameState{}
 
 	States = map[string]*state.AbstractState{
 		MenuStateKey: state.New(MenuState, false),
+		GameStateKey: state.New(GameState, false),
 	}
 
 	switchState = true
 	currState   = "unknown"
-	nextState   = MenuStateKey
+	nextState   = GameStateKey
 	loading     = false
 	loadingDone = false
 	done        = make(chan struct{})
@@ -34,6 +38,7 @@ var (
 
 func Update(win *pixelgl.Window) {
 	timing.Update()
+	debug.Clear()
 	options.WindowUpdate(win)
 	updateState()
 	if loading {
@@ -50,6 +55,13 @@ func Update(win *pixelgl.Window) {
 
 		if debugInput.Get("fullscreen").JustPressed() {
 			options.FullScreen = !options.FullScreen
+		}
+		if debugInput.Get("debugText").JustPressed() {
+			debug.Text = !debug.Text
+		}
+		if debugInput.Get("debugClear").JustPressed() {
+			systems.ClearBoard()
+
 		}
 
 		if cState, ok := States[currState]; ok {
