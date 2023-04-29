@@ -19,3 +19,7 @@
 
 # Go workspace file
 go.work
+
+# idea
+ludum-dare-53.iml
+.idea
