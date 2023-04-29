@@ -31,6 +31,9 @@ var (
 			"moveLeft":  pxginput.NewJoyless(pixelgl.KeyA),
 			"moveRight": pxginput.NewJoyless(pixelgl.KeyD),
 			"rotate":    pxginput.NewJoyless(pixelgl.KeyW),
+			"reset":     pxginput.NewJoyless(pixelgl.KeyR),
+			"speedUp":   pxginput.NewJoyless(pixelgl.KeyPageUp),
+			"speedDown": pxginput.NewJoyless(pixelgl.KeyPageDown),
 		},
 		Mode: pxginput.KeyboardMouse,
 	}

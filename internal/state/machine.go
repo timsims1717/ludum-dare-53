@@ -60,6 +60,7 @@ func Update(win *pixelgl.Window) {
 			debug.Text = !debug.Text
 		}
 		if debugInput.Get("debugClear").JustPressed() {
+			systems.FailCondition = false
 			systems.ClearBoard()
 		}
 

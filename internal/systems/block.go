@@ -19,6 +19,9 @@ var (
 )
 
 func BlockSystem() {
+	if FailCondition {
+		return
+	}
 	data.TetrisBoard.Timer.Update()
 	if data.TetrisBoard.Shape != nil {
 		if data.TetrisBoard.Timer.Done() || MoveDown {
@@ -116,22 +119,26 @@ func BlockSystem() {
 				}
 			}
 		}
-		if Rotate && !data.TetrisBoard.Shape.NoRot && !PieceDone {
+		if !PieceDone && Rotate && !data.TetrisBoard.Shape.NoRot {
 			canRot := true
 			pivot := data.TetrisBoard.Shape.Blocks[0]
-			for _, block := range data.TetrisBoard.Shape.Blocks {
-				if block.Coords != pivot.Coords {
-					xDiff := block.Coords.X - pivot.Coords.X
-					yDiff := block.Coords.Y - pivot.Coords.Y
-					try := world.Coords{X: pivot.Coords.X + yDiff, Y: pivot.Coords.Y - xDiff}
-					if !BlockLegal(try) {
-						canRot = false
-						break
-					}
-					tryHere := data.TetrisBoard.Get(try)
-					if tryHere != nil && !tryHere.Moving {
-						canRot = false
-						break
+			if pivot != nil {
+				for _, block := range data.TetrisBoard.Shape.Blocks {
+					if block != nil {
+						if block.Coords != pivot.Coords {
+							xDiff := block.Coords.X - pivot.Coords.X
+							yDiff := block.Coords.Y - pivot.Coords.Y
+							try := world.Coords{X: pivot.Coords.X + yDiff, Y: pivot.Coords.Y - xDiff}
+							if !BlockLegal(try) {
+								canRot = false
+								break
+							}
+							tryHere := data.TetrisBoard.Get(try)
+							if tryHere != nil && !tryHere.Moving {
+								canRot = false
+								break
+							}
+						}
 					}
 				}
 			}
@@ -169,7 +176,7 @@ func BlockSystem() {
 	}
 }
 
-func CreateTetronimo() {
+func CreateTetronimo() bool {
 	col := data.RandColor()
 	t := data.Tetronimo{}
 	s := constants.TetrisStart
@@ -229,8 +236,12 @@ func CreateTetronimo() {
 		s.Y--
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
 	}
-	data.TetrisBoard.Shape = &t
-	data.TetrisBoard.ResetTimer()
+	if t.IsValid() {
+		data.TetrisBoard.Shape = &t
+		data.TetrisBoard.ResetTimer()
+		return true
+	}
+	return false
 }
 
 func CreateBlock(c world.Coords, col data.TColor) *data.TetrisBlock {
