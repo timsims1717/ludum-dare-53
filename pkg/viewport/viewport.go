@@ -248,3 +248,33 @@ func (v *ViewPort) Projected(vec pixel.Vec) pixel.Vec {
 	//fmt.Printf("B: (%f,%f)\n", b.X, b.Y)
 	return a
 }
+
+func (v *ViewPort) Constrain(vec pixel.Vec) pixel.Vec {
+	newPos := vec
+	if v.CamPos.X+v.Rect.W()*0.5 < vec.X {
+		newPos.X = v.CamPos.X + v.Rect.W()*0.5
+	} else if v.CamPos.X-v.Rect.W()*0.5 > vec.X {
+		newPos.X = v.CamPos.X - v.Rect.W()*0.5
+	}
+	if v.CamPos.Y+v.Rect.H()*0.5 < vec.Y {
+		newPos.Y = v.CamPos.Y + v.Rect.H()*0.5
+	} else if v.CamPos.Y-v.Rect.H()*0.5 > vec.Y {
+		newPos.X = v.CamPos.Y - v.Rect.H()*0.5
+	}
+	return newPos
+}
+
+func (v *ViewPort) ConstrainR(vec pixel.Vec, r pixel.Rect) pixel.Vec {
+	newPos := vec
+	if v.CamPos.X+v.Rect.W()*0.5 < vec.X+r.W()*0.5 {
+		newPos.X = v.CamPos.X + v.Rect.W()*0.5 - r.W()*0.5
+	} else if v.CamPos.X-v.Rect.W()*0.5 > vec.X-r.W()*0.5 {
+		newPos.X = v.CamPos.X - v.Rect.W()*0.5 + r.W()*0.5
+	}
+	if v.CamPos.Y+v.Rect.H()*0.5 < vec.Y+r.H()*0.5 {
+		newPos.Y = v.CamPos.Y + v.Rect.H()*0.5 - r.H()*0.5
+	} else if v.CamPos.Y-v.Rect.H()*0.5 > vec.Y-r.H()*0.5 {
+		newPos.Y = v.CamPos.Y - v.Rect.H()*0.5 + r.H()*0.5
+	}
+	return newPos
+}

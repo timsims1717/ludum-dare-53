@@ -51,5 +51,5 @@ func (o *Object) WithID(code string) *Object {
 }
 
 func (o *Object) PointInside(vec pixel.Vec) bool {
-	return o.Rect.Moved(pixel.V(-(o.Rect.W() * 0.5), -(o.Rect.H() * 0.5))).Contains(vec)
+	return o.Rect.Moved(o.Pos).Moved(pixel.V(-(o.Rect.W() * 0.5), -(o.Rect.H() * 0.5))).Contains(vec)
 }
