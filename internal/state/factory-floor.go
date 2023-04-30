@@ -116,7 +116,6 @@ func BuildFactoryFloor(vp *viewport.ViewPort) {
 					data.DraggingPiece.Object.Layer = 20
 					for _, block := range blocks {
 						data.FactoryFloor.Set(block.Coords, nil)
-						block.Coords = world.Origin
 					}
 				}
 			}
