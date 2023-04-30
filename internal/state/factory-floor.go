@@ -111,18 +111,20 @@ func FactoryFloorClicked(vp *viewport.ViewPort) func() {
 			pos := vp.Projected(factoryInput.World)
 			x, y := world.WorldToMapC(pos.X+constants.FactoryTile*0.5, pos.Y, pixel.V(constants.FactoryTile, world.TileSize))
 			c := world.Coords{X: x, Y: y}
-			blockA := data.FactoryFloor.Get(c)
-			if blockA != nil {
-				blocks := []*data.FactoryBlock{blockA}
-				blocks = GetAllColorNeighbors(blockA, blocks)
-				tet := systems.ConstructTetFromBlocks(pos, blocks)
-				tet.Entity.AddComponent(myecs.ViewPort, vp)
-				tet.Entity.AddComponent(myecs.Input, factoryInput)
-				data.DraggingPiece = tet
-				data.DraggingPiece.Entity.AddComponent(myecs.Drag, &factoryInput.World)
-				data.DraggingPiece.Object.Layer = 20
-				for _, block := range blocks {
-					data.FactoryFloor.Set(block.Coords, nil)
+			if data.FactoryLegal(c) {
+				blockA := data.FactoryFloor.Get(c)
+				if blockA != nil {
+					blocks := []*data.FactoryBlock{blockA}
+					blocks = GetAllColorNeighbors(blockA, blocks)
+					tet := systems.ConstructTetFromBlocks(pos, blocks)
+					tet.Entity.AddComponent(myecs.ViewPort, vp)
+					tet.Entity.AddComponent(myecs.Input, factoryInput)
+					data.DraggingPiece = tet
+					data.DraggingPiece.Entity.AddComponent(myecs.Drag, &factoryInput.World)
+					data.DraggingPiece.Object.Layer = 20
+					for _, block := range blocks {
+						data.FactoryFloor.Set(block.Coords, nil)
+					}
 				}
 			}
 		}
