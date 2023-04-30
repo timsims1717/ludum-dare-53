@@ -5,6 +5,7 @@ import (
 	"timsims1717/ludum-dare-53/internal/data"
 	"timsims1717/ludum-dare-53/internal/myecs"
 	"timsims1717/ludum-dare-53/pkg/util"
+	"timsims1717/ludum-dare-53/pkg/world"
 )
 
 var (
@@ -59,7 +60,13 @@ func TetrisSystem() {
 			PieceDone = false
 		}
 		if data.TetrisBoard.Stats.Tetrominos > constants.MinPiecesToFail {
-			FailCondition = failedToPlace
+			empty := true
+			for _, tet := range data.Conveyor.Tets {
+				if tet != nil {
+					empty = false
+				}
+			}
+			FailCondition = failedToPlace && empty
 		}
 	}
 }
@@ -76,5 +83,42 @@ func ClearBoard() {
 	data.TetrisBoard.Shape = nil
 	data.TetrisBoard.Speed = constants.DefaultSpeed
 	data.TetrisBoard.NextShape = NewTetromino()
+	data.TetrisBoard.Stats.FullReset()
 	PlaceTetromino()
+}
+
+func ClearFactory() {
+	for _, pad := range data.FactoryPads {
+		if pad.Tet != nil {
+			for _, block := range pad.Tet.Blocks {
+				myecs.Manager.DisposeEntity(block.Entity)
+			}
+			myecs.Manager.DisposeEntity(pad.Tet.Entity)
+			pad.Tet = nil
+		}
+	}
+	for y, row := range data.FactoryFloor.Blocks {
+		for x, block := range row {
+			if block != nil {
+				myecs.Manager.DisposeEntity(block.Entity)
+				data.FactoryFloor.Set(world.Coords{X: x, Y: y}, nil)
+			}
+		}
+	}
+	if data.DraggingPiece != nil {
+		for _, block := range data.DraggingPiece.Blocks {
+			myecs.Manager.DisposeEntity(block.Entity)
+		}
+		myecs.Manager.DisposeEntity(data.DraggingPiece.Entity)
+		data.DraggingPiece = nil
+	}
+	for i, tet := range data.Conveyor.Tets {
+		if tet != nil {
+			for _, block := range tet.Blocks {
+				myecs.Manager.DisposeEntity(block.Entity)
+			}
+			myecs.Manager.DisposeEntity(tet.Entity)
+			data.Conveyor.Tets[i] = nil
+		}
+	}
 }

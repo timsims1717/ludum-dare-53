@@ -62,6 +62,7 @@ func Update(win *pixelgl.Window) {
 		if debugInput.Get("debugClear").JustPressed() {
 			systems.FailCondition = false
 			systems.ClearBoard()
+			systems.ClearFactory()
 		}
 
 		if cState, ok := States[currState]; ok {

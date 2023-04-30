@@ -8,11 +8,10 @@ import (
 	"timsims1717/ludum-dare-53/internal/systems"
 	"timsims1717/ludum-dare-53/pkg/img"
 	"timsims1717/ludum-dare-53/pkg/object"
-	"timsims1717/ludum-dare-53/pkg/viewport"
 	"timsims1717/ludum-dare-53/pkg/world"
 )
 
-func BuildFactoryPads(vp *viewport.ViewPort) {
+func BuildFactoryPads() {
 	// Import Pads
 	for i := 0; i < 5; i++ {
 		pad := &data.FactoryPad{}
@@ -36,7 +35,7 @@ func BuildFactoryPads(vp *viewport.ViewPort) {
 		e.AddComponent(myecs.Object, pad.Object).
 			AddComponent(myecs.Drawable, data.PadSection).
 			AddComponent(myecs.Input, factoryInput).
-			AddComponent(myecs.ViewPort, vp).
+			AddComponent(myecs.ViewPort, data.FactoryViewport).
 			AddComponent(myecs.Click, data.NewFn(func() {
 				if pad.Tet != nil && data.DraggingPiece == nil {
 					data.DraggingPiece = pad.Tet
@@ -71,7 +70,7 @@ func BuildFactoryPads(vp *viewport.ViewPort) {
 	e.AddComponent(myecs.Object, data.GarbagePad.Object).
 		AddComponent(myecs.Drawable, spr).
 		AddComponent(myecs.Input, factoryInput).
-		AddComponent(myecs.ViewPort, vp).
+		AddComponent(myecs.ViewPort, data.FactoryViewport).
 		AddComponent(myecs.Click, data.NewFn(func() {
 			if data.DraggingPiece != nil {
 				for _, block := range data.DraggingPiece.Blocks {
@@ -99,7 +98,7 @@ func BuildFactoryPads(vp *viewport.ViewPort) {
 	eQ.AddComponent(myecs.Object, data.QueuePad.Object).
 		AddComponent(myecs.Drawable, sprQ).
 		AddComponent(myecs.Input, factoryInput).
-		AddComponent(myecs.ViewPort, vp).
+		AddComponent(myecs.ViewPort, data.FactoryViewport).
 		AddComponent(myecs.Click, data.NewFn(AddToQueuePad)).
 		AddComponent(myecs.Update, data.NewFn(func() {
 			// todo: add hover shine

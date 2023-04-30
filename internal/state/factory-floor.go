@@ -9,7 +9,6 @@ import (
 	"timsims1717/ludum-dare-53/internal/systems"
 	"timsims1717/ludum-dare-53/pkg/img"
 	"timsims1717/ludum-dare-53/pkg/object"
-	"timsims1717/ludum-dare-53/pkg/viewport"
 	"timsims1717/ludum-dare-53/pkg/world"
 )
 
@@ -17,7 +16,7 @@ var (
 	FactoryBGEntities []*ecs.Entity
 )
 
-func BuildFactoryFloor(vp *viewport.ViewPort) {
+func BuildFactoryFloor() {
 	for y := 0; y < constants.FactoryHeight; y++ {
 		for x := 0; x < constants.FactoryWidth; x++ {
 			obj := object.New()
@@ -34,15 +33,15 @@ func BuildFactoryFloor(vp *viewport.ViewPort) {
 	data.FactoryFloor.Object.Pos = pixel.V(constants.FactoryTile*0.5*(constants.FactoryWidth-1), world.TileSize*0.5*(constants.FactoryHeight-1))
 	data.FactoryFloor.Object.Rect = pixel.R(0., 0., constants.FactoryWidth*constants.FactoryTile, constants.FactoryHeight*world.TileSize)
 	data.FactoryFloor.Entity.AddComponent(myecs.Object, data.FactoryFloor.Object).
-		AddComponent(myecs.ViewPort, vp).
+		AddComponent(myecs.ViewPort, data.FactoryViewport).
 		AddComponent(myecs.Input, factoryInput).
-		AddComponent(myecs.Update, data.NewFn(FactoryFloorUpdate(vp))).
-		AddComponent(myecs.Click, data.NewFn(FactoryFloorClicked(vp)))
+		AddComponent(myecs.Update, data.NewFn(FactoryFloorUpdate())).
+		AddComponent(myecs.Click, data.NewFn(FactoryFloorClicked()))
 }
 
-func FactoryFloorUpdate(vp *viewport.ViewPort) func() {
+func FactoryFloorUpdate() func() {
 	return func() {
-		if data.FactoryFloor.Object.PointInside(vp.Projected(factoryInput.World)) {
+		if data.FactoryFloor.Object.PointInside(data.FactoryViewport.Projected(factoryInput.World)) {
 			if data.DraggingPiece != nil {
 				if ActuallyOnFloor() {
 					legal := true
@@ -74,7 +73,7 @@ func FactoryFloorUpdate(vp *viewport.ViewPort) func() {
 	}
 }
 
-func FactoryFloorClicked(vp *viewport.ViewPort) func() {
+func FactoryFloorClicked() func() {
 	return func() {
 		if data.DraggingPiece != nil {
 			if ActuallyOnFloor() {
@@ -108,7 +107,7 @@ func FactoryFloorClicked(vp *viewport.ViewPort) func() {
 				}
 			}
 		} else {
-			pos := vp.Projected(factoryInput.World)
+			pos := data.FactoryViewport.Projected(factoryInput.World)
 			x, y := world.WorldToMapC(pos.X+constants.FactoryTile*0.5, pos.Y, pixel.V(constants.FactoryTile, world.TileSize))
 			c := world.Coords{X: x, Y: y}
 			if data.FactoryLegal(c) {
@@ -117,7 +116,7 @@ func FactoryFloorClicked(vp *viewport.ViewPort) func() {
 					blocks := []*data.FactoryBlock{blockA}
 					blocks = GetAllColorNeighbors(blockA, blocks)
 					tet := systems.ConstructTetFromBlocks(pos, blocks)
-					tet.Entity.AddComponent(myecs.ViewPort, vp)
+					tet.Entity.AddComponent(myecs.ViewPort, data.FactoryViewport)
 					tet.Entity.AddComponent(myecs.Input, factoryInput)
 					data.DraggingPiece = tet
 					data.DraggingPiece.Entity.AddComponent(myecs.Drag, &factoryInput.World)
