@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/faiface/pixel/pixelgl"
 	"timsims1717/ludum-dare-53/internal/constants"
+	"timsims1717/ludum-dare-53/internal/data"
 	"timsims1717/ludum-dare-53/internal/myecs"
 	"timsims1717/ludum-dare-53/internal/systems"
 	"timsims1717/ludum-dare-53/pkg/debug"
@@ -62,6 +63,12 @@ func Update(win *pixelgl.Window) {
 		if debugInput.Get("debugClear").JustPressed() {
 			systems.FailCondition = false
 			systems.ClearBoard()
+		}
+		if debugInput.Get("debugTruckGeneration").JustPressed() {
+			debugInput.Get("debugTruckGeneration").Consume()
+			t := data.Truck{}
+			systems.GenerateLoad(&t)
+			debug.AddText(fmt.Sprintf("Generated Truck Load: %s", t.MyBatchType.String()))
 		}
 
 		if cState, ok := States[currState]; ok {

@@ -22,6 +22,7 @@ var (
 			//"camRight":     pxginput.NewJoyless(pixelgl.KeyApostrophe),
 			//"camDown":      pxginput.NewJoyless(pixelgl.KeySemicolon),
 			//"camLeft":      pxginput.NewJoyless(pixelgl.KeyL),
+			"debugTruckGeneration": pxginput.NewJoyless(pixelgl.KeyF1),
 		},
 		Mode: pxginput.KeyboardMouse,
 	}
