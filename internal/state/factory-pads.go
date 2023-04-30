@@ -5,6 +5,7 @@ import (
 	"timsims1717/ludum-dare-53/internal/constants"
 	"timsims1717/ludum-dare-53/internal/data"
 	"timsims1717/ludum-dare-53/internal/myecs"
+	"timsims1717/ludum-dare-53/internal/systems"
 	"timsims1717/ludum-dare-53/pkg/img"
 	"timsims1717/ludum-dare-53/pkg/object"
 	"timsims1717/ludum-dare-53/pkg/viewport"
@@ -102,20 +103,24 @@ func BuildFactoryPads(vp *viewport.ViewPort) {
 		AddComponent(myecs.Drawable, sprQ).
 		AddComponent(myecs.Input, factoryInput).
 		AddComponent(myecs.ViewPort, vp).
-		AddComponent(myecs.Click, data.NewFn(func() {
-			if data.DraggingPiece != nil {
-				if len(data.DraggingPiece.Blocks) == 4 {
-					for _, block := range data.DraggingPiece.Blocks {
-						myecs.Manager.DisposeEntity(block.Entity)
-					}
-					myecs.Manager.DisposeEntity(data.DraggingPiece.Entity)
-					data.DraggingPiece = nil
-				}
-			}
-		})).
+		AddComponent(myecs.Click, data.NewFn(AddToQueue)).
 		AddComponent(myecs.Update, data.NewFn(func() {
 			// todo: add hover shine
 		}))
 	data.QueuePad.Entity = eQ
 	FactoryBGEntities = append(FactoryBGEntities, eQ)
+}
+
+func AddToQueue() {
+	if data.DraggingPiece != nil {
+		if len(data.DraggingPiece.Blocks) == 4 {
+			systems.FactoTet(data.DraggingPiece)
+
+			for _, block := range data.DraggingPiece.Blocks {
+				myecs.Manager.DisposeEntity(block.Entity)
+			}
+			myecs.Manager.DisposeEntity(data.DraggingPiece.Entity)
+			data.DraggingPiece = nil
+		}
+	}
 }

@@ -50,7 +50,62 @@ func RandColor() TColor {
 type Tetronimo struct {
 	Blocks  []*TetrisBlock
 	NoRot   bool
-	TetType TetronimoType
+	TetType constants.TetronimoType
+}
+
+func FacTetIsanI(f *FacTetronimo) bool {
+	xchange := false
+	ychange := false
+	x := f.Blocks[0].Coords.X
+	y := f.Blocks[0].Coords.Y
+	for _, block := range f.Blocks {
+		xchange = x != block.Coords.X
+		ychange = y != block.Coords.Y
+	}
+	return !xchange || !ychange
+}
+
+func Normalize(coords [4]world.Coords) [4]world.Coords {
+	minX, minY := coords[0].X, coords[0].Y
+
+	for _, coord := range coords {
+		if coord.X < minX {
+			minX = coord.X
+		}
+		if coord.Y < minY {
+			minY = coord.Y
+		}
+	}
+
+	var normalized [4]world.Coords
+	for i, coord := range coords {
+		normalized[i] = world.Coords{coord.X - minX, coord.Y - minY}
+	}
+	return normalized
+}
+func TetronimoCoordsEqual(a, b [4]world.Coords) bool {
+	for _, i := range a {
+		if !CoordsIn(i, b) {
+			return false
+		}
+	}
+	return true
+}
+
+func CoordsIn(c world.Coords, list [4]world.Coords) bool {
+	for _, l := range list {
+		if c.Eq(l) {
+			return true
+		}
+	}
+	return false
+}
+func TetronimoCoordsRotate(coords []world.Coords) []world.Coords {
+	rotated := make([]world.Coords, len(coords))
+	for i, coord := range coords {
+		rotated[i] = world.Coords{coord.X, -coord.Y}
+	}
+	return rotated
 }
 
 func (t Tetronimo) IsValid() bool {
@@ -67,38 +122,6 @@ type TetrisBlock struct {
 	Color  TColor
 	Moving bool
 	Entity *ecs.Entity
-}
-
-type TetronimoType int
-
-const (
-	I = iota
-	O
-	T
-	S
-	Z
-	J
-	L
-)
-
-func (t TetronimoType) String() string {
-	switch t {
-	case O:
-		return "O"
-	case I:
-		return "I"
-	case S:
-		return "S"
-	case Z:
-		return "Z"
-	case L:
-		return "L"
-	case J:
-		return "J"
-	case T:
-		return "T"
-	}
-	return ""
 }
 
 var TetrisBoard *tetrisBoard
