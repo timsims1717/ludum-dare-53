@@ -176,13 +176,15 @@ func BlockSystem() {
 	}
 }
 
-func CreateTetronimo() bool {
+// Places Tetronimo on the Board
+func PlaceTetronimo() bool {
 	col := data.RandColor()
 	t := data.Tetronimo{}
 	s := constants.TetrisStart
 	t.Blocks = append(t.Blocks, CreateBlock(s, col))
-	switch rand.Intn(7) {
-	case 0:
+	t.TetType = data.TetronimoType(rand.Intn(7))
+	switch t.TetType {
+	case data.O:
 		s.X++
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
 		s.Y--
@@ -190,28 +192,28 @@ func CreateTetronimo() bool {
 		s.X--
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
 		t.NoRot = true
-	case 1:
+	case data.I:
 		s.X++
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
 		s.X++
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
 		s.X -= 3
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-	case 2:
+	case data.L:
 		s.X++
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
 		s.X -= 2
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
 		s.Y--
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-	case 3:
+	case data.J:
 		s.X--
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
 		s.X += 2
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
 		s.Y--
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-	case 4:
+	case data.S:
 		s.X++
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
 		s.X--
@@ -219,7 +221,7 @@ func CreateTetronimo() bool {
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
 		s.X--
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-	case 5:
+	case data.Z:
 		s.X--
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
 		s.X++
@@ -227,7 +229,7 @@ func CreateTetronimo() bool {
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
 		s.X++
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-	case 6:
+	case data.T:
 		s.X++
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
 		s.X -= 2
@@ -236,12 +238,88 @@ func CreateTetronimo() bool {
 		s.Y--
 		t.Blocks = append(t.Blocks, CreateBlock(s, col))
 	}
+
 	if t.IsValid() {
 		data.TetrisBoard.Shape = &t
 		data.TetrisBoard.ResetTimer()
+		data.TetrisBoard.Stats.Tetronimos++
 		return true
 	}
 	return false
+}
+
+// Creates Standalone Tetronimo
+func NewTetronimo() *data.Tetronimo {
+	col := data.RandColor()
+	t := &data.Tetronimo{}
+	s := constants.TetrisStart
+	t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+	t.TetType = data.TetronimoType(rand.Intn(7))
+	switch t.TetType {
+	case data.O:
+		s.X++
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+		s.Y--
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+		s.X--
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+		t.NoRot = true
+	case data.I:
+		s.X++
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+		s.X++
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+		s.X -= 3
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+	case data.L:
+		s.X++
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+		s.X -= 2
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+		s.Y--
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+	case data.J:
+		s.X--
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+		s.X += 2
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+		s.Y--
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+	case data.S:
+		s.X++
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+		s.X--
+		s.Y--
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+		s.X--
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+	case data.Z:
+		s.X--
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+		s.X++
+		s.Y--
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+		s.X++
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+	case data.T:
+		s.X++
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+		s.X -= 2
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+		s.X++
+		s.Y--
+		t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
+	}
+	return t
+}
+
+func StandaloneBlock(c world.Coords, col data.TColor) *data.TetrisBlock {
+	block := &data.TetrisBlock{
+		Coords: c,
+		Color:  col,
+		Moving: true,
+	}
+	return block
 }
 
 func CreateBlock(c world.Coords, col data.TColor) *data.TetrisBlock {

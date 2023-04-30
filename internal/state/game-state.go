@@ -39,7 +39,8 @@ func (s *gameState) Load(done chan struct{}) {
 	s.tetrisViewport.SetRect(pixel.R(0, 0, world.TileSize*constants.TetrisWidth, world.TileSize*constants.TetrisHeight))
 	s.tetrisViewport.CamPos = pixel.V(world.TileSize*0.5*(constants.TetrisWidth-1), world.TileSize*0.5*(constants.TetrisHeight-1))
 	data.NewTetrisBoard(constants.DefaultSpeed)
-	systems.CreateTetronimo()
+	data.TetrisBoard.NextShape = systems.NewTetronimo()
+	systems.PlaceTetronimo()
 	BuildTetrisBG()
 
 	s.factoryViewPort = viewport.New(nil)
@@ -88,18 +89,14 @@ func (s *gameState) Update(win *pixelgl.Window) {
 		if systems.FailCondition {
 			systems.FailCondition = false
 			systems.ClearBoard()
-			data.TetrisBoard.Score.FullReset()
+			data.TetrisBoard.Stats.FullReset()
 		}
 	}
 	if tetrisInput.Get("speedUp").JustPressed() {
-		if data.TetrisBoard.Speed > 0 {
-			data.TetrisBoard.Speed = data.TetrisBoard.Speed - 0.05
-		}
+		data.TetrisBoard.SpeedUp()
 	}
 	if tetrisInput.Get("speedDown").JustPressed() {
-		if data.TetrisBoard.Speed < 2 {
-			data.TetrisBoard.Speed = data.TetrisBoard.Speed + 0.05
-		}
+		data.TetrisBoard.SpeedDown()
 	}
 
 	if factoryInput.Get("generate").JustPressed() {
@@ -138,9 +135,12 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	systems.DragSystem()
 	systems.ParentSystem()
 	systems.ObjectSystem()
-	debug.AddText(fmt.Sprintf("Tetris Score: %03d", data.TetrisBoard.Score.Score))
-	debug.AddText(fmt.Sprintf("Current Streak: %d", data.TetrisBoard.Score.Streak))
+	debug.AddText(fmt.Sprintf("Tetris Score: %03d", data.TetrisBoard.Stats.Score))
+	debug.AddText(fmt.Sprintf("Current Streak: %d", data.TetrisBoard.Stats.Streak))
 	debug.AddText(fmt.Sprintf("Current Speed: %f", data.TetrisBoard.Speed))
+	debug.AddText(fmt.Sprintf("Current Level: %d", data.TetrisBoard.Stats.Checkpoint))
+	debug.AddText(fmt.Sprintf("Current Piece: %s", data.TetrisBoard.Shape.TetType.String()))
+	debug.AddText(fmt.Sprintf("Next Piece: %s", data.TetrisBoard.NextShape.TetType.String()))
 	if systems.FailCondition {
 		debug.AddText("Game Over, dun dun dun")
 	}

@@ -29,11 +29,11 @@ func TetrisSystem() {
 			}
 			if full {
 				fullRows = append(fullRows, y)
-				data.TetrisBoard.Score.AddToScore()
+				data.TetrisBoard.Stats.AddToScore()
 			}
 		}
 		if len(fullRows) == 0 {
-			data.TetrisBoard.Score.ResetStreak()
+			data.TetrisBoard.Stats.ResetStreak()
 		}
 		down := 0
 		for y, row := range data.TetrisBoard.Board {
@@ -54,7 +54,8 @@ func TetrisSystem() {
 			}
 		}
 		// create new piece
-		FailCondition = !CreateTetronimo()
+		data.TetrisBoard.NextShape = NewTetronimo()
+		FailCondition = !PlaceTetronimo()
 	}
 	PieceDone = false
 }
@@ -70,5 +71,6 @@ func ClearBoard() {
 	}
 	data.TetrisBoard.Shape = nil
 	data.TetrisBoard.Speed = constants.DefaultSpeed
-	CreateTetronimo()
+	data.TetrisBoard.NextShape = NewTetronimo()
+	PlaceTetronimo()
 }
