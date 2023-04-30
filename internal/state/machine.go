@@ -63,12 +63,16 @@ func Update(win *pixelgl.Window) {
 		if debugInput.Get("debugClear").JustPressed() {
 			systems.FailCondition = false
 			systems.ClearBoard()
+			systems.ClearFactory()
 		}
 		if debugInput.Get("debugTruckGeneration").JustPressed() {
 			debugInput.Get("debugTruckGeneration").Consume()
 			t := data.Truck{}
 			systems.GenerateLoad(&t)
 			debug.AddText(fmt.Sprintf("Generated Truck Load: %s", t.MyBatchType.String()))
+		}
+		if debugInput.Get("debugIgnoreConv").JustPressed() {
+			constants.IgnoreEmptyConv = !constants.IgnoreEmptyConv
 		}
 
 		if cState, ok := States[currState]; ok {

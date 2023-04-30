@@ -13,8 +13,8 @@ var (
 			"debugText":  pxginput.NewJoyless(pixelgl.KeyF4),
 			"fullscreen": pxginput.NewJoyless(pixelgl.KeyF5),
 			//"debugMenu":    pxginput.NewJoyless(pixelgl.KeyF7),
-			"debugClear": pxginput.NewJoyless(pixelgl.KeyF8),
-			//"debugPause":   pxginput.NewJoyless(pixelgl.KeyF9),
+			"debugClear":      pxginput.NewJoyless(pixelgl.KeyF8),
+			"debugIgnoreConv": pxginput.NewJoyless(pixelgl.KeyF9),
 			//"debugResume":  pxginput.NewJoyless(pixelgl.KeyF10),
 			//"debugSP":      pxginput.NewJoyless(pixelgl.KeyEqual),
 			//"debugSM":      pxginput.NewJoyless(pixelgl.KeyMinus),
@@ -42,7 +42,7 @@ var (
 		Buttons: map[string]*pxginput.ButtonSet{
 			"click":      pxginput.NewJoyless(pixelgl.MouseButtonLeft),
 			"rightClick": pxginput.NewJoyless(pixelgl.MouseButtonRight),
-			"generate":   pxginput.NewJoyless(pixelgl.KeyG),
+			"generate":   pxginput.NewJoyless(pixelgl.KeyKPEnter),
 		},
 		Mode: pxginput.KeyboardMouse,
 	}

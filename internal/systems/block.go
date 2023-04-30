@@ -176,11 +176,12 @@ func BlockSystem() {
 	}
 }
 
+func HasTetromino() bool {
+	return data.TetrisBoard.NextShape != nil
+}
+
 // Places Tetromino on the Board
 func PlaceTetromino() bool {
-	if data.TetrisBoard.NextShape == nil {
-		return false
-	}
 	//Validate Blocks
 	for _, block := range data.TetrisBoard.NextShape.Blocks {
 		if BlockLegal(block.Coords) {
@@ -204,12 +205,11 @@ func PlaceTetromino() bool {
 	}
 	// Put Next Tetromino in Shape
 	data.TetrisBoard.Shape = data.TetrisBoard.NextShape
-	convTet := data.Conveyor.Tets[0]
-	if convTet != nil {
-		for _, block := range convTet.Blocks {
+	if data.Conveyor.Tets[0] != nil {
+		for _, block := range data.Conveyor.Tets[0].Blocks {
 			myecs.Manager.DisposeEntity(block.Entity)
 		}
-		myecs.Manager.DisposeEntity(convTet.Entity)
+		myecs.Manager.DisposeEntity(data.Conveyor.Tets[0].Entity)
 		data.Conveyor.Tets[0] = nil
 	}
 	data.TetrisBoard.NextShape = nil
