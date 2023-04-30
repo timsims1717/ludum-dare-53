@@ -1,8 +1,10 @@
 package systems
 
 import (
+	"timsims1717/ludum-dare-53/internal/data"
 	"timsims1717/ludum-dare-53/internal/myecs"
 	"timsims1717/ludum-dare-53/pkg/object"
+	"timsims1717/ludum-dare-53/pkg/timing"
 )
 
 func ObjectSystem() {
@@ -29,5 +31,59 @@ func ParentSystem() {
 				tran.Hide = parent.Hide
 			}
 		}
+	}
+}
+
+func FunctionSystem() {
+	for _, result := range myecs.Manager.Query(myecs.HasUpdate) {
+		fnA := result.Components[myecs.Update]
+		if fnT, ok := fnA.(*data.TimerFunc); ok {
+			if fnT.Timer.UpdateDone() {
+				if fnT.Func() {
+					result.Entity.RemoveComponent(myecs.Update)
+				} else {
+					fnT.Timer.Reset()
+				}
+			}
+		} else if fnF, ok := fnA.(*data.FrameFunc); ok {
+			if fnF.Func() {
+				result.Entity.RemoveComponent(myecs.Update)
+			}
+		} else if fnU, ok := fnA.(*data.Funky); ok {
+			fnU.Fn()
+		}
+	}
+}
+
+func TemporarySystem() {
+	for _, result := range myecs.Manager.Query(myecs.IsTemp) {
+		temp := result.Components[myecs.Temp]
+		obj, okT := result.Components[myecs.Object].(*object.Object)
+		if okT {
+			if timer, ok := temp.(*timing.Timer); ok {
+				if timer.UpdateDone() {
+					obj.Hide = true
+					obj.Kill = true
+					myecs.Manager.DisposeEntity(result.Entity)
+				}
+			} else if check, ok := temp.(myecs.ClearFlag); ok {
+				if check {
+					obj.Hide = true
+					obj.Kill = true
+					myecs.Manager.DisposeEntity(result.Entity)
+				}
+			}
+		}
+	}
+}
+
+func ClearSystem() {
+	for _, result := range myecs.Manager.Query(myecs.IsObject) {
+		obj, ok := result.Components[myecs.Object].(*object.Object)
+		if ok {
+			obj.Hide = true
+			obj.Kill = true
+		}
+		myecs.Manager.DisposeEntity(result.Entity)
 	}
 }
