@@ -54,7 +54,6 @@ func TetrisSystem() {
 			}
 		}
 		// create new piece
-		data.TetrisBoard.NextShape = NewTetronimo()
 		FailCondition = !PlaceTetronimo()
 	}
 	PieceDone = false

@@ -178,74 +178,33 @@ func BlockSystem() {
 
 // Places Tetronimo on the Board
 func PlaceTetronimo() bool {
-	col := data.RandColor()
-	t := data.Tetronimo{}
-	s := constants.TetrisStart
-	t.Blocks = append(t.Blocks, CreateBlock(s, col))
-	t.TetType = data.TetronimoType(rand.Intn(7))
-	switch t.TetType {
-	case data.O:
-		s.X++
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-		s.Y--
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-		s.X--
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-		t.NoRot = true
-	case data.I:
-		s.X++
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-		s.X++
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-		s.X -= 3
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-	case data.L:
-		s.X++
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-		s.X -= 2
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-		s.Y--
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-	case data.J:
-		s.X--
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-		s.X += 2
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-		s.Y--
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-	case data.S:
-		s.X++
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-		s.X--
-		s.Y--
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-		s.X--
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-	case data.Z:
-		s.X--
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-		s.X++
-		s.Y--
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-		s.X++
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-	case data.T:
-		s.X++
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-		s.X -= 2
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
-		s.X++
-		s.Y--
-		t.Blocks = append(t.Blocks, CreateBlock(s, col))
+	//Validate Blocks
+	for _, block := range data.TetrisBoard.NextShape.Blocks {
+		if BlockLegal(block.Coords) {
+			if data.TetrisBoard.Board[block.Coords.Y][block.Coords.X] == nil {
+				data.TetrisBoard.Board[block.Coords.Y][block.Coords.X] = block
+				obj := object.New()
+				obj.Pos = world.MapToWorld(block.Coords)
+				obj.Layer = 2
+				spr := img.NewSprite(block.Color.String(), constants.BlockKey)
+				block.Entity = myecs.Manager.NewEntity()
+				block.Entity.
+					AddComponent(myecs.Object, obj).
+					AddComponent(myecs.Block, block).
+					AddComponent(myecs.Drawable, spr)
+			} else {
+				return false
+			}
+		} else {
+			return false
+		}
 	}
-
-	if t.IsValid() {
-		data.TetrisBoard.Shape = &t
-		data.TetrisBoard.ResetTimer()
-		data.TetrisBoard.Stats.Tetronimos++
-		return true
-	}
-	return false
+	//Put Next Tetronimo in Shape
+	data.TetrisBoard.Shape = data.TetrisBoard.NextShape
+	data.TetrisBoard.NextShape = NewTetronimo()
+	data.TetrisBoard.ResetTimer()
+	data.TetrisBoard.Stats.Tetronimos++
+	return true
 }
 
 // Creates Standalone Tetronimo
