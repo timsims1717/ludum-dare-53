@@ -52,14 +52,14 @@ var (
 		[4]world.Coords{{0, 0}, {0, 1}, {1, 1}, {1, 2}}: Z,
 		[4]world.Coords{{0, 0}, {1, 0}, {1, 1}, {2, 1}}: S,
 		[4]world.Coords{{1, 0}, {2, 0}, {0, 1}, {1, 1}}: S,
-		[4]world.Coords{{0, 0}, {1, 0}, {2, 0}, {2, 1}}: L,
-		[4]world.Coords{{0, 0}, {1, 0}, {0, 1}, {0, 2}}: L,
-		[4]world.Coords{{0, 2}, {1, 0}, {1, 1}, {1, 2}}: L,
-		[4]world.Coords{{1, 0}, {1, 1}, {2, 1}, {0, 2}}: L,
-		[4]world.Coords{{0, 0}, {1, 0}, {2, 0}, {0, 1}}: J,
-		[4]world.Coords{{0, 0}, {0, 1}, {0, 2}, {1, 2}}: J,
-		[4]world.Coords{{0, 1}, {1, 1}, {2, 1}, {0, 2}}: J,
-		[4]world.Coords{{0, 0}, {1, 0}, {1, 1}, {1, 2}}: J,
+		[4]world.Coords{{0, 0}, {1, 0}, {2, 0}, {2, 1}}: L, //flat down point up
+		[4]world.Coords{{0, 0}, {0, 1}, {0, 2}, {1, 0}}: L, //flat left point right
+		[4]world.Coords{{0, 0}, {0, 1}, {1, 1}, {2, 1}}: L, //flat up point down
+		[4]world.Coords{{0, 2}, {1, 0}, {1, 1}, {1, 2}}: L, //flat right point left
+		[4]world.Coords{{0, 0}, {0, 1}, {1, 0}, {2, 0}}: J, //flat down point up
+		[4]world.Coords{{0, 0}, {0, 1}, {0, 2}, {1, 2}}: J, //flat left point right
+		[4]world.Coords{{0, 1}, {1, 1}, {2, 1}, {2, 0}}: J, //flat up point down
+		[4]world.Coords{{0, 0}, {1, 0}, {1, 1}, {1, 2}}: J, //flat right point left
 	}
 )
 
