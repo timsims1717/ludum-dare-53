@@ -116,7 +116,7 @@ func (s *gameState) Update(win *pixelgl.Window) {
 			pad = data.FactoryPads[r]
 		}
 		if pad.Tet == nil {
-			tet := systems.CreateFactoryTet(pad.Object.Pos, data.RandColor())
+			tet := systems.CreateFactoryTet(pad.Object.Pos, data.RandColor(), 0)
 			tet.Entity.AddComponent(myecs.ViewPort, data.FactoryViewport)
 			tet.Entity.AddComponent(myecs.Input, factoryInput)
 			pad.Tet = tet
