@@ -22,7 +22,6 @@ type gameState struct {
 
 	// tetris half
 	tetrisViewport *viewport.ViewPort
-	halfViewport   *viewport.ViewPort
 
 	lastLeft bool
 
@@ -57,6 +56,7 @@ func (s *gameState) Load(done chan struct{}) {
 func (s *gameState) Update(win *pixelgl.Window) {
 	debug.AddText("Game State")
 
+	s.UpdateViews()
 	tetrisInput.Update(win, viewport.MainCamera.Mat)
 	factoryInput.Update(win, viewport.MainCamera.Mat)
 	debug.AddText(fmt.Sprintf("Mouse Input: (%d,%d)", int(factoryInput.World.X), int(factoryInput.World.Y)))
@@ -180,13 +180,15 @@ func (s *gameState) SetAbstract(aState *state.AbstractState) {
 
 func (s *gameState) UpdateViews() {
 	portPos := pixel.V(viewport.MainCamera.PostCamPos.X+viewport.MainCamera.Rect.W()*0.5, viewport.MainCamera.PostCamPos.Y+viewport.MainCamera.Rect.H()*0.5)
-	s.tetrisViewport.PortPos = portPos
-	hRatio := viewport.MainCamera.Rect.H() / s.tetrisViewport.Rect.H()
+	hRatio := viewport.MainCamera.Rect.H() / (world.TileSize * 20)
 	hRatio *= 0.8
-	s.tetrisViewport.PortSize = pixel.V(hRatio, hRatio)
-	s.tetrisViewport.PortPos.X += 0.5 * hRatio * s.tetrisViewport.Canvas.Bounds().W()
+	s.tetrisViewport.PortPos = portPos
+	//s.tetrisViewport.PortSize = pixel.V(hRatio, hRatio)
+	s.tetrisViewport.PortPos.X -= 0.25 * viewport.MainCamera.Rect.W()
+	s.tetrisViewport.SetRect(pixel.R(0, 0, viewport.MainCamera.Rect.W()*0.5, viewport.MainCamera.Rect.H()))
 
 	s.factoryViewPort.PortPos = portPos
-	s.factoryViewPort.PortPos.X -= 0.25 * viewport.MainCamera.Rect.W()
+	//s.factoryViewPort.PortSize = pixel.V(hRatio, hRatio)
+	s.factoryViewPort.PortPos.X += 0.25 * viewport.MainCamera.Rect.W()
 	s.factoryViewPort.SetRect(pixel.R(0, 0, viewport.MainCamera.Rect.W()*0.5, viewport.MainCamera.Rect.H()))
 }

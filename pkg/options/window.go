@@ -3,13 +3,16 @@ package options
 import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
+	"timsims1717/ludum-dare-53/pkg/viewport"
 )
 
 var (
 	VSync           bool
 	FullScreen      bool
 	ResolutionIndex int
-	Resolutions     []pixel.Vec
+	Resolutions     = []pixel.Vec{
+		pixel.V(1600, 900),
+	}
 
 	fullscreen bool
 	resIndex   int
@@ -56,8 +59,11 @@ func WindowUpdate(win *pixelgl.Window) {
 			}
 			if FullScreen {
 				win.SetMonitor(picked)
+				x, y := picked.Size()
+				viewport.MainCamera.SetRect(pixel.R(0, 0, x, y))
 			} else {
 				win.SetMonitor(nil)
+				viewport.MainCamera.SetRect(pixel.R(0, 0, Resolutions[ResolutionIndex].X, Resolutions[ResolutionIndex].Y))
 			}
 			fullscreen = FullScreen
 		}
