@@ -12,9 +12,17 @@ import (
 func AnimationSystem() {
 	for _, result := range myecs.Manager.Query(myecs.HasAnimation) {
 		obj, okO := result.Components[myecs.Object].(*object.Object)
-		anim, ok := result.Components[myecs.Animation].(*reanimator.Tree)
-		if okO && ok && !obj.Hide {
-			anim.Update()
+		theAnim := result.Components[myecs.Animation]
+		if okO && !obj.Hide {
+			if theAnim == nil {
+				continue
+			} else if anims, okS := theAnim.([]*reanimator.Tree); okS {
+				for _, anim := range anims {
+					anim.Update()
+				}
+			} else if anim, okA := theAnim.(*reanimator.Tree); okA {
+				anim.Update()
+			}
 		}
 	}
 }
@@ -29,6 +37,11 @@ func DrawSystem(win *pixelgl.Window, layer int) {
 				continue
 			} else if draws, okD := draw.([]*img.Sprite); okD {
 				for _, d := range draws {
+					DrawThing(d, obj, win)
+					count++
+				}
+			} else if anims, okA := draw.([]*reanimator.Tree); okA {
+				for _, d := range anims {
 					DrawThing(d, obj, win)
 					count++
 				}
@@ -49,9 +62,11 @@ func DrawThing(draw interface{}, obj *object.Object, win *pixelgl.Window) {
 			batch.DrawSpriteColor(sprH.Key, obj.Mat.Moved(sprH.Offset), sprH.Color)
 		}
 	} else if anim, ok2 := draw.(*reanimator.Tree); ok2 {
-		sprA := anim.CurrentSprite()
-		if batch, okB := img.Batchers[sprA.Batch]; okB {
-			batch.DrawSpriteColor(sprA.Key, obj.Mat.Moved(sprA.Offset), sprA.Color)
+		res := anim.CurrentSprite()
+		if res != nil {
+			if _, okB := img.Batchers[res.Batch]; okB {
+				res.Spr.DrawColorMask(img.Batchers[res.Batch].Batch(), obj.Mat.Moved(res.Off), res.Col)
+			}
 		}
 	}
 }

@@ -84,8 +84,23 @@ func LoadTileMaps() {
 	objConvBase := object.New()
 	objConvBase.Pos.X = -2. * data.MSize
 	objConvBase.Pos.Y = 17. * data.MSize
-	objConvBase.Layer = 11
+	objConvBase.Layer = 10
 	myecs.Manager.NewEntity().
 		AddComponent(myecs.Object, objConvBase).
 		AddComponent(myecs.Drawable, data.ConveyorBase)
+	// conveyor sections
+	for x := 0; x < data.BeltSize; x++ {
+		obj := object.New()
+		obj.Pos.X = (float64(x-data.BeltSize) - 2.) * data.MSize
+		obj.Pos.Y = 18. * data.MSize
+		obj.Layer = 11
+		e := myecs.Manager.NewEntity().AddComponent(myecs.Object, obj)
+		if x == 0 {
+			e.AddComponent(myecs.Drawable, data.ConvLeftEdge)
+		} else if x == data.BeltSize-1 {
+			e.AddComponent(myecs.Drawable, data.ConvRightEdge)
+		} else {
+			e.AddComponent(myecs.Drawable, data.ConvMiddle)
+		}
+	}
 }

@@ -13,6 +13,7 @@ import (
 	"timsims1717/ludum-dare-53/pkg/debug"
 	"timsims1717/ludum-dare-53/pkg/img"
 	"timsims1717/ludum-dare-53/pkg/options"
+	"timsims1717/ludum-dare-53/pkg/reanimator"
 	"timsims1717/ludum-dare-53/pkg/state"
 	"timsims1717/ludum-dare-53/pkg/viewport"
 	"timsims1717/ludum-dare-53/pkg/world"
@@ -54,6 +55,8 @@ func (s *gameState) Load(done chan struct{}) {
 	systems.PlaceTetromino()
 
 	s.UpdateViews()
+	reanimator.SetFrameRate(16)
+	reanimator.Reset()
 	done <- struct{}{}
 }
 
@@ -65,6 +68,7 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	}
 	tetrisInput.Update(win, viewport.MainCamera.Mat)
 	factoryInput.Update(win, viewport.MainCamera.Mat)
+	reanimator.Update()
 	debug.AddText(fmt.Sprintf("Mouse Input: (%d,%d)", int(factoryInput.World.X), int(factoryInput.World.Y)))
 	debug.AddText(fmt.Sprintf("Factory Input: (%d,%d)", int(s.factoryViewPort.Projected(factoryInput.World).X), int(s.factoryViewPort.Projected(factoryInput.World).Y)))
 
@@ -141,6 +145,7 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	systems.DragSystem()
 	systems.ParentSystem()
 	systems.ObjectSystem()
+	systems.AnimationSystem()
 	debug.AddText(fmt.Sprintf("Tetris Score: %03d", data.TetrisBoard.Stats.Score))
 	debug.AddText(fmt.Sprintf("Current Streak: %d", data.TetrisBoard.Stats.Streak))
 	debug.AddText(fmt.Sprintf("Current Speed: %f", data.TetrisBoard.Speed))

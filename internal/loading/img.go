@@ -1,10 +1,14 @@
 package loading
 
 import (
+	"fmt"
 	"github.com/faiface/pixel"
 	"timsims1717/ludum-dare-53/internal/constants"
 	"timsims1717/ludum-dare-53/internal/data"
+	"timsims1717/ludum-dare-53/internal/myecs"
 	"timsims1717/ludum-dare-53/pkg/img"
+	"timsims1717/ludum-dare-53/pkg/object"
+	"timsims1717/ludum-dare-53/pkg/reanimator"
 )
 
 func LoadImg() {
@@ -185,14 +189,54 @@ func LoadImg() {
 		}
 	}
 	// conveyor base
-	for x := 0; x < 53; x++ {
+	for x := 0; x < data.BeltSize; x++ {
 		str := "conv_base_m"
 		if x == 0 {
 			str = "conv_base_l"
-		} else if x == 52 {
+		} else if x == data.BeltSize-1 {
 			str = "conv_base_r"
 		}
 		spr = img.NewOffsetSprite(str, constants.FactoryKey, pixel.V(float64(x-53)*data.MSize, 0))
 		data.ConveyorBase = append(data.ConveyorBase, spr)
 	}
+	// conveyor sections
+	for x := 0; x < 3; x++ {
+		var str string
+		if x == 0 {
+			str = "conv_l%s"
+		} else if x == 1 {
+			str = "conv_m%s"
+		} else {
+			str = "conv_r%s"
+		}
+		for y := 0; y < 6; y++ {
+			key := fmt.Sprintf(str, "")
+			if y == 0 {
+				key = fmt.Sprintf(str, "b")
+			} else if y == 5 {
+				key = fmt.Sprintf(str, "t")
+			}
+			sprs := img.Reverse(img.Batchers[constants.FactoryKey].GetAnimation(key).S)
+			anim := reanimator.NewAnimFromSprites(key, sprs, reanimator.Loop).
+				WithBatch(constants.FactoryKey).
+				WithOffset(pixel.V(0, float64(y)*data.MSize))
+			tree := reanimator.NewSimple(anim)
+			if x == 0 {
+				data.ConvLeftEdge = append(data.ConvLeftEdge, tree)
+			} else if x == 1 {
+				data.ConvMiddle = append(data.ConvMiddle, tree)
+			} else {
+				data.ConvRightEdge = append(data.ConvRightEdge, tree)
+			}
+		}
+	}
+	myecs.Manager.NewEntity().
+		AddComponent(myecs.Object, object.New()).
+		AddComponent(myecs.Animation, data.ConvLeftEdge)
+	myecs.Manager.NewEntity().
+		AddComponent(myecs.Object, object.New()).
+		AddComponent(myecs.Animation, data.ConvMiddle)
+	myecs.Manager.NewEntity().
+		AddComponent(myecs.Object, object.New()).
+		AddComponent(myecs.Animation, data.ConvRightEdge)
 }
