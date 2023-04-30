@@ -20,12 +20,12 @@ func CreateFactoryTet(pos pixel.Vec, col data.TColor) *data.FacTetronimo {
 	t.Object.Layer = 12
 	w := constants.FactoryTile
 	h := world.TileSize + 6.
-	switch rand.Intn(9) {
-	case 0:
+	switch rand.Intn(18) {
+	case 0, 1, 2, 3, 4, 5:
 		a := CreateFactoryBlock(pixel.ZV, col)
 		a.Entity.AddComponent(myecs.Parent, t.Object)
 		t.Blocks = append(t.Blocks, a)
-	case 1:
+	case 6, 7, 8:
 		a := CreateFactoryBlock(pixel.ZV, col)
 		b := CreateFactoryBlock(pixel.ZV, col)
 		a.Object.Offset.X -= constants.FactoryTile * 0.5
@@ -35,7 +35,7 @@ func CreateFactoryTet(pos pixel.Vec, col data.TColor) *data.FacTetronimo {
 		t.Blocks = append(t.Blocks, a)
 		t.Blocks = append(t.Blocks, b)
 		w += constants.FactoryTile
-	case 2:
+	case 9, 10, 11:
 		a := CreateFactoryBlock(pixel.ZV, col)
 		b := CreateFactoryBlock(pixel.ZV, col)
 		a.Object.Offset.Y += world.TileSize * 0.5
@@ -45,7 +45,7 @@ func CreateFactoryTet(pos pixel.Vec, col data.TColor) *data.FacTetronimo {
 		t.Blocks = append(t.Blocks, a)
 		t.Blocks = append(t.Blocks, b)
 		h += world.TileSize
-	case 3:
+	case 12:
 		a := CreateFactoryBlock(pixel.ZV, col)
 		b := CreateFactoryBlock(pixel.ZV, col)
 		c := CreateFactoryBlock(pixel.ZV, col)
@@ -58,7 +58,7 @@ func CreateFactoryTet(pos pixel.Vec, col data.TColor) *data.FacTetronimo {
 		t.Blocks = append(t.Blocks, b)
 		t.Blocks = append(t.Blocks, c)
 		w += constants.FactoryTile * 2.
-	case 4:
+	case 13:
 		a := CreateFactoryBlock(pixel.ZV, col)
 		b := CreateFactoryBlock(pixel.ZV, col)
 		c := CreateFactoryBlock(pixel.ZV, col)
@@ -71,7 +71,7 @@ func CreateFactoryTet(pos pixel.Vec, col data.TColor) *data.FacTetronimo {
 		t.Blocks = append(t.Blocks, b)
 		t.Blocks = append(t.Blocks, c)
 		h += world.TileSize * 2.
-	case 5:
+	case 14:
 		a := CreateFactoryBlock(pixel.ZV, col)
 		b := CreateFactoryBlock(pixel.ZV, col)
 		c := CreateFactoryBlock(pixel.ZV, col)
@@ -89,7 +89,7 @@ func CreateFactoryTet(pos pixel.Vec, col data.TColor) *data.FacTetronimo {
 		t.Blocks = append(t.Blocks, c)
 		w += constants.FactoryTile
 		h += world.TileSize
-	case 6:
+	case 15:
 		a := CreateFactoryBlock(pixel.ZV, col)
 		b := CreateFactoryBlock(pixel.ZV, col)
 		c := CreateFactoryBlock(pixel.ZV, col)
@@ -107,7 +107,7 @@ func CreateFactoryTet(pos pixel.Vec, col data.TColor) *data.FacTetronimo {
 		t.Blocks = append(t.Blocks, c)
 		w += constants.FactoryTile
 		h += world.TileSize
-	case 7:
+	case 16:
 		a := CreateFactoryBlock(pixel.ZV, col)
 		b := CreateFactoryBlock(pixel.ZV, col)
 		c := CreateFactoryBlock(pixel.ZV, col)
@@ -125,7 +125,7 @@ func CreateFactoryTet(pos pixel.Vec, col data.TColor) *data.FacTetronimo {
 		t.Blocks = append(t.Blocks, c)
 		w += constants.FactoryTile
 		h += world.TileSize
-	case 8:
+	case 17:
 		a := CreateFactoryBlock(pixel.ZV, col)
 		b := CreateFactoryBlock(pixel.ZV, col)
 		c := CreateFactoryBlock(pixel.ZV, col)
