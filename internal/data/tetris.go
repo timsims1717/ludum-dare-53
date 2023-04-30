@@ -75,11 +75,29 @@ type tetrisBoard struct {
 	Shape *Tetronimo
 	Timer *timing.Timer
 	Speed float64
-	Score *TetrisScore
+	Stats *TetrisStats
 }
 
 func (t *tetrisBoard) Get(c world.Coords) *TetrisBlock {
 	return t.Board[c.Y][c.X]
+}
+func (t *tetrisBoard) SpeedUp() {
+	if t.Speed > constants.SpeedMin {
+		if t.Speed <= constants.HighSpeedMark {
+			t.Speed = t.Speed - constants.HighSpeedModifer
+		} else {
+			t.Speed = t.Speed - constants.SpeedModifier
+		}
+	}
+}
+func (t *tetrisBoard) SpeedDown() {
+	if t.Speed < constants.SpeedMax {
+		if t.Speed <= constants.HighSpeedMark {
+			t.Speed = t.Speed + constants.HighSpeedModifer
+		} else {
+			t.Speed = t.Speed + constants.SpeedModifier
+		}
+	}
 }
 
 func (t *tetrisBoard) Set(c world.Coords, b *TetrisBlock) {
@@ -96,6 +114,6 @@ func NewTetrisBoard(spd float64) {
 		Shape: nil,
 		Timer: timing.New(spd),
 		Speed: spd,
-		Score: newTetrisScore(),
+		Stats: newTetrisStats(),
 	}
 }

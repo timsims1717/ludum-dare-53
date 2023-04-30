@@ -86,18 +86,14 @@ func (s *gameState) Update(win *pixelgl.Window) {
 		if systems.FailCondition {
 			systems.FailCondition = false
 			systems.ClearBoard()
-			data.TetrisBoard.Score.FullReset()
+			data.TetrisBoard.Stats.FullReset()
 		}
 	}
 	if tetrisInput.Get("speedUp").JustPressed() {
-		if data.TetrisBoard.Speed > 0 {
-			data.TetrisBoard.Speed = data.TetrisBoard.Speed - 0.05
-		}
+		data.TetrisBoard.SpeedUp()
 	}
 	if tetrisInput.Get("speedDown").JustPressed() {
-		if data.TetrisBoard.Speed < 2 {
-			data.TetrisBoard.Speed = data.TetrisBoard.Speed + 0.05
-		}
+		data.TetrisBoard.SpeedDown()
 	}
 
 	if factoryInput.Get("generate").JustPressed() {
@@ -123,9 +119,10 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	systems.DragSystem()
 	systems.ParentSystem()
 	systems.ObjectSystem()
-	debug.AddText(fmt.Sprintf("Tetris Score: %03d", data.TetrisBoard.Score.Score))
-	debug.AddText(fmt.Sprintf("Current Streak: %d", data.TetrisBoard.Score.Streak))
+	debug.AddText(fmt.Sprintf("Tetris Score: %03d", data.TetrisBoard.Stats.Score))
+	debug.AddText(fmt.Sprintf("Current Streak: %d", data.TetrisBoard.Stats.Streak))
 	debug.AddText(fmt.Sprintf("Current Speed: %f", data.TetrisBoard.Speed))
+	debug.AddText(fmt.Sprintf("Current Level: %d", data.TetrisBoard.Stats.Checkpoint))
 	if systems.FailCondition {
 		debug.AddText("Game Over, dun dun dun")
 	}

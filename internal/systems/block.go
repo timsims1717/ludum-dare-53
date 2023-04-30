@@ -239,6 +239,7 @@ func CreateTetronimo() bool {
 	if t.IsValid() {
 		data.TetrisBoard.Shape = &t
 		data.TetrisBoard.ResetTimer()
+		data.TetrisBoard.Stats.Tetronimos++
 		return true
 	}
 	return false
