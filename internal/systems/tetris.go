@@ -54,7 +54,8 @@ func TetrisSystem() {
 			}
 		}
 		// create new piece
-		FailCondition = !CreateTetronimo()
+		data.TetrisBoard.NextShape = NewTetronimo()
+		FailCondition = !PlaceTetronimo()
 	}
 	PieceDone = false
 }
@@ -70,5 +71,6 @@ func ClearBoard() {
 	}
 	data.TetrisBoard.Shape = nil
 	data.TetrisBoard.Speed = constants.DefaultSpeed
-	CreateTetronimo()
+	data.TetrisBoard.NextShape = NewTetronimo()
+	PlaceTetronimo()
 }

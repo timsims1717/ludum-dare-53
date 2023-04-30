@@ -38,7 +38,8 @@ func (s *gameState) Load(done chan struct{}) {
 	s.tetrisViewport.SetRect(pixel.R(0, 0, world.TileSize*constants.TetrisWidth, world.TileSize*constants.TetrisHeight))
 	s.tetrisViewport.CamPos = pixel.V(world.TileSize*0.5*(constants.TetrisWidth-1), world.TileSize*0.5*(constants.TetrisHeight-1))
 	data.NewTetrisBoard(constants.DefaultSpeed)
-	systems.CreateTetronimo()
+	data.TetrisBoard.NextShape = systems.NewTetronimo()
+	systems.PlaceTetronimo()
 	BuildTetrisBG()
 
 	s.factoryViewPort = viewport.New(nil)
@@ -123,6 +124,8 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	debug.AddText(fmt.Sprintf("Current Streak: %d", data.TetrisBoard.Stats.Streak))
 	debug.AddText(fmt.Sprintf("Current Speed: %f", data.TetrisBoard.Speed))
 	debug.AddText(fmt.Sprintf("Current Level: %d", data.TetrisBoard.Stats.Checkpoint))
+	debug.AddText(fmt.Sprintf("Current Piece: %s", data.TetrisBoard.Shape.TetType.String()))
+	debug.AddText(fmt.Sprintf("Next Piece: %s", data.TetrisBoard.NextShape.TetType.String()))
 	if systems.FailCondition {
 		debug.AddText("Game Over, dun dun dun")
 	}

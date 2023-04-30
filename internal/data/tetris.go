@@ -48,8 +48,9 @@ func RandColor() TColor {
 }
 
 type Tetronimo struct {
-	Blocks []*TetrisBlock
-	NoRot  bool
+	Blocks  []*TetrisBlock
+	NoRot   bool
+	TetType TetronimoType
 }
 
 func (t Tetronimo) IsValid() bool {
@@ -68,14 +69,47 @@ type TetrisBlock struct {
 	Entity *ecs.Entity
 }
 
+type TetronimoType int
+
+const (
+	I = iota
+	O
+	T
+	S
+	Z
+	J
+	L
+)
+
+func (t TetronimoType) String() string {
+	switch t {
+	case O:
+		return "O"
+	case I:
+		return "I"
+	case S:
+		return "S"
+	case Z:
+		return "Z"
+	case L:
+		return "L"
+	case J:
+		return "J"
+	case T:
+		return "T"
+	}
+	return ""
+}
+
 var TetrisBoard *tetrisBoard
 
 type tetrisBoard struct {
-	Board [constants.TetrisHeight][constants.TetrisWidth]*TetrisBlock
-	Shape *Tetronimo
-	Timer *timing.Timer
-	Speed float64
-	Stats *TetrisStats
+	Board     [constants.TetrisHeight][constants.TetrisWidth]*TetrisBlock
+	Shape     *Tetronimo
+	NextShape *Tetronimo
+	Timer     *timing.Timer
+	Speed     float64
+	Stats     *TetrisStats
 }
 
 func (t *tetrisBoard) Get(c world.Coords) *TetrisBlock {
