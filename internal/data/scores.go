@@ -6,14 +6,14 @@ import (
 
 type TetrisStats struct {
 	Score      int
-	Tetronimos int
+	Tetrominos int
 	Streak     int
 	Checkpoint int
 	MyFibScore *FibScore
 }
 
 func newTetrisStats() *TetrisStats {
-	tScore := &TetrisStats{Score: 0, Streak: 0, MyFibScore: newFibScore(), Tetronimos: 0}
+	tScore := &TetrisStats{Score: 0, Streak: 0, MyFibScore: newFibScore(), Tetrominos: 0}
 	return tScore
 }
 
@@ -39,7 +39,7 @@ func (ts *TetrisStats) ResetStreak() {
 
 func (ts *TetrisStats) FullReset() {
 	ts.ResetStreak()
-	ts.Tetronimos = 0
+	ts.Tetrominos = 0
 	ts.Score = 0
 }
 
@@ -63,6 +63,7 @@ func (f *FibScore) fibIter(cycles int) int {
 	}
 	return score
 }
+
 func (f *FibScore) reset() {
 	f.FibN = 1
 	f.FibNMinus = 0

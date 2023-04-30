@@ -9,6 +9,7 @@ require (
 )
 
 require (
+	github.com/bcvery1/tilepix v0.3.2 // indirect
 	github.com/bytearena/ecs v1.0.0 // indirect
 	github.com/faiface/beep v1.1.0 // indirect
 	github.com/faiface/glhf v0.0.0-20211013000516-57b20770c369 // indirect
@@ -17,6 +18,11 @@ require (
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20221017161538-93cebf72946b // indirect
 	github.com/go-gl/mathgl v1.0.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
+	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/sirupsen/logrus v1.4.0 // indirect
 	github.com/timsims1717/pixel-go-input v0.0.0-20220809154241-bd3c6f7600c7 // indirect
+	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
+	golang.org/x/sys v0.5.0 // indirect
+	golang.org/x/term v0.5.0 // indirect
 )

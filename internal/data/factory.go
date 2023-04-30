@@ -18,6 +18,7 @@ type FacTetronimo struct {
 	Object  *object.Object
 	Entity  *ecs.Entity
 	LastPos pixel.Vec
+	Moving  bool
 }
 
 type FactoryBlock struct {
@@ -33,13 +34,36 @@ type FactoryPad struct {
 	Entity *ecs.Entity
 }
 
-var (
-	FactoryPads []*FactoryPad
-	GarbagePad  *FactoryPad
-	QueuePad    *FactoryPad
+const (
+	ConveyorLength = 5
+	ConveyorSpeed  = 50.
+	ConveyorHeight = 19.5 * MSize
 )
 
-var FactoryFloor *factoryFloor
+type conveyor struct {
+	Tets   [ConveyorLength]*FacTetronimo
+	Entity *ecs.Entity
+	Slots  [ConveyorLength]pixel.Vec
+}
+
+func NewConveyor() {
+	Conveyor = &conveyor{}
+	Conveyor.Slots = [ConveyorLength]pixel.Vec{
+		pixel.V(-53.*MSize, ConveyorHeight),
+		pixel.V(-41.*MSize, ConveyorHeight),
+		pixel.V(-29.*MSize, ConveyorHeight),
+		pixel.V(-17.*MSize, ConveyorHeight),
+		pixel.V(-5.*MSize, ConveyorHeight),
+	}
+}
+
+var (
+	FactoryPads  []*FactoryPad
+	GarbagePad   *FactoryPad
+	QueuePad     *FactoryPad
+	FactoryFloor *factoryFloor
+	Conveyor     *conveyor
+)
 
 type factoryFloor struct {
 	Blocks [constants.FactoryHeight][constants.FactoryWidth]*FactoryBlock

@@ -47,7 +47,7 @@ func RandColor() TColor {
 	return TColor(rand.Intn(Black))
 }
 
-type Tetronimo struct {
+type Tetromino struct {
 	Blocks  []*TetrisBlock
 	NoRot   bool
 	TetType constants.TetronimoType
@@ -108,7 +108,7 @@ func TetronimoCoordsRotate(coords []world.Coords) []world.Coords {
 	return rotated
 }
 
-func (t Tetronimo) IsValid() bool {
+func (t Tetromino) IsValid() bool {
 	for _, b := range t.Blocks {
 		if b == nil {
 			return false
@@ -128,8 +128,8 @@ var TetrisBoard *tetrisBoard
 
 type tetrisBoard struct {
 	Board     [constants.TetrisHeight][constants.TetrisWidth]*TetrisBlock
-	Shape     *Tetronimo
-	NextShape *Tetronimo
+	Shape     *Tetromino
+	NextShape *Tetromino
 	Timer     *timing.Timer
 	Speed     float64
 	Stats     *TetrisStats

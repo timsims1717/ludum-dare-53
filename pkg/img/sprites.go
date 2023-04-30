@@ -146,8 +146,17 @@ type Sprite struct {
 
 func NewSprite(key, batch string) *Sprite {
 	return &Sprite{
+		Key:   key,
+		Batch: batch,
+		Color: colornames.White,
+	}
+}
+
+func NewOffsetSprite(key, batch string, offset pixel.Vec) *Sprite {
+	return &Sprite{
 		Key:    key,
 		Batch:  batch,
+		Offset: offset,
 		Color:  colornames.White,
 	}
 }
