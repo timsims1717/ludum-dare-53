@@ -43,11 +43,15 @@ func UpdateConveyor() {
 					t.Moving = true
 					t.Object.Pos.X -= timing.DT * data.ConveyorSpeed
 					if t.Object.Pos.X < data.Conveyor.Slots[i-1].X {
-						data.Conveyor.Tets[i-1] = t
-						if i == data.ConveyorLength-1 {
-							data.QueuePad.Tet = nil
+						if next == nil {
+							data.Conveyor.Tets[i-1] = t
+							if i == data.ConveyorLength-1 {
+								data.QueuePad.Tet = nil
+							}
+							data.Conveyor.Tets[i] = nil
+						} else {
+							t.Object.Pos.X = data.Conveyor.Slots[i-1].X
 						}
-						data.Conveyor.Tets[i] = nil
 					}
 				} else {
 					t.Moving = false

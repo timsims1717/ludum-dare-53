@@ -55,18 +55,23 @@ func TetrisSystem() {
 			}
 		}
 		// create new piece
-		failedToPlace := !PlaceTetromino()
-		if !failedToPlace {
-			PieceDone = false
-		}
-		if data.TetrisBoard.Stats.Tetrominos > constants.MinPiecesToFail {
-			empty := true
-			for _, tet := range data.Conveyor.Tets {
-				if tet != nil {
-					empty = false
-				}
+		if HasTetromino() {
+			if PlaceTetromino() {
+				PieceDone = false
+			} else {
+				FailCondition = true
 			}
-			FailCondition = failedToPlace && empty
+		} else {
+			PieceDone = true
+			if data.TetrisBoard.Stats.Tetrominos > constants.MinPiecesToFail && !constants.IgnoreEmptyConv {
+				empty := true
+				for _, tet := range data.Conveyor.Tets {
+					if tet != nil {
+						empty = false
+					}
+				}
+				FailCondition = empty
+			}
 		}
 	}
 }

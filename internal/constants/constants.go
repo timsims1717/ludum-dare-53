@@ -41,7 +41,10 @@ var (
 		B: 19,
 		A: 255,
 	}
-	TetrisStart          = world.Coords{X: 4, Y: 19}
+	TetrisStart = world.Coords{X: 4, Y: 19}
+
+	IgnoreEmptyConv = false
+
 	NormalizedTetronimos = map[[4]world.Coords]TetronimoType{
 		[4]world.Coords{{0, 0}, {1, 0}, {2, 0}, {3, 0}}: I,
 		[4]world.Coords{{0, 0}, {0, 1}, {0, 2}, {0, 3}}: I,

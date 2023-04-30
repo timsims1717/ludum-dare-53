@@ -150,6 +150,15 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	if data.TetrisBoard.NextShape != nil {
 		debug.AddText(fmt.Sprintf("Next Piece: %s", data.TetrisBoard.NextShape.TetType.String()))
 	}
+	if data.Conveyor != nil {
+		count := 0
+		for _, block := range data.Conveyor.Tets {
+			if block != nil {
+				count++
+			}
+		}
+		debug.AddText(fmt.Sprintf("Num of Blocks on Conveyor: %d", count))
+	}
 	if systems.FailCondition {
 		debug.AddText("Game Over, dun dun dun")
 	}

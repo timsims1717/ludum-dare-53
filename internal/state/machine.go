@@ -71,6 +71,9 @@ func Update(win *pixelgl.Window) {
 			systems.GenerateLoad(&t)
 			debug.AddText(fmt.Sprintf("Generated Truck Load: %s", t.MyBatchType.String()))
 		}
+		if debugInput.Get("debugIgnoreConv").JustPressed() {
+			constants.IgnoreEmptyConv = !constants.IgnoreEmptyConv
+		}
 
 		if cState, ok := States[currState]; ok {
 			cState.Update(win)
