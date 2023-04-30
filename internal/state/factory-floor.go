@@ -22,11 +22,10 @@ func BuildFactoryFloor(vp *viewport.ViewPort) {
 		for x := 0; x < constants.FactoryWidth; x++ {
 			obj := object.New()
 			obj.Pos = world.MapToWorldC(world.Coords{X: x, Y: y}, pixel.V(constants.FactoryTile, world.TileSize))
-			obj.Layer = 11
-			spr := img.NewSprite("ff_bg", constants.BlockKey)
+			obj.Layer = 10
 			e := myecs.Manager.NewEntity()
 			e.AddComponent(myecs.Object, obj).
-				AddComponent(myecs.Drawable, spr)
+				AddComponent(myecs.Drawable, data.BlockSpot)
 			FactoryBGEntities = append(FactoryBGEntities, e)
 		}
 	}
@@ -37,89 +36,97 @@ func BuildFactoryFloor(vp *viewport.ViewPort) {
 	data.FactoryFloor.Entity.AddComponent(myecs.Object, data.FactoryFloor.Object).
 		AddComponent(myecs.ViewPort, vp).
 		AddComponent(myecs.Input, factoryInput).
-		AddComponent(myecs.Update, data.NewFn(func() {
-			if data.FactoryFloor.Object.PointInside(vp.Projected(factoryInput.World)) {
-				if data.DraggingPiece != nil {
-					if ActuallyOnFloor() {
-						legal := true
-						spr := img.NewSprite("ff_hlerr", constants.BlockKey)
-						for _, block := range data.DraggingPiece.Blocks {
-							pos := data.DraggingPiece.Object.Pos.Add(block.Object.Offset)
-							x, y := world.WorldToMapC(pos.X+constants.FactoryTile*0.5, pos.Y, pixel.V(constants.FactoryTile, world.TileSize))
-							c := world.Coords{X: x, Y: y}
-							mPos := world.MapToWorldC(c, pixel.V(constants.FactoryTile, world.TileSize))
-							if data.FactoryFloor.Get(c) != nil {
-								legal = false
-							}
-							obj := object.New()
-							obj.Pos = mPos
-							obj.Layer = 11
-							myecs.Manager.NewEntity().
-								AddComponent(myecs.Object, obj).
-								AddComponent(myecs.Drawable, spr).
-								AddComponent(myecs.Temp, myecs.ClearFlag(true))
-						}
-						if legal {
-							spr.Key = "ff_hl"
-						}
-					}
-				} else {
-					// todo: hover for picking up
-				}
-			}
-		})).
-		AddComponent(myecs.Click, data.NewFn(func() {
+		AddComponent(myecs.Update, data.NewFn(FactoryFloorUpdate(vp))).
+		AddComponent(myecs.Click, data.NewFn(FactoryFloorClicked(vp)))
+}
+
+func FactoryFloorUpdate(vp *viewport.ViewPort) func() {
+	return func() {
+		if data.FactoryFloor.Object.PointInside(vp.Projected(factoryInput.World)) {
 			if data.DraggingPiece != nil {
 				if ActuallyOnFloor() {
 					legal := true
+					spr := img.NewSprite("ff_hlerr", constants.BlockKey)
 					for _, block := range data.DraggingPiece.Blocks {
 						pos := data.DraggingPiece.Object.Pos.Add(block.Object.Offset)
 						x, y := world.WorldToMapC(pos.X+constants.FactoryTile*0.5, pos.Y, pixel.V(constants.FactoryTile, world.TileSize))
 						c := world.Coords{X: x, Y: y}
+						mPos := world.MapToWorldC(c, pixel.V(constants.FactoryTile, world.TileSize))
 						if data.FactoryFloor.Get(c) != nil {
 							legal = false
-							break
 						}
+						obj := object.New()
+						obj.Pos = mPos
+						obj.Layer = 11
+						myecs.Manager.NewEntity().
+							AddComponent(myecs.Object, obj).
+							AddComponent(myecs.Drawable, spr).
+							AddComponent(myecs.Temp, myecs.ClearFlag(true))
 					}
 					if legal {
-						for _, block := range data.DraggingPiece.Blocks {
-							pos := data.DraggingPiece.Object.Pos.Add(block.Object.Offset)
-							x, y := world.WorldToMapC(pos.X+constants.FactoryTile*0.5, pos.Y, pixel.V(constants.FactoryTile, world.TileSize))
-							c := world.Coords{X: x, Y: y}
-							mPos := world.MapToWorldC(c, pixel.V(constants.FactoryTile, world.TileSize))
-							mPos.Y += 6.
-							block.Object.Pos = mPos
-							block.Coords = c
-							block.Object.Offset = pixel.ZV
-							block.Object.Layer = 19 - y
-							block.Entity.RemoveComponent(myecs.Parent)
-							data.FactoryFloor.Set(c, block)
-						}
-						myecs.Manager.DisposeEntity(data.DraggingPiece.Entity)
-						data.DraggingPiece.Blocks = []*data.FactoryBlock{}
-						data.DraggingPiece = nil
+						spr.Key = "ff_hl"
 					}
 				}
 			} else {
-				pos := vp.Projected(factoryInput.World)
-				x, y := world.WorldToMapC(pos.X+constants.FactoryTile*0.5, pos.Y, pixel.V(constants.FactoryTile, world.TileSize))
-				c := world.Coords{X: x, Y: y}
-				blockA := data.FactoryFloor.Get(c)
-				if blockA != nil {
-					blocks := []*data.FactoryBlock{blockA}
-					blocks = GetAllColorNeighbors(blockA, blocks)
-					tet := systems.ConstructTetFromBlocks(pos, blocks)
-					tet.Entity.AddComponent(myecs.ViewPort, vp)
-					tet.Entity.AddComponent(myecs.Input, factoryInput)
-					data.DraggingPiece = tet
-					data.DraggingPiece.Entity.AddComponent(myecs.Drag, &factoryInput.World)
-					data.DraggingPiece.Object.Layer = 20
-					for _, block := range blocks {
-						data.FactoryFloor.Set(block.Coords, nil)
+				// todo: hover for picking up
+			}
+		}
+	}
+}
+
+func FactoryFloorClicked(vp *viewport.ViewPort) func() {
+	return func() {
+		if data.DraggingPiece != nil {
+			if ActuallyOnFloor() {
+				legal := true
+				for _, block := range data.DraggingPiece.Blocks {
+					pos := data.DraggingPiece.Object.Pos.Add(block.Object.Offset)
+					x, y := world.WorldToMapC(pos.X+constants.FactoryTile*0.5, pos.Y, pixel.V(constants.FactoryTile, world.TileSize))
+					c := world.Coords{X: x, Y: y}
+					if data.FactoryFloor.Get(c) != nil {
+						legal = false
+						break
 					}
 				}
+				if legal {
+					for _, block := range data.DraggingPiece.Blocks {
+						pos := data.DraggingPiece.Object.Pos.Add(block.Object.Offset)
+						x, y := world.WorldToMapC(pos.X+constants.FactoryTile*0.5, pos.Y, pixel.V(constants.FactoryTile, world.TileSize))
+						c := world.Coords{X: x, Y: y}
+						mPos := world.MapToWorldC(c, pixel.V(constants.FactoryTile, world.TileSize))
+						mPos.Y += 6.
+						block.Object.Pos = mPos
+						block.Coords = c
+						block.Object.Offset = pixel.ZV
+						block.Object.Layer = 19 - y
+						block.Entity.RemoveComponent(myecs.Parent)
+						data.FactoryFloor.Set(c, block)
+					}
+					myecs.Manager.DisposeEntity(data.DraggingPiece.Entity)
+					data.DraggingPiece.Blocks = []*data.FactoryBlock{}
+					data.DraggingPiece = nil
+				}
 			}
-		}))
+		} else {
+			pos := vp.Projected(factoryInput.World)
+			x, y := world.WorldToMapC(pos.X+constants.FactoryTile*0.5, pos.Y, pixel.V(constants.FactoryTile, world.TileSize))
+			c := world.Coords{X: x, Y: y}
+			blockA := data.FactoryFloor.Get(c)
+			if blockA != nil {
+				blocks := []*data.FactoryBlock{blockA}
+				blocks = GetAllColorNeighbors(blockA, blocks)
+				tet := systems.ConstructTetFromBlocks(pos, blocks)
+				tet.Entity.AddComponent(myecs.ViewPort, vp)
+				tet.Entity.AddComponent(myecs.Input, factoryInput)
+				data.DraggingPiece = tet
+				data.DraggingPiece.Entity.AddComponent(myecs.Drag, &factoryInput.World)
+				data.DraggingPiece.Object.Layer = 20
+				for _, block := range blocks {
+					data.FactoryFloor.Set(block.Coords, nil)
+				}
+			}
+		}
+	}
 }
 
 func ActuallyOnFloor() bool {

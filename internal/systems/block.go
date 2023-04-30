@@ -176,8 +176,11 @@ func BlockSystem() {
 	}
 }
 
-// Places Tetronimo on the Board
-func PlaceTetronimo() bool {
+// Places Tetromino on the Board
+func PlaceTetromino() bool {
+	if data.TetrisBoard.NextShape == nil {
+		return false
+	}
 	//Validate Blocks
 	for _, block := range data.TetrisBoard.NextShape.Blocks {
 		if BlockLegal(block.Coords) {
@@ -199,18 +202,27 @@ func PlaceTetronimo() bool {
 			return false
 		}
 	}
-	//Put Next Tetronimo in Shape
+	// Put Next Tetromino in Shape
 	data.TetrisBoard.Shape = data.TetrisBoard.NextShape
-	data.TetrisBoard.NextShape = NewTetronimo()
+	convTet := data.Conveyor.Tets[0]
+	if convTet != nil {
+		for _, block := range convTet.Blocks {
+			myecs.Manager.DisposeEntity(block.Entity)
+		}
+		myecs.Manager.DisposeEntity(convTet.Entity)
+		data.Conveyor.Tets[0] = nil
+	}
+	data.TetrisBoard.NextShape = nil
+	//data.TetrisBoard.NextShape = NewTetromino()
 	data.TetrisBoard.ResetTimer()
-	data.TetrisBoard.Stats.Tetronimos++
+	data.TetrisBoard.Stats.Tetrominos++
 	return true
 }
 
-// Creates Standalone Tetronimo
-func NewTetronimo() *data.Tetronimo {
+// Creates Standalone Tetromino
+func NewTetromino() *data.Tetromino {
 	col := data.RandColor()
-	t := &data.Tetronimo{}
+	t := &data.Tetromino{}
 	t.TetType = constants.TetronimoType(rand.Intn(7))
 	switch t.TetType {
 	case constants.O:
@@ -232,12 +244,12 @@ func NewTetronimo() *data.Tetronimo {
 }
 func FactoTet(f *data.FacTetronimo) {
 	//detect Fac Type
-	var originalCoords [4]world.Coords
-	for i, block := range f.Blocks {
-		originalCoords[i] = world.Coords{block.Coords.X, block.Coords.Y}
-	}
-	newCoords := data.Normalize(originalCoords)
-	if len(newCoords) == 4 {
+	if len(f.Blocks) == 4 {
+		var originalCoords [4]world.Coords
+		for i, block := range f.Blocks {
+			originalCoords[i] = world.Coords{block.Coords.X, block.Coords.Y}
+		}
+		newCoords := data.Normalize(originalCoords)
 		var tetType *constants.TetronimoType
 		for i, kv := range constants.NormalizedTetronimos {
 			if data.TetronimoCoordsEqual(i, newCoords) {
@@ -274,8 +286,8 @@ func FactoTet(f *data.FacTetronimo) {
 
 }
 
-func CreateITetronimo(col data.TColor) *data.Tetronimo {
-	t := &data.Tetronimo{}
+func CreateITetronimo(col data.TColor) *data.Tetromino {
+	t := &data.Tetromino{}
 	s := constants.TetrisStart
 	t.TetType = constants.I
 	t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
@@ -288,8 +300,8 @@ func CreateITetronimo(col data.TColor) *data.Tetronimo {
 	return t
 }
 
-func CreateOTetronimo(col data.TColor) *data.Tetronimo {
-	t := &data.Tetronimo{}
+func CreateOTetronimo(col data.TColor) *data.Tetromino {
+	t := &data.Tetromino{}
 	s := constants.TetrisStart
 	t.TetType = constants.O
 	t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
@@ -302,8 +314,8 @@ func CreateOTetronimo(col data.TColor) *data.Tetronimo {
 	t.NoRot = true
 	return t
 }
-func CreateTTetronimo(col data.TColor) *data.Tetronimo {
-	t := &data.Tetronimo{}
+func CreateTTetronimo(col data.TColor) *data.Tetromino {
+	t := &data.Tetromino{}
 	s := constants.TetrisStart
 	t.TetType = constants.T
 	t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
@@ -316,8 +328,8 @@ func CreateTTetronimo(col data.TColor) *data.Tetronimo {
 	t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
 	return t
 }
-func CreateSTetronimo(col data.TColor) *data.Tetronimo {
-	t := &data.Tetronimo{}
+func CreateSTetronimo(col data.TColor) *data.Tetromino {
+	t := &data.Tetromino{}
 	s := constants.TetrisStart
 	t.TetType = constants.S
 	t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
@@ -330,8 +342,8 @@ func CreateSTetronimo(col data.TColor) *data.Tetronimo {
 	t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
 	return t
 }
-func CreateZTetronimo(col data.TColor) *data.Tetronimo {
-	t := &data.Tetronimo{}
+func CreateZTetronimo(col data.TColor) *data.Tetromino {
+	t := &data.Tetromino{}
 	s := constants.TetrisStart
 	t.TetType = constants.Z
 	t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
@@ -344,8 +356,8 @@ func CreateZTetronimo(col data.TColor) *data.Tetronimo {
 	t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
 	return t
 }
-func CreateJTetronimo(col data.TColor) *data.Tetronimo {
-	t := &data.Tetronimo{}
+func CreateJTetronimo(col data.TColor) *data.Tetromino {
+	t := &data.Tetromino{}
 	s := constants.TetrisStart
 	t.TetType = constants.J
 	t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
@@ -357,8 +369,8 @@ func CreateJTetronimo(col data.TColor) *data.Tetronimo {
 	t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
 	return t
 }
-func CreateLTetronimo(col data.TColor) *data.Tetronimo {
-	t := &data.Tetronimo{}
+func CreateLTetronimo(col data.TColor) *data.Tetromino {
+	t := &data.Tetromino{}
 	s := constants.TetrisStart
 	t.TetType = constants.L
 	t.Blocks = append(t.Blocks, StandaloneBlock(s, col))

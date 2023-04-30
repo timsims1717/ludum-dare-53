@@ -54,9 +54,14 @@ func TetrisSystem() {
 			}
 		}
 		// create new piece
-		FailCondition = !PlaceTetronimo()
+		failedToPlace := !PlaceTetromino()
+		if !failedToPlace {
+			PieceDone = false
+		}
+		if data.TetrisBoard.Stats.Tetrominos > constants.MinPiecesToFail {
+			FailCondition = failedToPlace
+		}
 	}
-	PieceDone = false
 }
 
 func ClearBoard() {
@@ -70,6 +75,6 @@ func ClearBoard() {
 	}
 	data.TetrisBoard.Shape = nil
 	data.TetrisBoard.Speed = constants.DefaultSpeed
-	data.TetrisBoard.NextShape = NewTetronimo()
-	PlaceTetronimo()
+	data.TetrisBoard.NextShape = NewTetromino()
+	PlaceTetromino()
 }

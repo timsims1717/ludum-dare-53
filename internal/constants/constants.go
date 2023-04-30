@@ -12,7 +12,8 @@ const (
 	Build   = 20230428
 
 	// Batches
-	BlockKey = "blocks"
+	BlockKey   = "blocks"
+	FactoryKey = "factory"
 
 	// Tetris
 	TileSize         = 32.
@@ -25,6 +26,7 @@ const (
 	SpeedMin         = 0.1
 	HighSpeedModifer = 0.01
 	HighSpeedMark    = 0.3
+	MinPiecesToFail  = 5
 
 	// Factory
 	FactoryTile   = 48.

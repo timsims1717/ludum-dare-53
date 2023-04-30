@@ -7,6 +7,7 @@ import (
 )
 
 var (
+	Updated         bool
 	VSync           bool
 	FullScreen      bool
 	ResolutionIndex int
@@ -23,6 +24,7 @@ func RegisterResolution(res pixel.Vec) {
 }
 
 func WindowUpdate(win *pixelgl.Window) {
+	Updated = false
 	if win.Focused() {
 		win.SetVSync(VSync)
 		if FullScreen != fullscreen {
@@ -66,6 +68,7 @@ func WindowUpdate(win *pixelgl.Window) {
 				viewport.MainCamera.SetRect(pixel.R(0, 0, Resolutions[ResolutionIndex].X, Resolutions[ResolutionIndex].Y))
 			}
 			fullscreen = FullScreen
+			Updated = true
 		}
 	}
 }

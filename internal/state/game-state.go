@@ -12,6 +12,7 @@ import (
 	"timsims1717/ludum-dare-53/internal/systems"
 	"timsims1717/ludum-dare-53/pkg/debug"
 	"timsims1717/ludum-dare-53/pkg/img"
+	"timsims1717/ludum-dare-53/pkg/options"
 	"timsims1717/ludum-dare-53/pkg/state"
 	"timsims1717/ludum-dare-53/pkg/viewport"
 	"timsims1717/ludum-dare-53/pkg/world"
@@ -38,16 +39,19 @@ func (s *gameState) Load(done chan struct{}) {
 	s.tetrisViewport.SetRect(pixel.R(0, 0, world.TileSize*constants.TetrisWidth, world.TileSize*constants.TetrisHeight))
 	s.tetrisViewport.CamPos = pixel.V(world.TileSize*0.5*(constants.TetrisWidth-1), world.TileSize*0.5*(constants.TetrisHeight-1))
 	data.NewTetrisBoard(constants.DefaultSpeed)
-	data.TetrisBoard.NextShape = systems.NewTetronimo()
-	systems.PlaceTetronimo()
 	BuildTetrisBG()
 
 	s.factoryViewPort = viewport.New(nil)
 	s.factoryViewPort.SetRect(pixel.R(0, 0, constants.FactoryTile*constants.FactoryWidth, world.TileSize*constants.FactoryHeight))
 	s.factoryViewPort.CamPos = pixel.V(constants.FactoryTile*0.5*(constants.FactoryWidth-1), world.TileSize*0.5*(constants.FactoryHeight-1))
 	data.NewFactoryFloor()
+	LoadTileMaps()
 	BuildFactoryFloor(s.factoryViewPort)
 	BuildFactoryPads(s.factoryViewPort)
+	CreateConveyor()
+
+	data.TetrisBoard.NextShape = systems.NewTetromino()
+	systems.PlaceTetromino()
 
 	s.UpdateViews()
 	done <- struct{}{}
@@ -56,7 +60,9 @@ func (s *gameState) Load(done chan struct{}) {
 func (s *gameState) Update(win *pixelgl.Window) {
 	debug.AddText("Game State")
 
-	s.UpdateViews()
+	if options.Updated {
+		s.UpdateViews()
+	}
 	tetrisInput.Update(win, viewport.MainCamera.Mat)
 	factoryInput.Update(win, viewport.MainCamera.Mat)
 	debug.AddText(fmt.Sprintf("Mouse Input: (%d,%d)", int(factoryInput.World.X), int(factoryInput.World.Y)))
@@ -142,18 +148,23 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	if data.TetrisBoard.Shape != nil {
 		debug.AddText(fmt.Sprintf("Current Piece: %s", data.TetrisBoard.Shape.TetType.String()))
 	}
-	debug.AddText(fmt.Sprintf("Next Piece: %s", data.TetrisBoard.NextShape.TetType.String()))
+	if data.TetrisBoard.NextShape != nil {
+		debug.AddText(fmt.Sprintf("Next Piece: %s", data.TetrisBoard.NextShape.TetType.String()))
+	}
 	if systems.FailCondition {
 		debug.AddText("Game Over, dun dun dun")
 	}
+	debug.AddText(fmt.Sprintf("PieceDone: %t", systems.PieceDone))
 	s.tetrisViewport.Update()
 	s.factoryViewPort.Update()
 }
 
 func (s *gameState) Draw(win *pixelgl.Window) {
 	s.factoryViewPort.Canvas.Clear(colornames.Green)
-	systems.DrawSystem(win, 11)
-	systems.DrawSystem(win, 12)
+	systems.DrawSystem(win, 9)  // floor
+	systems.DrawSystem(win, 10) // trucks
+	systems.DrawSystem(win, 11) // walls
+	systems.DrawSystem(win, 12) // tiles
 	systems.DrawSystem(win, 13)
 	systems.DrawSystem(win, 14)
 	systems.DrawSystem(win, 15)
@@ -161,7 +172,8 @@ func (s *gameState) Draw(win *pixelgl.Window) {
 	systems.DrawSystem(win, 17)
 	systems.DrawSystem(win, 18)
 	systems.DrawSystem(win, 19)
-	systems.DrawSystem(win, 20)
+	systems.DrawSystem(win, 20) // dragged tile
+	img.Batchers[constants.FactoryKey].Draw(s.factoryViewPort.Canvas)
 	img.Batchers[constants.BlockKey].Draw(s.factoryViewPort.Canvas)
 	img.Clear()
 	s.factoryViewPort.Canvas.Draw(win, s.factoryViewPort.Mat)
@@ -185,10 +197,12 @@ func (s *gameState) UpdateViews() {
 	s.tetrisViewport.PortPos = portPos
 	//s.tetrisViewport.PortSize = pixel.V(hRatio, hRatio)
 	s.tetrisViewport.PortPos.X -= 0.25 * viewport.MainCamera.Rect.W()
-	s.tetrisViewport.SetRect(pixel.R(0, 0, viewport.MainCamera.Rect.W()*0.5, viewport.MainCamera.Rect.H()))
+	//s.tetrisViewport.SetRect(pixel.R(0, 0, viewport.MainCamera.Rect.W()*0.5, viewport.MainCamera.Rect.H()))
 
 	s.factoryViewPort.PortPos = portPos
 	//s.factoryViewPort.PortSize = pixel.V(hRatio, hRatio)
-	s.factoryViewPort.PortPos.X += 0.25 * viewport.MainCamera.Rect.W()
-	s.factoryViewPort.SetRect(pixel.R(0, 0, viewport.MainCamera.Rect.W()*0.5, viewport.MainCamera.Rect.H()))
+	//s.factoryViewPort.PortPos.X += 0.25 * viewport.MainCamera.Rect.W()
+	s.factoryViewPort.SetRect(pixel.R(0, 0, viewport.MainCamera.Rect.W(), viewport.MainCamera.Rect.H()))
+	s.factoryViewPort.CamPos.Y = data.MSize * 10.
+	s.factoryViewPort.CamPos.X = data.MSize * -10.
 }
