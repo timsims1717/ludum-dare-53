@@ -139,7 +139,9 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	debug.AddText(fmt.Sprintf("Current Streak: %d", data.TetrisBoard.Stats.Streak))
 	debug.AddText(fmt.Sprintf("Current Speed: %f", data.TetrisBoard.Speed))
 	debug.AddText(fmt.Sprintf("Current Level: %d", data.TetrisBoard.Stats.Checkpoint))
-	debug.AddText(fmt.Sprintf("Current Piece: %s", data.TetrisBoard.Shape.TetType.String()))
+	if data.TetrisBoard.Shape != nil {
+		debug.AddText(fmt.Sprintf("Current Piece: %s", data.TetrisBoard.Shape.TetType.String()))
+	}
 	debug.AddText(fmt.Sprintf("Next Piece: %s", data.TetrisBoard.NextShape.TetType.String()))
 	if systems.FailCondition {
 		debug.AddText("Game Over, dun dun dun")
