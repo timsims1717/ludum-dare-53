@@ -35,6 +35,8 @@ type FactoryPad struct {
 
 var (
 	FactoryPads []*FactoryPad
+	GarbagePad  *FactoryPad
+	QueuePad    *FactoryPad
 )
 
 var FactoryFloor *factoryFloor

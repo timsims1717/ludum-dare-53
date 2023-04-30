@@ -6,6 +6,7 @@ import (
 	"timsims1717/ludum-dare-53/internal/constants"
 	"timsims1717/ludum-dare-53/internal/data"
 	"timsims1717/ludum-dare-53/internal/myecs"
+	"timsims1717/ludum-dare-53/internal/systems"
 	"timsims1717/ludum-dare-53/pkg/img"
 	"timsims1717/ludum-dare-53/pkg/object"
 	"timsims1717/ludum-dare-53/pkg/viewport"
@@ -63,7 +64,7 @@ func BuildFactoryFloor(vp *viewport.ViewPort) {
 						}
 					}
 				} else {
-					// todo: check for fours or more to grab
+					// todo: hover for picking up
 				}
 			}
 		})).
@@ -86,7 +87,9 @@ func BuildFactoryFloor(vp *viewport.ViewPort) {
 							x, y := world.WorldToMapC(pos.X+constants.FactoryTile*0.5, pos.Y, pixel.V(constants.FactoryTile, world.TileSize))
 							c := world.Coords{X: x, Y: y}
 							mPos := world.MapToWorldC(c, pixel.V(constants.FactoryTile, world.TileSize))
+							mPos.Y += 6.
 							block.Object.Pos = mPos
+							block.Coords = c
 							block.Object.Offset = pixel.ZV
 							block.Object.Layer = 19 - y
 							block.Entity.RemoveComponent(myecs.Parent)
@@ -95,6 +98,25 @@ func BuildFactoryFloor(vp *viewport.ViewPort) {
 						myecs.Manager.DisposeEntity(data.DraggingPiece.Entity)
 						data.DraggingPiece.Blocks = []*data.FactoryBlock{}
 						data.DraggingPiece = nil
+					}
+				}
+			} else {
+				pos := vp.Projected(factoryInput.World)
+				x, y := world.WorldToMapC(pos.X+constants.FactoryTile*0.5, pos.Y, pixel.V(constants.FactoryTile, world.TileSize))
+				c := world.Coords{X: x, Y: y}
+				blockA := data.FactoryFloor.Get(c)
+				if blockA != nil {
+					blocks := []*data.FactoryBlock{blockA}
+					blocks = GetAllColorNeighbors(blockA, blocks)
+					tet := systems.ConstructTetFromBlocks(pos, blocks)
+					tet.Entity.AddComponent(myecs.ViewPort, vp)
+					tet.Entity.AddComponent(myecs.Input, factoryInput)
+					data.DraggingPiece = tet
+					data.DraggingPiece.Entity.AddComponent(myecs.Drag, &factoryInput.World)
+					data.DraggingPiece.Object.Layer = 20
+					for _, block := range blocks {
+						data.FactoryFloor.Set(block.Coords, nil)
+						block.Coords = world.Origin
 					}
 				}
 			}
@@ -117,4 +139,27 @@ func ActuallyOnFloor() bool {
 		}
 	}
 	return onFloor
+}
+
+func GetAllColorNeighbors(block *data.FactoryBlock, blocks []*data.FactoryBlock) []*data.FactoryBlock {
+	col := block.Color
+	for _, n := range block.Coords.Neighbors() {
+		if data.FactoryLegal(n) {
+			nBlock := data.FactoryFloor.Get(n)
+			if nBlock != nil && nBlock.Color == col && !BlockInArray(nBlock, blocks) {
+				blocks = append(blocks, nBlock)
+				blocks = GetAllColorNeighbors(nBlock, blocks)
+			}
+		}
+	}
+	return blocks
+}
+
+func BlockInArray(block *data.FactoryBlock, blocks []*data.FactoryBlock) bool {
+	for _, b := range blocks {
+		if b.Coords == block.Coords {
+			return true
+		}
+	}
+	return false
 }

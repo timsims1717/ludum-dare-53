@@ -26,9 +26,9 @@ func BuildFactoryPads(vp *viewport.ViewPort) {
 		if i > 1 {
 			obj.Pos.X = -150.
 		} else if i == 1 {
-			obj.Pos.X = 75.
+			obj.Pos.X = 25.
 		} else if i == 0 {
-			obj.Pos.X = 300.
+			obj.Pos.X = 200.
 		}
 		obj.Layer = 11
 		obj.Rect = pixel.R(0., 0., constants.FactoryTile*2.8, world.TileSize*2.8)
@@ -56,7 +56,66 @@ func BuildFactoryPads(vp *viewport.ViewPort) {
 			AddComponent(myecs.Update, data.NewFn(func() {
 				// todo: add hover shine
 			}))
+		pad.Entity = e
 		FactoryBGEntities = append(FactoryBGEntities, e)
 		data.FactoryPads = append(data.FactoryPads, pad)
 	}
+	// garbage pad
+	data.GarbagePad = &data.FactoryPad{}
+	obj := object.New()
+	obj.Pos.Y = -200.
+	obj.Pos.X = 300.
+	obj.Layer = 11
+	obj.Rect = pixel.R(0., 0., constants.FactoryTile*2.8, world.TileSize*2.8)
+	data.GarbagePad.Object = obj
+	spr := img.NewSprite("red_circle", constants.BlockKey)
+	e := myecs.Manager.NewEntity()
+	e.AddComponent(myecs.Object, data.GarbagePad.Object).
+		AddComponent(myecs.Drawable, spr).
+		AddComponent(myecs.Input, factoryInput).
+		AddComponent(myecs.ViewPort, vp).
+		AddComponent(myecs.Click, data.NewFn(func() {
+			if data.DraggingPiece != nil {
+				for _, block := range data.DraggingPiece.Blocks {
+					myecs.Manager.DisposeEntity(block.Entity)
+				}
+				myecs.Manager.DisposeEntity(data.DraggingPiece.Entity)
+				data.DraggingPiece = nil
+			}
+		})).
+		AddComponent(myecs.Update, data.NewFn(func() {
+			// todo: add hover shine
+		}))
+	data.GarbagePad.Entity = e
+	FactoryBGEntities = append(FactoryBGEntities, e)
+	// queue pad
+	data.QueuePad = &data.FactoryPad{}
+	objQ := object.New()
+	objQ.Pos.Y = 400.
+	objQ.Pos.X = 300.
+	objQ.Layer = 11
+	objQ.Rect = pixel.R(0., 0., constants.FactoryTile*2.8, world.TileSize*2.8)
+	data.QueuePad.Object = objQ
+	sprQ := img.NewSprite("green_circle", constants.BlockKey)
+	eQ := myecs.Manager.NewEntity()
+	eQ.AddComponent(myecs.Object, data.QueuePad.Object).
+		AddComponent(myecs.Drawable, sprQ).
+		AddComponent(myecs.Input, factoryInput).
+		AddComponent(myecs.ViewPort, vp).
+		AddComponent(myecs.Click, data.NewFn(func() {
+			if data.DraggingPiece != nil {
+				if len(data.DraggingPiece.Blocks) == 4 {
+					for _, block := range data.DraggingPiece.Blocks {
+						myecs.Manager.DisposeEntity(block.Entity)
+					}
+					myecs.Manager.DisposeEntity(data.DraggingPiece.Entity)
+					data.DraggingPiece = nil
+				}
+			}
+		})).
+		AddComponent(myecs.Update, data.NewFn(func() {
+			// todo: add hover shine
+		}))
+	data.QueuePad.Entity = eQ
+	FactoryBGEntities = append(FactoryBGEntities, eQ)
 }

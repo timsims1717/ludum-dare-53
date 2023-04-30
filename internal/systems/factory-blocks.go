@@ -151,6 +151,47 @@ func CreateFactoryTet(pos pixel.Vec, col data.TColor) *data.FacTetronimo {
 	return t
 }
 
+func ConstructTetFromBlocks(pos pixel.Vec, blocks []*data.FactoryBlock) *data.FacTetronimo {
+	ft := &data.FacTetronimo{}
+	ft.LastPos = pos
+	ft.Object = object.New().WithID("factory-tet")
+	ft.Object.Pos = pos
+	ft.Object.Layer = 20
+	l := -1.
+	r := -1.
+	b := -1.
+	t := -1.
+	for _, block := range blocks {
+		p := world.MapToWorldC(block.Coords, pixel.V(constants.FactoryTile, world.TileSize))
+		if l == -1 || p.X < l {
+			l = p.X
+		}
+		if r == -1 || p.X > r {
+			r = p.X
+		}
+		if t == -1 || p.Y > t {
+			t = p.Y
+		}
+		if b == -1 || p.Y < b {
+			b = p.Y
+		}
+	}
+	size := pixel.V(r-l, t-b)
+	center := pixel.V(l+size.X*0.5, b+size.Y*0.5)
+	for _, block := range blocks {
+		block.Object.Offset = block.Object.Pos.Sub(center)
+		block.Object.Pos = pixel.ZV
+		block.Object.Layer = 20
+		block.Entity.AddComponent(myecs.Parent, ft.Object)
+		ft.Blocks = append(ft.Blocks, block)
+	}
+	ft.Object.Rect = pixel.R(0., 0., r-l+constants.FactoryTile, t-b+world.TileSize+6.)
+	ft.Entity = myecs.Manager.NewEntity()
+	ft.Entity.AddComponent(myecs.Object, ft.Object).
+		AddComponent(myecs.Block, ft)
+	return ft
+}
+
 func CreateFactoryBlock(pos pixel.Vec, col data.TColor) *data.FactoryBlock {
 	block := &data.FactoryBlock{
 		Coords: world.Origin,
