@@ -9,16 +9,19 @@ import (
 )
 
 var (
-	DraggingPiece *FacTetromino
+	DraggingPiece *Factromino
 )
 
-type FacTetromino struct {
-	Blocks  []*FactoryBlock
-	NoRot   bool
-	Object  *object.Object
-	Entity  *ecs.Entity
-	LastPos pixel.Vec
-	Moving  bool
+type Factromino struct {
+	Blocks              []*FactoryBlock
+	NoRot               bool
+	Object              *object.Object
+	Entity              *ecs.Entity
+	LastPos             pixel.Vec
+	Moving              bool
+	MyFactronimoType    constants.FactrominoType
+	MyFactronimoVariant constants.FactrominoVariant
+	Color               TColor
 }
 
 type FactoryBlock struct {
@@ -29,7 +32,7 @@ type FactoryBlock struct {
 }
 
 type FactoryPad struct {
-	Tet    *FacTetromino
+	Tet    *Factromino
 	Object *object.Object
 	Entity *ecs.Entity
 }
@@ -41,7 +44,7 @@ const (
 )
 
 type conveyor struct {
-	Tets   [ConveyorLength]*FacTetromino
+	Tets   [ConveyorLength]*Factromino
 	Entity *ecs.Entity
 	Slots  [ConveyorLength]pixel.Vec
 }

@@ -8,7 +8,7 @@ import (
 )
 
 type Truck struct {
-	DeliveryLoad []*FacTetromino
+	DeliveryLoad []*Factromino
 	MyBatchType  constants.DeliveryLoadBatchTypes
 
 	Object *object.Object

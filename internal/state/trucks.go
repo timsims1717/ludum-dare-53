@@ -147,7 +147,7 @@ func TruckUpdate(truck *data.Truck, startMove bool) func() {
 					block.Object.Hide = false
 					truck.Pad.Tet = block
 					if len(truck.DeliveryLoad) == 1 {
-						truck.DeliveryLoad = []*data.FacTetromino{}
+						truck.DeliveryLoad = []*data.Factromino{}
 					} else {
 						truck.DeliveryLoad = truck.DeliveryLoad[1:]
 					}

@@ -11,6 +11,14 @@ type TetrisStats struct {
 	Checkpoint int
 	MyFibScore *FibScore
 }
+type FactoryStats struct {
+	Score         int
+	Factrominos   int
+	ColorStreak   int
+	CurrentColor  TColor
+	ShapeStreak   int
+	LastTetromino constants.TetronimoType
+}
 
 func newTetrisStats() *TetrisStats {
 	tScore := &TetrisStats{Score: 0, Streak: 0, MyFibScore: newFibScore(), Tetrominos: 0}
