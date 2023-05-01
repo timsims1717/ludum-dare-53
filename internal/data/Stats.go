@@ -2,6 +2,8 @@ package data
 
 import (
 	"fmt"
+	"github.com/thoas/go-funk"
+	"strconv"
 	"strings"
 	"timsims1717/ludum-dare-53/internal/constants"
 )
@@ -67,6 +69,20 @@ func newFactoryStats() *FactoryStats {
 }
 func (fs *FactoryStats) TrashAShape(factromino Factromino) {
 	fs.TrashedShapes[len(factromino.Blocks)]++
+	rawAchievements := funk.Map(constants.Achievements, func(k string, value constants.Achievement) constants.Achievement {
+		return value
+	})
+	filteredAchievements := funk.Filter(rawAchievements, func(x constants.Achievement) bool {
+		return x.MyFamily.Name == "TrashingTheCamp"
+	}).([]constants.Achievement)
+
+	for _, value := range filteredAchievements {
+		if i, _ := strconv.Atoi(value.Properties["target"]); i <= FactoryFloor.Stats.TotalTrashedShapes() {
+			temp := constants.Achievements[value.Name]
+			temp.Achieved = true
+			constants.Achievements[value.Name] = temp
+		}
+	}
 }
 func (fs *FactoryStats) TotalTrashedShapes() int {
 	total := 0
@@ -120,13 +136,24 @@ func (fs *FactoryStats) AddToFactoryStats(factromino Factromino) {
 	CheckAchievements()
 }
 func CheckAchievements() {
-	//TODO Make a better Achievement Engine
-	switch FactoryFloor.Stats.Factrominos {
-	case 5:
-		tAchieve := constants.Achievements["Create5Tetronimos"]
-		tAchieve.Achieved = true
-		constants.Achievements["Create5Tetronimos"] = tAchieve
+	rawAchievements := funk.Map(constants.Achievements, func(k string, value constants.Achievement) constants.Achievement {
+		return value
+	})
+	filteredAchievements := funk.Filter(rawAchievements, func(x constants.Achievement) bool {
+		return x.MyFamily.Name == "CreateTetronimos"
+	}).([]constants.Achievement)
+
+	for _, value := range filteredAchievements {
+		if i, _ := strconv.Atoi(value.Properties["target"]); i <= FactoryFloor.Stats.Factrominos {
+			temp := constants.Achievements[value.Name]
+			if !temp.Achieved {
+				temp.Achieved = true
+			}
+
+			constants.Achievements[value.Name] = temp
+		}
 	}
+
 }
 
 func (fs *FactoryStats) ResetFactoryBalanceStreak() {

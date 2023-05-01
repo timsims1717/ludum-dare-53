@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
+	"github.com/thoas/go-funk"
 	"golang.org/x/image/colornames"
 	"image/color"
 	"math/rand"
@@ -94,8 +95,9 @@ func (s *gameState) Load(done chan struct{}) {
 		achFam.StickyNote.Hide = true
 		achFam.StickyNote.Rect = pixel.R(0, 0, 32, 32)
 		constants.AchievementFamilies[i] = achFam
+		newachFam := constants.AchievementFamilies[i]
 		myecs.Manager.NewEntity().AddComponent(myecs.Object, constants.AchievementFamilies[i].StickyNote).AddComponent(myecs.Drawable, data.TinyNote).
-			AddComponent(myecs.ViewPort, data.FactoryViewport).AddComponent(myecs.Input, gameInput).AddComponent(myecs.Click, data.NewFn(ClickAchievement(&achFam)))
+			AddComponent(myecs.ViewPort, data.FactoryViewport).AddComponent(myecs.Input, gameInput).AddComponent(myecs.Click, data.NewFn(ClickAchievement(&newachFam)))
 	}
 
 	pauseBtnObj := object.New()
@@ -323,7 +325,6 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	data.StickyText.Obj.Update()
 	data.StickyObj.Update()
 	data.StickyViewport.Update()
-	UnhideAchievements()
 	if s.sfxTimer.UpdateDone() {
 		switch rand.Intn(2) {
 		case 0:
@@ -333,6 +334,7 @@ func (s *gameState) Update(win *pixelgl.Window) {
 		}
 		s.sfxTimer = timing.New(rand.Float64()*20. + 5.)
 	}
+	UpdateAchievements()
 }
 
 func (s *gameState) Draw(win *pixelgl.Window) {
@@ -406,9 +408,27 @@ func (s *gameState) UpdateViews() {
 	data.StickyViewport.PortSize = pixel.V(0.8, 0.8)
 }
 
-func UnhideAchievements() {
+func UpdateAchievements() {
 	for _, value := range constants.AchievementFamilies {
 		if value.StickyNote != nil && value.Achieved() {
+			//TODO loop through family and see if there is a new one
+			rawAchievements := funk.Map(constants.Achievements, func(k string, value constants.Achievement) constants.Achievement {
+				return value
+			})
+			filteredAchievements := funk.Filter(rawAchievements, func(x constants.Achievement) bool {
+				return x.MyFamily.Name == value.Name
+			}).([]constants.Achievement)
+
+			for _, achievement := range filteredAchievements {
+				if achievement.Achieved && !achievement.Presented {
+					OpenSticky(&data.StickyMsg{
+						Message: value.String(),
+						Offset:  pixel.Vec{},
+					})
+					achievement.Presented = true
+					constants.Achievements[achievement.Name] = achievement
+				}
+			}
 			value.StickyNote.Hide = false
 		}
 	}
