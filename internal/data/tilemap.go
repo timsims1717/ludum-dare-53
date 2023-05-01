@@ -43,4 +43,6 @@ var (
 
 	TV   []*img.Sprite
 	Bulb []*img.Sprite
+
+	TVShapes []*img.Sprite
 )

@@ -7,6 +7,7 @@ import (
 	"timsims1717/ludum-dare-53/internal/data"
 	"timsims1717/ludum-dare-53/pkg/object"
 	"timsims1717/ludum-dare-53/pkg/options"
+	"timsims1717/ludum-dare-53/pkg/sfx"
 	"timsims1717/ludum-dare-53/pkg/typeface"
 )
 
@@ -30,6 +31,8 @@ var (
 	vsyncItem  = &data.MenuItem{}
 	fullScreen = &data.MenuItem{}
 	backItem   = &data.MenuItem{}
+	musicPlus  = &data.MenuItem{}
+	musicMinus = &data.MenuItem{}
 )
 
 func InitMenu(win *pixelgl.Window) {
@@ -127,6 +130,45 @@ func InitMenu(win *pixelgl.Window) {
 	fullScreen.Text.Obj.Pos.Y = 45.
 	fullScreen.Text.Obj.Hide = true
 	fullScreen.OrigSize = 0.26
+
+	musicPlus.Click = func() {
+		vol := sfx.GetMusicVolume()
+		vol += 10
+		if vol > 100. {
+			vol = 100.
+		}
+		sfx.SetMusicVolume(vol)
+	}
+	musicPlus.Text = typeface.New(nil, "sticky", typeface.NewAlign(typeface.Center, typeface.Center), 1.5, 0.45, 0, 0)
+	musicPlus.Text.SetPos(pixel.V(0., 0.))
+	musicPlus.Text.SetSize(0.45)
+	musicPlus.Text.SetColor(constants.BlackColor)
+	musicPlus.Text.SetText("+")
+	musicPlus.Text.Obj = object.New()
+	musicPlus.Text.Obj.Pos.X = 335.
+	musicPlus.Text.Obj.Pos.Y = -35.
+	musicPlus.Text.Obj.Hide = true
+	musicPlus.OrigSize = 0.45
+
+	musicMinus.Click = func() {
+		vol := sfx.GetMusicVolume()
+		vol -= 10
+		if vol < 0. {
+			vol = 0.
+		}
+		sfx.SetMusicVolume(vol)
+	}
+	musicMinus.Text = typeface.New(nil, "sticky", typeface.NewAlign(typeface.Center, typeface.Center), 1.5, 0.45, 0, 0)
+	musicMinus.Text.SetPos(pixel.V(0., 0.))
+	musicMinus.Text.SetSize(0.45)
+	musicMinus.Text.SetColor(constants.BlackColor)
+	musicMinus.Text.SetText("-")
+	musicMinus.Text.Obj = object.New()
+	musicMinus.Text.Obj.Pos.X = 265.
+	musicMinus.Text.Obj.Pos.Y = -35.
+	musicMinus.Text.Obj.Hide = true
+	musicMinus.OrigSize = 0.45
+
 	backItem.Click = func() {
 		hideAllItems()
 		openPauseMenu()
@@ -155,6 +197,8 @@ func InitMenu(win *pixelgl.Window) {
 	data.MenuItems = append(data.MenuItems, optionItem)
 	data.MenuItems = append(data.MenuItems, vsyncItem)
 	data.MenuItems = append(data.MenuItems, fullScreen)
+	data.MenuItems = append(data.MenuItems, musicPlus)
+	data.MenuItems = append(data.MenuItems, musicMinus)
 	data.MenuItems = append(data.MenuItems, backItem)
 }
 
@@ -170,6 +214,9 @@ func openPauseMenu() {
 func openOptionsMenu() {
 	vsyncItem.Text.Obj.Hide = false
 	fullScreen.Text.Obj.Hide = false
+	musicPlus.Text.Obj.Hide = false
+	musicMinus.Text.Obj.Hide = false
+	OpenSticky(data.OptionsMsg)
 	backItem.Text.Obj.Hide = false
 }
 
@@ -180,13 +227,9 @@ func closeMenu() {
 }
 
 func hideAllItems() {
-	resumeItem.Text.Obj.Hide = true
-	quitItem.Text.Obj.Hide = true
-	creditItem.Text.Obj.Hide = true
-	optionItem.Text.Obj.Hide = true
-	vsyncItem.Text.Obj.Hide = true
-	fullScreen.Text.Obj.Hide = true
-	backItem.Text.Obj.Hide = true
+	for _, item := range data.MenuItems {
+		item.Text.Obj.Hide = true
+	}
 }
 
 func openCredits() {

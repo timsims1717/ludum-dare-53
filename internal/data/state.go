@@ -15,6 +15,7 @@ var (
 
 	SBLabels *typeface.Text
 	SBScores *typeface.Text
+	ShCounts *typeface.Text
 
 	StickyText *typeface.Text
 
@@ -37,6 +38,10 @@ var (
 	CreditsMsg = &StickyMsg{
 		Message: "Credits\n\nEverything by Ben and Tim Sims\nGet back to work.",
 		Offset:  pixel.V(40., 115.),
+	}
+	OptionsMsg = &StickyMsg{
+		Message: "Options\n\n\n\nMusic Volume",
+		Offset:  pixel.V(-40., 135.),
 	}
 )
 

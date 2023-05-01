@@ -9,6 +9,7 @@ import (
 	"timsims1717/ludum-dare-53/internal/state"
 	"timsims1717/ludum-dare-53/pkg/debug"
 	"timsims1717/ludum-dare-53/pkg/options"
+	"timsims1717/ludum-dare-53/pkg/sfx"
 	"timsims1717/ludum-dare-53/pkg/timing"
 	"timsims1717/ludum-dare-53/pkg/typeface"
 	"timsims1717/ludum-dare-53/pkg/viewport"
@@ -48,6 +49,9 @@ func run() {
 	typeface.Atlases["sticky"] = text.NewAtlas(stickyFont, text.ASCII)
 
 	loading.LoadImg()
+
+	sfx.MusicPlayer.RegisterMusicTrack("assets/thesong.wav", "song")
+	sfx.MusicPlayer.NewSet("song", []string{"song"}, sfx.Repeat, 0., 2.)
 
 	debug.Initialize(&viewport.MainCamera.PostCamPos, &viewport.MainCamera.PostCamPos)
 

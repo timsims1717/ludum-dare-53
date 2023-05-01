@@ -40,6 +40,7 @@ type FactoryStats struct {
 	MyFibScore           FibScore
 	TimesSinceLastShape  map[constants.TetronimoType]int
 	TrashedShapes        map[int]int
+	BuiltShapes          map[constants.TetronimoType]int
 }
 
 func newFactoryStats() *FactoryStats {
@@ -55,6 +56,15 @@ func newFactoryStats() *FactoryStats {
 	}
 	tScore.TrashedShapes = map[int]int{}
 	tScore.MyFibScore = *newFibScore()
+	tScore.BuiltShapes = map[constants.TetronimoType]int{
+		constants.I: 0,
+		constants.O: 0,
+		constants.T: 0,
+		constants.S: 0,
+		constants.Z: 0,
+		constants.J: 0,
+		constants.L: 0,
+	}
 	return tScore
 }
 func (fs *FactoryStats) TrashAShape(factromino Factromino) {
@@ -122,6 +132,7 @@ func (fs *FactoryStats) AddToFactoryStats(factromino Factromino) {
 		fs.ShapeStreak = 0
 		fs.LastTetromino = factromino.MyTetrominoType
 	}
+	fs.BuiltShapes[factromino.MyTetrominoType]++
 	CheckAchievements()
 }
 func CheckAchievements() {
