@@ -96,8 +96,17 @@ func (s *gameState) Load(done chan struct{}) {
 		achFam.StickyNote.Rect = pixel.R(0, 0, 32, 32)
 		constants.AchievementFamilies[i] = achFam
 		newachFam := constants.AchievementFamilies[i]
-		myecs.Manager.NewEntity().AddComponent(myecs.Object, constants.AchievementFamilies[i].StickyNote).AddComponent(myecs.Drawable, data.TinyNote).
-			AddComponent(myecs.ViewPort, data.FactoryViewport).AddComponent(myecs.Input, gameInput).AddComponent(myecs.Click, data.NewFn(ClickAchievement(&newachFam)))
+		myecs.Manager.NewEntity().AddComponent(myecs.Object, constants.AchievementFamilies[i].StickyNote).
+			AddComponent(myecs.Drawable, data.TinyNote).
+			AddComponent(myecs.ViewPort, data.FactoryViewport).
+			AddComponent(myecs.Input, gameInput).
+			AddComponent(myecs.Click, data.NewFn(ClickAchievement(&newachFam))).
+			AddComponent(myecs.Update, data.NewFn(func() {
+				if newachFam.StickyNote.PointInside(data.FactoryViewport.Projected(gameInput.World)) &&
+					newachFam.Achieved() {
+					data.HandState = 1
+				}
+			}))
 	}
 
 	pauseBtnObj := object.New()
@@ -109,6 +118,7 @@ func (s *gameState) Load(done chan struct{}) {
 		AddComponent(myecs.Drawable, data.PauseButSprs).
 		AddComponent(myecs.Update, data.NewFn(func() {
 			if pauseBtnObj.PointInside(data.FactoryViewport.Projected(gameInput.World)) {
+				data.HandState = 1
 				if gameInput.Get("click").Pressed() {
 					data.PauseButSprs[1].Offset.Y = -3.
 				} else {
@@ -133,6 +143,7 @@ func (s *gameState) Load(done chan struct{}) {
 		AddComponent(myecs.Drawable, data.RestartButSprs).
 		AddComponent(myecs.Update, data.NewFn(func() {
 			if restartBtnObj.PointInside(data.FactoryViewport.Projected(gameInput.World)) {
+				data.HandState = 1
 				if gameInput.Get("click").Pressed() {
 					data.RestartButSprs[1].Offset.Y = -3.
 				} else {
@@ -154,6 +165,7 @@ func (s *gameState) Load(done chan struct{}) {
 
 	s.UpdateViews()
 	sfx.MusicPlayer.PlayMusic("song")
+	data.HandObj = object.New()
 	reanimator.SetFrameRate(16)
 	reanimator.Reset()
 	s.sfxTimer = timing.New(rand.Float64()*20. + 5.)
@@ -167,6 +179,14 @@ func (s *gameState) Update(win *pixelgl.Window) {
 		s.UpdateViews()
 	}
 	gameInput.Update(win, viewport.MainCamera.Mat)
+	obj := object.New()
+	obj.Pos = gameInput.World
+	spr := data.HandPoint
+
+	myecs.Manager.NewEntity().
+		AddComponent(myecs.Object, obj).
+		AddComponent(myecs.Drawable, spr).
+		AddComponent(myecs.Temp, myecs.ClearFlag(true))
 	if !data.PauseMenu && data.StickyOpen && gameInput.Get("click").JustPressed() {
 		if !data.StickyObj.PointInside(data.StickyViewport.Projected(gameInput.World)) {
 			CloseSticky()
@@ -334,6 +354,8 @@ func (s *gameState) Update(win *pixelgl.Window) {
 		}
 		s.sfxTimer = timing.New(rand.Float64()*20. + 5.)
 	}
+	data.HandObj.Pos = gameInput.World
+	data.HandObj.Update()
 	UpdateAchievements()
 }
 
@@ -380,6 +402,24 @@ func (s *gameState) Draw(win *pixelgl.Window) {
 		systems.DrawMenuSystem(data.StickyViewport)
 		data.StickyViewport.Canvas.Draw(win, data.StickyViewport.Mat)
 	}
+	sprH := data.HandPoint
+	if data.DraggingPiece != nil {
+		sprH = data.HandGrab
+	} else {
+		switch data.HandState {
+		case 0:
+			sprH = data.HandOpen
+		case 1:
+			sprH = data.HandPoint
+		case 2:
+			sprH = data.HandGrab
+		}
+	}
+	if sprH != nil {
+		img.Batchers[constants.FactoryKey].DrawSpriteColor(sprH.Key, data.HandObj.Mat.Moved(sprH.Offset), sprH.Color)
+		img.Batchers[constants.FactoryKey].Draw(win)
+	}
+	data.HandState = 0
 	systems.TemporarySystem()
 }
 

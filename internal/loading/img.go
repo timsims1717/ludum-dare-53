@@ -483,4 +483,9 @@ func LoadImg() {
 	data.TVShapes = append(data.TVShapes, img.NewOffsetSprite("L", constants.FactoryKey, pixel.V(2.*data.MSize, 0.)))
 	data.TVShapes = append(data.TVShapes, img.NewOffsetSprite("T", constants.FactoryKey, pixel.V(4.*data.MSize, 0.)))
 	data.TVShapes = append(data.TVShapes, img.NewOffsetSprite("I", constants.FactoryKey, pixel.V(6.*data.MSize, 0.)))
+
+	// cursor
+	data.HandPoint = img.NewOffsetSprite("hand_point", constants.FactoryKey, pixel.ZV)
+	data.HandOpen = img.NewOffsetSprite("hand_open", constants.FactoryKey, pixel.ZV)
+	data.HandGrab = img.NewOffsetSprite("hand_grab", constants.FactoryKey, pixel.ZV)
 }
