@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	Title   = "Have you ever played a block falling game and thought, 'I like this game but wouldn't it be great if it was more stressful?'"
+	Title   = "Well that didn't work"
 	Release = 0
 	Version = 1
 	Build   = 20230428
@@ -69,7 +69,16 @@ var (
 		[4]world.Coords{{0, 1}, {1, 1}, {2, 1}, {2, 0}}: J, //flat up point down
 		[4]world.Coords{{0, 0}, {1, 0}, {1, 1}, {1, 2}}: J, //flat right point left
 	}
+	TitleVariants = []string{
+		"42 Days Accident Free",
+		"Have you ever played a block falling game and thought, 'I like this game but wouldn't it be great if it was more stressful?'",
+		"We need more Blocks! Everyone's working weekends!",
+	}
 )
+
+func RandomTitle() string {
+	return TitleVariants[GlobalSeededRandom.Intn(len(TitleVariants))]
+}
 
 type TetronimoType int
 

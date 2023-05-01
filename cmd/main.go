@@ -16,7 +16,7 @@ import (
 func run() {
 	world.SetTileSize(constants.TileSize)
 	cfg := pixelgl.WindowConfig{
-		Title:     constants.Title,
+		Title:     constants.RandomTitle(),
 		Bounds:    pixel.R(0, 0, 1600, 900),
 		VSync:     true,
 		Invisible: true,
