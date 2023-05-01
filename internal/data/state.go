@@ -23,6 +23,12 @@ var (
 	PauseMenu  bool
 	StickyOpen bool
 	TinyNote   *img.Sprite
+
+	HandState int
+	HandPoint *img.Sprite
+	HandOpen  *img.Sprite
+	HandGrab  *img.Sprite
+	HandObj   *object.Object
 )
 
 type StickyMsg struct {

@@ -30,6 +30,7 @@ func run() {
 	}
 
 	win.SetSmooth(false)
+	win.SetCursorVisible(false)
 
 	viewport.MainCamera = viewport.New(win.Canvas())
 	viewport.MainCamera.SetRect(pixel.R(0, 0, 1600, 900))
