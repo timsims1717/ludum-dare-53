@@ -158,7 +158,7 @@ func LoadImg() {
 	for y := 0; y < 12; y++ {
 		str := "caution_side_1"
 		if y%2 == 0 {
-			str = "caution_side_1"
+			str = "caution_side_2"
 		}
 		spr = img.NewOffsetSprite(str, constants.FactoryKey, pixel.V(0, float64(y)*data.MSize))
 		data.SideDSection = append(data.SideDSection, spr)
@@ -239,4 +239,87 @@ func LoadImg() {
 	myecs.Manager.NewEntity().
 		AddComponent(myecs.Object, object.New()).
 		AddComponent(myecs.Animation, data.ConvRightEdge)
+	// trucks
+	for y := 0; y < 10; y++ {
+		for x := 0; x < data.TruckWidth; x++ {
+			str := "truck_roof"
+			if y == 0 {
+				str = "truck_roof_top_edge"
+			}
+			spr = img.NewOffsetSprite(str, constants.FactoryKey, pixel.V(float64(x-data.TruckWidth/2)*data.MSize, float64(-y)*data.MSize))
+			data.BotTruck = append(data.BotTruck, spr)
+		}
+	}
+	for y := 0; y < data.TruckHeight; y++ {
+		for x := 0; x < 12; x++ {
+			var str string
+			if y == 0 {
+				str = "truck_side_b_mid"
+				if x == 0 {
+					str = "truck_side_b_end"
+				}
+			} else if y < 7 {
+				str = "truck_side_mid"
+				if x == 0 {
+					str = "truck_side_end"
+				}
+			} else if y == 7 {
+				str = "truck_side_roof_b_mid"
+				if x == 0 {
+					str = "truck_side_roof_b_end"
+				}
+			} else if y == 11 {
+				str = "truck_side_roof_t_mid"
+				if x == 0 {
+					str = "truck_side_roof_t_end"
+				}
+			} else {
+				str = "truck_side_roof_m_mid"
+				if x == 0 {
+					str = "truck_side_roof_m_end"
+				}
+			}
+			spr = img.NewOffsetSprite(str, constants.FactoryKey, pixel.V(float64(x)*data.MSize, float64(y-data.TruckHeight/2)*data.MSize))
+			data.MidTruck = append(data.MidTruck, spr)
+		}
+	}
+	for y := 0; y < 20; y++ {
+		for x := 0; x < data.TruckWidth; x++ {
+			var str string
+			if y == 0 {
+				str = "truck_back_b"
+				if x == 0 {
+					str = "truck_back_bl"
+				} else if x == data.TruckWidth-1 {
+					str = "truck_back_br"
+				} else if x == 1 || x == data.TruckWidth-2 {
+					str = "truck_back_bf"
+				}
+			} else if y < 8 {
+				str = "truck_back"
+				if x == 0 {
+					str = "truck_back_l"
+				} else if x == data.TruckWidth-1 {
+					str = "truck_back_r"
+				}
+			} else if y == 8 {
+				str = "truck_back_t"
+				if x == 0 {
+					str = "truck_back_tl"
+				} else if x == data.TruckWidth-1 {
+					str = "truck_back_tr"
+				} else if x == data.TruckWidth/2-1 {
+					str = "truck_back_thl"
+				} else if x == data.TruckWidth/2 {
+					str = "truck_back_thr"
+				}
+			} else if y == 11 {
+				str = "truck_roof_bot_edge"
+			} else {
+				str = "truck_roof"
+			}
+			spr = img.NewOffsetSprite(str, constants.FactoryKey, pixel.V(float64(x-data.TruckWidth/2)*data.MSize, float64(y)*data.MSize))
+			data.TopTruck = append(data.TopTruck, spr)
+		}
+	}
 }

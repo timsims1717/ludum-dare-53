@@ -11,22 +11,30 @@ import (
 	"timsims1717/ludum-dare-53/pkg/world"
 )
 
+var (
+	PadX1 = data.MSize * 9.
+	PadX2 = data.MSize * 25.
+	PadY1 = data.MSize * 21.
+	PadY2 = data.MSize * 7.
+	PadY3 = data.MSize * -7.
+)
+
 func BuildFactoryPads() {
 	// Import Pads
 	for i := 0; i < 5; i++ {
 		pad := &data.FactoryPad{}
 		obj := object.New()
 		if i < 2 {
-			obj.Pos.Y = data.MSize * 21.
+			obj.Pos.Y = PadY1
 		} else if i == 2 {
-			obj.Pos.Y = data.MSize * 7.
+			obj.Pos.Y = PadY2
 		} else {
-			obj.Pos.Y = data.MSize * -7.
+			obj.Pos.Y = PadY3
 		}
 		if i > 0 && i < 4 {
-			obj.Pos.X = data.MSize * 25.
+			obj.Pos.X = PadX2
 		} else {
-			obj.Pos.X = data.MSize * 9.
+			obj.Pos.X = PadX1
 		}
 		obj.Layer = 10
 		obj.Rect = pixel.R(0., 0., constants.FactoryTile*2.8, world.TileSize*2.)
@@ -56,6 +64,18 @@ func BuildFactoryPads() {
 		pad.Entity = e
 		FactoryBGEntities = append(FactoryBGEntities, e)
 		data.FactoryPads = append(data.FactoryPads, pad)
+		switch i {
+		case 0:
+			data.NorthPad = pad
+		case 1:
+			data.NorthEastPad = pad
+		case 2:
+			data.EastPad = pad
+		case 3:
+			data.SouthEastPad = pad
+		case 4:
+			data.SouthPad = pad
+		}
 	}
 	// garbage pad
 	data.GarbagePad = &data.FactoryPad{}

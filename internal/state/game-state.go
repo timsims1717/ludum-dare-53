@@ -44,6 +44,7 @@ func (s *gameState) Load(done chan struct{}) {
 	BuildFactoryFloor()
 	BuildFactoryPads()
 	CreateConveyor()
+	CreateTrucks()
 
 	data.TetrisBoard.NextShape = systems.NewTetromino()
 	systems.PlaceTetromino()
