@@ -463,4 +463,15 @@ func LoadImg() {
 			}
 		}
 	}
+	// buttons
+	baseSpr1 := img.NewOffsetSprite("button_base_1", constants.BlockKey, pixel.V(0., 0.))
+	pauseBtn := img.NewOffsetSprite("pause_button", constants.BlockKey, pixel.V(0., 0.))
+	restartBtn := img.NewOffsetSprite("restart_button", constants.BlockKey, pixel.V(0., 0.))
+	baseSpr2 := img.NewOffsetSprite("button_base_2", constants.BlockKey, pixel.V(0., 0.))
+	data.RestartButSprs = append(data.RestartButSprs, baseSpr1)
+	data.RestartButSprs = append(data.RestartButSprs, restartBtn)
+	data.RestartButSprs = append(data.RestartButSprs, baseSpr2)
+	data.PauseButSprs = append(data.PauseButSprs, baseSpr1)
+	data.PauseButSprs = append(data.PauseButSprs, pauseBtn)
+	data.PauseButSprs = append(data.PauseButSprs, baseSpr2)
 }
