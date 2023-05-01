@@ -78,7 +78,7 @@ func (s *gameState) Load(done chan struct{}) {
 
 	data.ShCounts = typeface.New(nil, "main", typeface.NewAlign(typeface.Center, typeface.Top), 1.5, 1., 0, 0)
 	data.ShCounts.Obj.Layer = 12
-	data.ShCounts.SetPos(pixel.V(-13.*data.MSize, 2.*data.MSize))
+	data.ShCounts.SetPos(pixel.V(-13.*data.MSize, 1.8*data.MSize))
 	data.ShCounts.SetColor(constants.TVTextColor)
 	data.ShCounts.SetSize(0.08)
 	data.ShCounts.SetText("Scores")
@@ -330,10 +330,10 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	}
 	debug.AddText(fmt.Sprintf("PieceDone: %t", systems.PieceDone))
 
-	data.SBLabels.SetText("Score:\nDeliveries:\nBalance Bonus:\nLines Cleared:\nClear Bonus:")
+	data.SBLabels.SetText("Score:\nLevel:\nDeliveries:\nBalance Bonus:\nLines Cleared:\nClear Bonus:")
 	data.SBLabels.Obj.Update()
 
-	data.SBScores.SetText(fmt.Sprintf("%05d\n%03d\n+%d\n%03d\n+%d", data.TetrisBoard.Stats.GlobalScore(), data.FactoryFloor.Stats.Factrominos, data.FactoryFloor.Stats.MyFibScore.FibN-1, data.TetrisBoard.Stats.LinesCleared, data.TetrisBoard.Stats.MyFibScore.FibN-1))
+	data.SBScores.SetText(fmt.Sprintf("%d\n%05d\n%03d\n+%d\n%03d\n+%d", data.TetrisBoard.Stats.Checkpoint, data.TetrisBoard.Stats.GlobalScore(), data.FactoryFloor.Stats.Factrominos, data.FactoryFloor.Stats.MyFibScore.FibN-1, data.TetrisBoard.Stats.LinesCleared, data.TetrisBoard.Stats.MyFibScore.FibN-1))
 	data.SBScores.Obj.Update()
 
 	bs := data.FactoryFloor.Stats.BuiltShapes
@@ -464,7 +464,7 @@ func UpdateAchievements() {
 					constants.Achievements[achievement.Name] = achievement
 					OpenSticky(&data.StickyMsg{
 						Message: value.String(),
-						Offset:  pixel.Vec{},
+						Offset:  constants.NoteVec,
 					})
 					achievement.Presented = true
 					constants.Achievements[achievement.Name] = achievement
@@ -479,7 +479,7 @@ func ClickAchievement(a *constants.AchievementFamily) func() {
 	return func() {
 		OpenSticky(&data.StickyMsg{
 			Message: a.String(),
-			Offset:  pixel.Vec{},
+			Offset:  constants.NoteVec,
 		})
 	}
 }

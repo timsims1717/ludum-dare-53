@@ -12,7 +12,7 @@ import (
 )
 
 func CreateFactoryTet(pos pixel.Vec, col data.TColor, factrominoType constants.FactrominoType) *data.Factromino {
-	t := &data.Factromino{MyFactronimoType: factrominoType}
+	t := &data.Factromino{MyFactrominoType: factrominoType}
 	t.LastPos = pos
 	t.Object = object.New().WithID("factory-tet")
 	t.Object.Hide = true
@@ -21,10 +21,10 @@ func CreateFactoryTet(pos pixel.Vec, col data.TColor, factrominoType constants.F
 	t.Color = col
 	w := constants.FactoryTile
 	h := world.TileSize + 6.
-	if t.MyFactronimoType == constants.FacUndefined {
-		t.MyFactronimoType = constants.RawFactrominoRoll()
+	if t.MyFactrominoType == constants.FacUndefined {
+		t.MyFactrominoType = constants.RawFactrominoRoll()
 	}
-	switch t.MyFactronimoType {
+	switch t.MyFactrominoType {
 	case constants.FacOne: //1
 		CreateFactrominoSizeOne(t)
 	case constants.FacTwo:
@@ -44,10 +44,10 @@ func CreateFactrominoSizeOne(t *data.Factromino) {
 	t.Blocks = append(t.Blocks, a)
 }
 func CreateFactrominoSizeTwo(t *data.Factromino, w float64, h float64) {
-	t.MyFactronimoVariant = constants.FactVariantUndefined
-	t.MyFactronimoVariant = constants.FactrominoVariant(constants.GlobalSeededRandom.Intn(2) + 1)
+	t.MyFactrominoVariant = constants.FactVariantUndefined
+	t.MyFactrominoVariant = constants.FactrominoVariant(constants.GlobalSeededRandom.Intn(2) + 1)
 
-	switch t.MyFactronimoVariant {
+	switch t.MyFactrominoVariant {
 	case constants.Horizontal: //2 Horizontal
 		a := CreateFactoryBlock(pixel.ZV, t.Color)
 		b := CreateFactoryBlock(pixel.ZV, t.Color)
@@ -71,9 +71,9 @@ func CreateFactrominoSizeTwo(t *data.Factromino, w float64, h float64) {
 	}
 }
 func CreateFactrominoSizeThree(t *data.Factromino, w float64, h float64) {
-	t.MyFactronimoVariant = constants.FactVariantUndefined
-	t.MyFactronimoVariant = constants.FactrominoThreeVariationRoll()
-	switch t.MyFactronimoVariant {
+	t.MyFactrominoVariant = constants.FactVariantUndefined
+	t.MyFactrominoVariant = constants.FactrominoThreeVariationRoll()
+	switch t.MyFactrominoVariant {
 	case constants.Horizontal:
 		a := CreateFactoryBlock(pixel.ZV, t.Color)
 		b := CreateFactoryBlock(pixel.ZV, t.Color)

@@ -50,7 +50,7 @@ func RandColor() TColor {
 type Tetromino struct {
 	Blocks  []*TetrisBlock
 	NoRot   bool
-	TetType constants.TetronimoType
+	TetType constants.TetrominoType
 }
 
 func FacTetIsanI(f *Factromino) bool {
@@ -83,7 +83,7 @@ func Normalize(coords [4]world.Coords) [4]world.Coords {
 	}
 	return normalized
 }
-func TetronimoCoordsEqual(a, b [4]world.Coords) bool {
+func TetrominoCoordsEqual(a, b [4]world.Coords) bool {
 	for _, i := range a {
 		if !CoordsIn(i, b) {
 			return false
@@ -101,7 +101,7 @@ func CoordsIn(c world.Coords, list [4]world.Coords) bool {
 	return false
 }
 
-func TetronimoCoordsRotate(coords []world.Coords) []world.Coords {
+func TetrominoCoordsRotate(coords []world.Coords) []world.Coords {
 	rotated := make([]world.Coords, len(coords))
 	for i, coord := range coords {
 		rotated[i] = world.Coords{coord.X, -coord.Y}

@@ -64,7 +64,7 @@ var (
 
 	IgnoreEmptyConv      = false
 	AutoGenTetrominos    = false
-	NormalizedTetronimos = map[[4]world.Coords]TetronimoType{
+	NormalizedTetrominos = map[[4]world.Coords]TetrominoType{
 		[4]world.Coords{{0, 0}, {1, 0}, {2, 0}, {3, 0}}: I,
 		[4]world.Coords{{0, 0}, {0, 1}, {0, 2}, {0, 3}}: I,
 		[4]world.Coords{{0, 0}, {1, 0}, {0, 1}, {1, 1}}: O,
@@ -124,10 +124,10 @@ func (fc FailCondition) String() string {
 	return ""
 }
 
-type TetronimoType int
+type TetrominoType int
 
 const (
-	UndefinedTetronimoType = iota
+	UndefinedTetrominoType = iota
 	I
 	O
 	T
@@ -137,7 +137,7 @@ const (
 	L
 )
 
-func (t TetronimoType) String() string {
+func (t TetrominoType) String() string {
 	switch t {
 	case O:
 		return "O"
@@ -153,7 +153,7 @@ func (t TetronimoType) String() string {
 		return "J"
 	case T:
 		return "T"
-	case UndefinedTetronimoType:
+	case UndefinedTetrominoType:
 		return "Undefined"
 	}
 	return ""

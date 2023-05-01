@@ -223,22 +223,22 @@ func PlaceTetromino() bool {
 func NewTetromino() *data.Tetromino {
 	col := data.RandColor()
 	t := &data.Tetromino{}
-	t.TetType = constants.TetronimoType(rand.Intn(7)) + 1
+	t.TetType = constants.TetrominoType(rand.Intn(7)) + 1
 	switch t.TetType {
 	case constants.O:
-		t = CreateOTetronimo(col)
+		t = CreateOTetromino(col)
 	case constants.I:
-		t = CreateITetronimo(col)
+		t = CreateITetromino(col)
 	case constants.L:
-		t = CreateLTetronimo(col)
+		t = CreateLTetromino(col)
 	case constants.J:
-		t = CreateJTetronimo(col)
+		t = CreateJTetromino(col)
 	case constants.S:
-		t = CreateSTetronimo(col)
+		t = CreateSTetromino(col)
 	case constants.Z:
-		t = CreateZTetronimo(col)
+		t = CreateZTetromino(col)
 	case constants.T:
-		t = CreateTTetronimo(col)
+		t = CreateTTetromino(col)
 	}
 	return t
 }
@@ -247,28 +247,28 @@ func FactoTet(f *data.Factromino) {
 	//detect Fac Type
 	if len(f.Blocks) == 4 {
 		f.RefreshState()
-		if f.MyTetrominoType != constants.UndefinedTetronimoType {
+		if f.MyTetrominoType != constants.UndefinedTetrominoType {
 			switch f.MyTetrominoType {
 			case constants.O:
-				data.TetrisBoard.NextShape = CreateOTetronimo(f.Blocks[0].Color)
+				data.TetrisBoard.NextShape = CreateOTetromino(f.Blocks[0].Color)
 				return
 			case constants.I:
-				data.TetrisBoard.NextShape = CreateITetronimo(f.Blocks[0].Color)
+				data.TetrisBoard.NextShape = CreateITetromino(f.Blocks[0].Color)
 				return
 			case constants.L:
-				data.TetrisBoard.NextShape = CreateLTetronimo(f.Blocks[0].Color)
+				data.TetrisBoard.NextShape = CreateLTetromino(f.Blocks[0].Color)
 				return
 			case constants.J:
-				data.TetrisBoard.NextShape = CreateJTetronimo(f.Blocks[0].Color)
+				data.TetrisBoard.NextShape = CreateJTetromino(f.Blocks[0].Color)
 				return
 			case constants.S:
-				data.TetrisBoard.NextShape = CreateSTetronimo(f.Blocks[0].Color)
+				data.TetrisBoard.NextShape = CreateSTetromino(f.Blocks[0].Color)
 				return
 			case constants.Z:
-				data.TetrisBoard.NextShape = CreateZTetronimo(f.Blocks[0].Color)
+				data.TetrisBoard.NextShape = CreateZTetromino(f.Blocks[0].Color)
 				return
 			case constants.T:
-				data.TetrisBoard.NextShape = CreateTTetronimo(f.Blocks[0].Color)
+				data.TetrisBoard.NextShape = CreateTTetromino(f.Blocks[0].Color)
 				return
 			}
 		}
@@ -276,7 +276,7 @@ func FactoTet(f *data.Factromino) {
 
 }
 
-func CreateITetronimo(col data.TColor) *data.Tetromino {
+func CreateITetromino(col data.TColor) *data.Tetromino {
 	t := &data.Tetromino{}
 	s := constants.TetrisStart
 	t.TetType = constants.I
@@ -290,7 +290,7 @@ func CreateITetronimo(col data.TColor) *data.Tetromino {
 	return t
 }
 
-func CreateOTetronimo(col data.TColor) *data.Tetromino {
+func CreateOTetromino(col data.TColor) *data.Tetromino {
 	t := &data.Tetromino{}
 	s := constants.TetrisStart
 	t.TetType = constants.O
@@ -304,7 +304,7 @@ func CreateOTetronimo(col data.TColor) *data.Tetromino {
 	t.NoRot = true
 	return t
 }
-func CreateTTetronimo(col data.TColor) *data.Tetromino {
+func CreateTTetromino(col data.TColor) *data.Tetromino {
 	t := &data.Tetromino{}
 	s := constants.TetrisStart
 	t.TetType = constants.T
@@ -318,7 +318,7 @@ func CreateTTetronimo(col data.TColor) *data.Tetromino {
 	t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
 	return t
 }
-func CreateSTetronimo(col data.TColor) *data.Tetromino {
+func CreateSTetromino(col data.TColor) *data.Tetromino {
 	t := &data.Tetromino{}
 	s := constants.TetrisStart
 	t.TetType = constants.S
@@ -332,7 +332,7 @@ func CreateSTetronimo(col data.TColor) *data.Tetromino {
 	t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
 	return t
 }
-func CreateZTetronimo(col data.TColor) *data.Tetromino {
+func CreateZTetromino(col data.TColor) *data.Tetromino {
 	t := &data.Tetromino{}
 	s := constants.TetrisStart
 	t.TetType = constants.Z
@@ -346,7 +346,7 @@ func CreateZTetronimo(col data.TColor) *data.Tetromino {
 	t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
 	return t
 }
-func CreateJTetronimo(col data.TColor) *data.Tetromino {
+func CreateJTetromino(col data.TColor) *data.Tetromino {
 	t := &data.Tetromino{}
 	s := constants.TetrisStart
 	t.TetType = constants.J
@@ -359,7 +359,7 @@ func CreateJTetronimo(col data.TColor) *data.Tetromino {
 	t.Blocks = append(t.Blocks, StandaloneBlock(s, col))
 	return t
 }
-func CreateLTetronimo(col data.TColor) *data.Tetromino {
+func CreateLTetromino(col data.TColor) *data.Tetromino {
 	t := &data.Tetromino{}
 	s := constants.TetrisStart
 	t.TetType = constants.L

@@ -19,14 +19,14 @@ type Factromino struct {
 	Entity              *ecs.Entity
 	LastPos             pixel.Vec
 	Moving              bool
-	MyFactronimoType    constants.FactrominoType
-	MyFactronimoVariant constants.FactrominoVariant
+	MyFactrominoType    constants.FactrominoType
+	MyFactrominoVariant constants.FactrominoVariant
 	Color               TColor
-	MyTetrominoType     constants.TetronimoType
+	MyTetrominoType     constants.TetrominoType
 }
 
 func (f *Factromino) RefreshState() {
-	if f.MyTetrominoType == constants.UndefinedTetronimoType {
+	if f.MyTetrominoType == constants.UndefinedTetrominoType {
 		f.DetectTetrominoType()
 	}
 	if f.Color == 0 && len(f.Blocks) > 0 {
@@ -40,14 +40,14 @@ func (f *Factromino) DetectTetrominoType() {
 			originalCoords[i] = world.Coords{block.Coords.X, block.Coords.Y}
 		}
 		newCoords := Normalize(originalCoords)
-		for i, kv := range constants.NormalizedTetronimos {
-			if TetronimoCoordsEqual(i, newCoords) {
+		for i, kv := range constants.NormalizedTetrominos {
+			if TetrominoCoordsEqual(i, newCoords) {
 				f.MyTetrominoType = kv
 				return
 			}
 		}
 	}
-	f.MyTetrominoType = constants.UndefinedTetronimoType
+	f.MyTetrominoType = constants.UndefinedTetrominoType
 }
 
 type FactoryBlock struct {

@@ -28,7 +28,7 @@ type FactoryStats struct {
 	ColorStreak          int
 	CurrentColor         TColor
 	ShapeStreak          int
-	LastTetromino        constants.TetronimoType
+	LastTetromino        constants.TetrominoType
 	LongestColorStreak   int
 	LongestShapeStreak   int
 	UnoStreak            int
@@ -38,14 +38,14 @@ type FactoryStats struct {
 	ShapesTrashed        int
 	LargestShape         int
 	MyFibScore           FibScore
-	TimesSinceLastShape  map[constants.TetronimoType]int
+	TimesSinceLastShape  map[constants.TetrominoType]int
 	TrashedShapes        map[int]int
-	BuiltShapes          map[constants.TetronimoType]int
+	BuiltShapes          map[constants.TetrominoType]int
 }
 
 func newFactoryStats() *FactoryStats {
-	tScore := &FactoryStats{Score: 0, Factrominos: 0, ColorStreak: 0, CurrentColor: 0, ShapeStreak: 0, LastTetromino: constants.UndefinedTetronimoType}
-	tScore.TimesSinceLastShape = map[constants.TetronimoType]int{
+	tScore := &FactoryStats{Score: 0, Factrominos: 0, ColorStreak: 0, CurrentColor: 0, ShapeStreak: 0, LastTetromino: constants.UndefinedTetrominoType}
+	tScore.TimesSinceLastShape = map[constants.TetrominoType]int{
 		constants.I: 0,
 		constants.O: 0,
 		constants.T: 0,
@@ -56,7 +56,7 @@ func newFactoryStats() *FactoryStats {
 	}
 	tScore.TrashedShapes = map[int]int{}
 	tScore.MyFibScore = *newFibScore()
-	tScore.BuiltShapes = map[constants.TetronimoType]int{
+	tScore.BuiltShapes = map[constants.TetrominoType]int{
 		constants.I: 0,
 		constants.O: 0,
 		constants.T: 0,
@@ -145,7 +145,7 @@ func CheckAchievements() {
 		return value
 	})
 	filteredAchievements := funk.Filter(rawAchievements, func(x constants.Achievement) bool {
-		return x.MyFamily.Name == "CreateTetronimos"
+		return x.MyFamily.Name == "CreateTetrominos"
 	}).([]constants.Achievement)
 
 	for _, value := range filteredAchievements {
@@ -178,7 +178,7 @@ func (fs *FactoryStats) FullFactoryStatReset() {
 	fs.ColorStreak = 0
 	fs.CurrentColor = 0
 	fs.ShapeStreak = 0
-	fs.LastTetromino = constants.UndefinedTetronimoType
+	fs.LastTetromino = constants.UndefinedTetrominoType
 	fs.LongestColorStreak = 0
 	fs.LongestShapeStreak = 0
 	fs.ResetFactoryBalanceStreak()
@@ -186,7 +186,7 @@ func (fs *FactoryStats) FullFactoryStatReset() {
 	fs.LongestUnoSteak = 0
 	fs.ShapesTrashed = 0
 	fs.LargestShape = 0
-	fs.TimesSinceLastShape = map[constants.TetronimoType]int{
+	fs.TimesSinceLastShape = map[constants.TetrominoType]int{
 		constants.I: 0,
 		constants.O: 0,
 		constants.T: 0,
