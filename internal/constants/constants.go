@@ -22,7 +22,7 @@ const (
 	TetrisWidth         = 10
 	TetrisHeight        = 20
 	DefaultSpeed        = 0.8
-	ScoreCheckPoint     = 5
+	ScoreCheckPoint     = 10
 	SpeedModifier       = 0.05
 	SpeedMax            = 2
 	SpeedMin            = 0.1
@@ -54,7 +54,7 @@ var (
 	TetrisStart = world.Coords{X: 4, Y: 19}
 
 	IgnoreEmptyConv      = false
-	AutoGenTetrominos    = true
+	AutoGenTetrominos    = false
 	NormalizedTetronimos = map[[4]world.Coords]TetronimoType{
 		[4]world.Coords{{0, 0}, {1, 0}, {2, 0}, {3, 0}}: I,
 		[4]world.Coords{{0, 0}, {0, 1}, {0, 2}, {0, 3}}: I,
