@@ -22,6 +22,7 @@ type Factromino struct {
 	MyFactronimoType    constants.FactrominoType
 	MyFactronimoVariant constants.FactrominoVariant
 	Color               TColor
+	MyTetronimoType     constants.TetronimoType
 }
 
 type FactoryBlock struct {

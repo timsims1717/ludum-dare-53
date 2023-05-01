@@ -90,7 +90,8 @@ func RandomTitle() string {
 type TetronimoType int
 
 const (
-	I = iota
+	UndefinedTetronimoType = iota
+	I
 	O
 	T
 	S
@@ -115,6 +116,8 @@ func (t TetronimoType) String() string {
 		return "J"
 	case T:
 		return "T"
+	case UndefinedTetronimoType:
+		return "Undefined"
 	}
 	return ""
 }
