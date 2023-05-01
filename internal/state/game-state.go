@@ -87,6 +87,56 @@ func (s *gameState) Load(done chan struct{}) {
 			AddComponent(myecs.ViewPort, data.FactoryViewport).AddComponent(myecs.Input, gameInput).AddComponent(myecs.Click, data.NewFn(ClickAchievement(&achFam)))
 	}
 
+	pauseBtnObj := object.New()
+	pauseBtnObj.Pos = pixel.V(-295., -180.)
+	pauseBtnObj.Rect = pixel.R(0, 0, 96, 64)
+	pauseBtnObj.Layer = 11
+	myecs.Manager.NewEntity().
+		AddComponent(myecs.Object, pauseBtnObj).
+		AddComponent(myecs.Drawable, data.PauseButSprs).
+		AddComponent(myecs.Update, data.NewFn(func() {
+			if pauseBtnObj.PointInside(data.FactoryViewport.Projected(gameInput.World)) {
+				if gameInput.Get("click").Pressed() {
+					data.PauseButSprs[1].Offset.Y = -3.
+				} else {
+					data.PauseButSprs[1].Offset.Y = 0
+				}
+				if gameInput.Get("click").JustReleased() {
+					data.Paused = true
+					openPauseMenu()
+				}
+			} else {
+				data.PauseButSprs[1].Offset.Y = 0
+			}
+		}))
+
+	restartBtnObj := object.New()
+	restartBtnObj.Pos = pixel.V(-820., -180.)
+	restartBtnObj.Rect = pixel.R(0, 0, 96, 64)
+	restartBtnObj.Layer = 11
+	myecs.Manager.NewEntity().
+		AddComponent(myecs.Object, restartBtnObj).
+		AddComponent(myecs.Drawable, data.RestartButSprs).
+		AddComponent(myecs.Update, data.NewFn(func() {
+			if restartBtnObj.PointInside(data.FactoryViewport.Projected(gameInput.World)) {
+				if gameInput.Get("click").Pressed() {
+					data.RestartButSprs[1].Offset.Y = -3.
+				} else {
+					data.RestartButSprs[1].Offset.Y = 0
+				}
+				if gameInput.Get("click").JustReleased() {
+					if systems.FailCondition {
+						systems.FailCondition = false
+						systems.WasFail = false
+						systems.ClearBoard()
+						systems.ClearFactory()
+					}
+				}
+			} else {
+				data.RestartButSprs[1].Offset.Y = 0
+			}
+		}))
+
 	s.UpdateViews()
 	reanimator.SetFrameRate(16)
 	reanimator.Reset()
@@ -107,13 +157,9 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	}
 	if gameInput.Get("pause").JustPressed() {
 		data.Paused = !data.Paused
-		data.PauseMenu = data.Paused
-		data.StickyOpen = data.Paused
 		if data.Paused {
-			OpenSticky(data.PauseMsg)
 			openPauseMenu()
 		} else {
-			CloseSticky()
 			closeMenu()
 		}
 	}

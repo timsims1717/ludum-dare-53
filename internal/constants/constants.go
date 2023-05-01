@@ -117,9 +117,9 @@ const (
 func (fc FailCondition) String() string {
 	switch fc {
 	case BoardFull:
-		return "You cannot consume anymore of our products, the board is full"
+		return "Game Over.\nYou cannot consume anymore of our products, the board is full"
 	case ConveyorBeltEmpty:
-		return "You did not meet your quota, the conveyor belt is empty"
+		return "Game Over.\nYou did not meet your quota, the conveyor belt is empty"
 	}
 	return ""
 }

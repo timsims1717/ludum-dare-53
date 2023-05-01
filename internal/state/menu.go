@@ -26,6 +26,7 @@ var (
 	resumeItem = &data.MenuItem{}
 	quitItem   = &data.MenuItem{}
 	optionItem = &data.MenuItem{}
+	creditItem = &data.MenuItem{}
 	vsyncItem  = &data.MenuItem{}
 	fullScreen = &data.MenuItem{}
 	backItem   = &data.MenuItem{}
@@ -63,7 +64,7 @@ func InitMenu(win *pixelgl.Window) {
 	quitItem.Text.Obj.Hide = true
 	quitItem.OrigSize = 0.32
 	optionItem.Click = func() {
-		closeMenu()
+		hideAllItems()
 		openOptionsMenu()
 	}
 	optionItem.Text = typeface.New(nil, "sticky", typeface.NewAlign(typeface.Center, typeface.Center), 1.5, 0.32, 0, 0)
@@ -76,6 +77,20 @@ func InitMenu(win *pixelgl.Window) {
 	optionItem.Text.Obj.Pos.Y = 36.
 	optionItem.Text.Obj.Hide = true
 	optionItem.OrigSize = 0.32
+	creditItem.Click = func() {
+		hideAllItems()
+		openCredits()
+	}
+	creditItem.Text = typeface.New(nil, "sticky", typeface.NewAlign(typeface.Center, typeface.Center), 1.5, 0.32, 0, 0)
+	creditItem.Text.SetPos(pixel.V(0., 0.))
+	creditItem.Text.SetSize(0.32)
+	creditItem.Text.SetColor(constants.BlackColor)
+	creditItem.Text.SetText("Credits")
+	creditItem.Text.Obj = object.New()
+	creditItem.Text.Obj.Pos.X = -28.
+	creditItem.Text.Obj.Pos.Y = -66.
+	creditItem.Text.Obj.Hide = true
+	creditItem.OrigSize = 0.32
 	vsyncItem.Click = func() {
 		options.VSync = !options.VSync
 		if !options.VSync {
@@ -91,7 +106,7 @@ func InitMenu(win *pixelgl.Window) {
 	vsyncItem.Text.SetText("VSync (It's on)")
 	vsyncItem.Text.Obj = object.New()
 	vsyncItem.Text.Obj.Pos.X = 118.
-	vsyncItem.Text.Obj.Pos.Y = 132.
+	vsyncItem.Text.Obj.Pos.Y = 152.
 	vsyncItem.Text.Obj.Hide = true
 	vsyncItem.OrigSize = 0.32
 	fullScreen.Click = func() {
@@ -108,12 +123,12 @@ func InitMenu(win *pixelgl.Window) {
 	fullScreen.Text.SetColor(constants.BlackColor)
 	fullScreen.Text.SetText("FullScreen (It's off)")
 	fullScreen.Text.Obj = object.New()
-	fullScreen.Text.Obj.Pos.X = -32.
+	fullScreen.Text.Obj.Pos.X = -20.
 	fullScreen.Text.Obj.Pos.Y = 45.
 	fullScreen.Text.Obj.Hide = true
 	fullScreen.OrigSize = 0.26
 	backItem.Click = func() {
-		closeMenu()
+		hideAllItems()
 		openPauseMenu()
 	}
 	backItem.Text = typeface.New(nil, "sticky", typeface.NewAlign(typeface.Center, typeface.Center), 1.5, 0.32, 0, 0)
@@ -123,7 +138,7 @@ func InitMenu(win *pixelgl.Window) {
 	backItem.Text.SetText("Back")
 	backItem.Text.Obj = object.New()
 	backItem.Text.Obj.Pos.X = -145.
-	backItem.Text.Obj.Pos.Y = -162.
+	backItem.Text.Obj.Pos.Y = -222.
 	backItem.Text.Obj.Hide = true
 	backItem.OrigSize = 0.32
 
@@ -136,6 +151,7 @@ func InitMenu(win *pixelgl.Window) {
 
 	data.MenuItems = append(data.MenuItems, resumeItem)
 	data.MenuItems = append(data.MenuItems, quitItem)
+	data.MenuItems = append(data.MenuItems, creditItem)
 	data.MenuItems = append(data.MenuItems, optionItem)
 	data.MenuItems = append(data.MenuItems, vsyncItem)
 	data.MenuItems = append(data.MenuItems, fullScreen)
@@ -143,7 +159,10 @@ func InitMenu(win *pixelgl.Window) {
 }
 
 func openPauseMenu() {
+	OpenSticky(data.PauseMsg)
+	data.PauseMenu = true
 	resumeItem.Text.Obj.Hide = false
+	creditItem.Text.Obj.Hide = false
 	quitItem.Text.Obj.Hide = false
 	optionItem.Text.Obj.Hide = false
 }
@@ -155,10 +174,22 @@ func openOptionsMenu() {
 }
 
 func closeMenu() {
+	hideAllItems()
+	data.PauseMenu = false
+	CloseSticky()
+}
+
+func hideAllItems() {
 	resumeItem.Text.Obj.Hide = true
 	quitItem.Text.Obj.Hide = true
+	creditItem.Text.Obj.Hide = true
 	optionItem.Text.Obj.Hide = true
 	vsyncItem.Text.Obj.Hide = true
 	fullScreen.Text.Obj.Hide = true
 	backItem.Text.Obj.Hide = true
+}
+
+func openCredits() {
+	OpenSticky(data.CreditsMsg)
+	backItem.Text.Obj.Hide = false
 }
