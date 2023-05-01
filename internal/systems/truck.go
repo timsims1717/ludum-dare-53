@@ -2,6 +2,7 @@ package systems
 
 import (
 	"github.com/faiface/pixel"
+	"math/rand"
 	"timsims1717/ludum-dare-53/internal/constants"
 	"timsims1717/ludum-dare-53/internal/data"
 )
@@ -19,4 +20,13 @@ func GenerateLoad(t *data.Truck) {
 		}
 	}
 	//pixel.zv
+}
+
+func RandomizeLoad(t *data.Truck) {
+	if t != nil && len(t.DeliveryLoad) > 1 {
+		for i := len(t.DeliveryLoad) - 1; i > 0; i-- {
+			j := rand.Intn(i)
+			t.DeliveryLoad[i], t.DeliveryLoad[j] = t.DeliveryLoad[j], t.DeliveryLoad[i]
+		}
+	}
 }

@@ -257,6 +257,7 @@ func DetectTetrominoTypeFromFactromino(f *data.Factromino) {
 		}
 	}
 }
+
 func FactoTet(f *data.Factromino) {
 	//detect Fac Type
 	if len(f.Blocks) == 4 {

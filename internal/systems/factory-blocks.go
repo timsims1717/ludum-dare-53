@@ -15,6 +15,7 @@ func CreateFactoryTet(pos pixel.Vec, col data.TColor, factrominoType constants.F
 	t := &data.Factromino{MyFactronimoType: factrominoType}
 	t.LastPos = pos
 	t.Object = object.New().WithID("factory-tet")
+	t.Object.Hide = true
 	t.Object.Pos = pos
 	t.Object.Layer = 12
 	t.Color = col
@@ -221,6 +222,7 @@ func CreateFactoryBlock(pos pixel.Vec, col data.TColor) *data.FactoryBlock {
 		Color:  col,
 	}
 	block.Object = object.New().WithID("factory-block")
+	block.Object.Hide = true
 	block.Object.Pos = pos
 	block.Object.Layer = 12
 	block.Object.Rect = pixel.R(0., 0., constants.FactoryTile, world.TileSize)
