@@ -4,6 +4,7 @@ import (
 	"github.com/bcvery1/tilepix"
 	"github.com/faiface/pixel"
 	"timsims1717/ludum-dare-53/pkg/img"
+	"timsims1717/ludum-dare-53/pkg/object"
 	"timsims1717/ludum-dare-53/pkg/reanimator"
 )
 
@@ -15,6 +16,8 @@ var (
 )
 
 var (
+	StickyObj     *object.Object
+	StickyNote    *pixel.Sprite
 	FloorSection  []*img.Sprite
 	PadSection    []*img.Sprite
 	WallSection   []*img.Sprite

@@ -26,6 +26,13 @@ func LoadImg() {
 	}
 	img.AddBatcher(constants.FactoryKey, factorySheet, true, true)
 
+	stickyNote, err := img.LoadImage("assets/stickynote.png")
+	if err != nil {
+		panic(err)
+	}
+	data.StickyNote = pixel.NewSprite(stickyNote, stickyNote.Bounds())
+	data.StickyObj = object.New()
+
 	// tilemaps
 	// floor section
 	for y := 0; y < 7; y++ {

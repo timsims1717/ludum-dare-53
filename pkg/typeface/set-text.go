@@ -114,6 +114,7 @@ func (item *Text) SetText(raw string) {
 	}
 	item.Width = maxX
 	item.Height = maxY
+	item.Obj.Rect = pixel.R(0., 0., item.Width, item.Height)
 	item.updateText()
 }
 

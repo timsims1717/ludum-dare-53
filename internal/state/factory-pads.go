@@ -42,26 +42,28 @@ func BuildFactoryPads() {
 		e := myecs.Manager.NewEntity()
 		e.AddComponent(myecs.Object, pad.Object).
 			AddComponent(myecs.Drawable, data.PadSection).
-			AddComponent(myecs.Input, factoryInput).
+			AddComponent(myecs.Input, gameInput).
 			AddComponent(myecs.ViewPort, data.FactoryViewport).
 			AddComponent(myecs.Click, data.NewFn(func() {
-				if pad.Tet != nil && data.DraggingPiece == nil {
-					data.DraggingPiece = pad.Tet
-					data.DraggingPiece.Entity.AddComponent(myecs.Drag, &factoryInput.World)
-					data.DraggingPiece.Object.Layer = 20
-					pad.Tet = nil
-				} else if pad.Tet == nil && data.DraggingPiece != nil {
-					pad.Tet = data.DraggingPiece
-					data.DraggingPiece.Entity.RemoveComponent(myecs.Drag)
-					data.DraggingPiece.Object.Layer = 12
-					data.DraggingPiece.Object.Pos = pad.Object.Pos
-					data.DraggingPiece = nil
+				if !systems.FailCondition {
+					if pad.Tet != nil && data.DraggingPiece == nil {
+						data.DraggingPiece = pad.Tet
+						data.DraggingPiece.Entity.AddComponent(myecs.Drag, &gameInput.World)
+						data.DraggingPiece.Object.Layer = 20
+						pad.Tet = nil
+					} else if pad.Tet == nil && data.DraggingPiece != nil {
+						pad.Tet = data.DraggingPiece
+						data.DraggingPiece.Entity.RemoveComponent(myecs.Drag)
+						data.DraggingPiece.Object.Layer = 12
+						data.DraggingPiece.Object.Pos = pad.Object.Pos
+						data.DraggingPiece = nil
+					}
 				}
 			})).
 			AddComponent(myecs.Update, data.NewFn(func() {
-				if ((data.DraggingPiece != nil && pad.Tet == nil) ||
+				if !systems.FailCondition && ((data.DraggingPiece != nil && pad.Tet == nil) ||
 					(data.DraggingPiece == nil && pad.Tet != nil)) &&
-					obj.PointInside(data.FactoryViewport.Projected(factoryInput.World)) {
+					obj.PointInside(data.FactoryViewport.Projected(gameInput.World)) {
 					PadHighlight(obj.Pos)
 				}
 			}))
@@ -93,20 +95,22 @@ func BuildFactoryPads() {
 	e := myecs.Manager.NewEntity()
 	e.AddComponent(myecs.Object, data.GarbagePad.Object).
 		AddComponent(myecs.Drawable, spr).
-		AddComponent(myecs.Input, factoryInput).
+		AddComponent(myecs.Input, gameInput).
 		AddComponent(myecs.ViewPort, data.FactoryViewport).
 		AddComponent(myecs.Click, data.NewFn(func() {
-			if data.DraggingPiece != nil {
-				for _, block := range data.DraggingPiece.Blocks {
-					myecs.Manager.DisposeEntity(block.Entity)
+			if !systems.FailCondition {
+				if data.DraggingPiece != nil {
+					for _, block := range data.DraggingPiece.Blocks {
+						myecs.Manager.DisposeEntity(block.Entity)
+					}
+					myecs.Manager.DisposeEntity(data.DraggingPiece.Entity)
+					data.DraggingPiece = nil
 				}
-				myecs.Manager.DisposeEntity(data.DraggingPiece.Entity)
-				data.DraggingPiece = nil
 			}
 		})).
 		AddComponent(myecs.Update, data.NewFn(func() {
-			if data.DraggingPiece != nil &&
-				obj.PointInside(data.FactoryViewport.Projected(factoryInput.World)) {
+			if !systems.FailCondition && data.DraggingPiece != nil &&
+				obj.PointInside(data.FactoryViewport.Projected(gameInput.World)) {
 				PadHighlight(obj.Pos)
 			}
 		}))
@@ -122,12 +126,13 @@ func BuildFactoryPads() {
 	data.QueuePad.Object = objQ
 	eQ := myecs.Manager.NewEntity()
 	eQ.AddComponent(myecs.Object, data.QueuePad.Object).
-		AddComponent(myecs.Input, factoryInput).
+		AddComponent(myecs.Input, gameInput).
 		AddComponent(myecs.ViewPort, data.FactoryViewport).
 		AddComponent(myecs.Click, data.NewFn(AddToQueuePad)).
 		AddComponent(myecs.Update, data.NewFn(func() {
-			if data.DraggingPiece != nil && len(data.DraggingPiece.Blocks) == 4 &&
-				objQ.PointInside(data.FactoryViewport.Projected(factoryInput.World)) {
+			if !systems.FailCondition && data.DraggingPiece != nil && len(data.DraggingPiece.Blocks) == 4 &&
+				objQ.PointInside(data.FactoryViewport.Projected(gameInput.World)) &&
+				data.QueuePad.Tet == nil {
 				PadHighlight(objQ.Pos)
 			}
 		}))
@@ -136,7 +141,7 @@ func BuildFactoryPads() {
 }
 
 func AddToQueuePad() {
-	if data.DraggingPiece != nil {
+	if !systems.FailCondition && data.DraggingPiece != nil {
 		if len(data.DraggingPiece.Blocks) == 4 {
 			if data.QueuePad.Tet == nil {
 				data.QueuePad.Tet = data.DraggingPiece
@@ -146,7 +151,7 @@ func AddToQueuePad() {
 				data.DraggingPiece.RefreshState()
 				if data.DraggingPiece.MyTetrominoType == constants.I {
 					for _, block := range data.DraggingPiece.Blocks {
-						if block.Object.Offset.Y != 0 {
+						if block.Object.Offset.Y > 7 || block.Object.Offset.Y < -7 {
 							block.Object.Offset.X = (block.Object.Offset.Y / world.TileSize) * constants.FactoryTile
 							block.Object.Offset.Y = 0
 						}
@@ -156,24 +161,6 @@ func AddToQueuePad() {
 				data.FactoryFloor.Stats.AddToFactoryStats(*data.DraggingPiece)
 				data.DraggingPiece = nil
 			}
-		}
-	}
-}
-
-func QueuePadUpdate() {
-
-}
-
-func AddToQueue() {
-	if data.DraggingPiece != nil {
-		if len(data.DraggingPiece.Blocks) == 4 {
-			systems.FactoTet(data.DraggingPiece)
-
-			for _, block := range data.DraggingPiece.Blocks {
-				myecs.Manager.DisposeEntity(block.Entity)
-			}
-			myecs.Manager.DisposeEntity(data.DraggingPiece.Entity)
-			data.DraggingPiece = nil
 		}
 	}
 }

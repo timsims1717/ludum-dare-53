@@ -3,12 +3,14 @@ package main
 import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
+	"github.com/faiface/pixel/text"
 	"timsims1717/ludum-dare-53/internal/constants"
 	"timsims1717/ludum-dare-53/internal/loading"
 	"timsims1717/ludum-dare-53/internal/state"
 	"timsims1717/ludum-dare-53/pkg/debug"
 	"timsims1717/ludum-dare-53/pkg/options"
 	"timsims1717/ludum-dare-53/pkg/timing"
+	"timsims1717/ludum-dare-53/pkg/typeface"
 	"timsims1717/ludum-dare-53/pkg/viewport"
 	"timsims1717/ludum-dare-53/pkg/world"
 )
@@ -34,10 +36,22 @@ func run() {
 
 	options.VSync = true
 
+	mainFont, err := typeface.LoadTTF("assets/FR73PixD.ttf", constants.TypeFaceSize)
+	if err != nil {
+		panic(err)
+	}
+	typeface.Atlases["main"] = text.NewAtlas(mainFont, text.ASCII)
+	stickyFont, err := typeface.LoadTTF("assets/HomemadeApple-Regular.ttf", constants.TypeFaceSize)
+	if err != nil {
+		panic(err)
+	}
+	typeface.Atlases["sticky"] = text.NewAtlas(stickyFont, text.ASCII)
+
 	loading.LoadImg()
 
 	debug.Initialize(&viewport.MainCamera.PostCamPos, &viewport.MainCamera.PostCamPos)
 
+	state.InitMenu(win)
 	win.Show()
 
 	timing.Reset()

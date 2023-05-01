@@ -26,23 +26,19 @@ var (
 		},
 		Mode: pxginput.KeyboardMouse,
 	}
-	tetrisInput = &pxginput.Input{
+	gameInput = &pxginput.Input{
 		Buttons: map[string]*pxginput.ButtonSet{
-			"moveDown":  pxginput.NewJoyless(pixelgl.KeyS),
-			"moveLeft":  pxginput.NewJoyless(pixelgl.KeyA),
-			"moveRight": pxginput.NewJoyless(pixelgl.KeyD),
-			"rotate":    pxginput.NewJoyless(pixelgl.KeyW),
-			"reset":     pxginput.NewJoyless(pixelgl.KeyR),
-			"speedUp":   pxginput.NewJoyless(pixelgl.KeyPageUp),
-			"speedDown": pxginput.NewJoyless(pixelgl.KeyPageDown),
-		},
-		Mode: pxginput.KeyboardMouse,
-	}
-	factoryInput = &pxginput.Input{
-		Buttons: map[string]*pxginput.ButtonSet{
+			"moveDown":   pxginput.NewJoyless(pixelgl.KeyS),
+			"moveLeft":   pxginput.NewJoyless(pixelgl.KeyA),
+			"moveRight":  pxginput.NewJoyless(pixelgl.KeyD),
+			"rotate":     pxginput.NewJoyless(pixelgl.KeyW),
+			"reset":      pxginput.NewJoyless(pixelgl.KeyR),
+			"speedUp":    pxginput.NewJoyless(pixelgl.KeyPageUp),
+			"speedDown":  pxginput.NewJoyless(pixelgl.KeyPageDown),
 			"click":      pxginput.NewJoyless(pixelgl.MouseButtonLeft),
 			"rightClick": pxginput.NewJoyless(pixelgl.MouseButtonRight),
 			"generate":   pxginput.NewJoyless(pixelgl.KeyKPEnter),
+			"pause":      pxginput.NewJoyless(pixelgl.KeyEscape),
 		},
 		Mode: pxginput.KeyboardMouse,
 	}

@@ -141,7 +141,7 @@ func TruckUpdate(truck *data.Truck, startMove bool) func() {
 				if len(truck.DeliveryLoad) > 0 {
 					block := truck.DeliveryLoad[0]
 					block.Entity.AddComponent(myecs.ViewPort, data.FactoryViewport)
-					block.Entity.AddComponent(myecs.Input, factoryInput)
+					block.Entity.AddComponent(myecs.Input, gameInput)
 					block.Object.Pos = truck.Pad.Object.Pos
 					block.Object.Layer = 10
 					block.Object.Hide = false

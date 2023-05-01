@@ -223,7 +223,7 @@ func PlaceTetromino() bool {
 func NewTetromino() *data.Tetromino {
 	col := data.RandColor()
 	t := &data.Tetromino{}
-	t.TetType = constants.TetronimoType(rand.Intn(7))
+	t.TetType = constants.TetronimoType(rand.Intn(7)) + 1
 	switch t.TetType {
 	case constants.O:
 		t = CreateOTetronimo(col)

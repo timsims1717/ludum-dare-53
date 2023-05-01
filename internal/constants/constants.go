@@ -13,6 +13,8 @@ const (
 	Version = 1
 	Build   = 20230428
 
+	TypeFaceSize = 200.
+
 	// Batches
 	BlockKey   = "blocks"
 	FactoryKey = "factory"
@@ -51,6 +53,12 @@ var (
 		B: 19,
 		A: 255,
 	}
+	TVTextColor = color.RGBA{
+		R: 15,
+		G: 95,
+		B: 21,
+		A: 255,
+	}
 	TetrisStart = world.Coords{X: 4, Y: 19}
 
 	IgnoreEmptyConv = false
@@ -84,6 +92,7 @@ var (
 		"We killed a bug, YAY!!!",
 		"Stop everything! We need a full factory reset!",
 		"Where did you think the blocks you mined in minecraft went?!?",
+		"Don't forget to spend your hard earned dollars at the company store!",
 	}
 )
 

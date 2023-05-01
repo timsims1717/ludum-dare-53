@@ -15,6 +15,13 @@ var (
 
 func TetrisSystem() {
 	if FailCondition {
+		if data.DraggingPiece != nil {
+			for _, block := range data.DraggingPiece.Blocks {
+				myecs.Manager.DisposeEntity(block.Entity)
+			}
+			myecs.Manager.DisposeEntity(data.DraggingPiece.Entity)
+			data.DraggingPiece = nil
+		}
 		return
 	}
 	if PieceDone {

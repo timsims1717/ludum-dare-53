@@ -5,6 +5,7 @@ import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/pixelgl"
 	"golang.org/x/image/colornames"
+	"image/color"
 	"math/rand"
 	"timsims1717/ludum-dare-53/internal/constants"
 	"timsims1717/ludum-dare-53/internal/data"
@@ -15,6 +16,7 @@ import (
 	"timsims1717/ludum-dare-53/pkg/options"
 	"timsims1717/ludum-dare-53/pkg/reanimator"
 	"timsims1717/ludum-dare-53/pkg/state"
+	"timsims1717/ludum-dare-53/pkg/typeface"
 	"timsims1717/ludum-dare-53/pkg/viewport"
 	"timsims1717/ludum-dare-53/pkg/world"
 )
@@ -30,6 +32,11 @@ func (s *gameState) Unload() {
 }
 
 func (s *gameState) Load(done chan struct{}) {
+
+	data.StickyViewport = viewport.New(nil)
+	data.StickyViewport.SetRect(pixel.R(0, 0, 1024, 1024))
+	data.StickyViewport.CamPos = pixel.ZV
+
 	data.TetrisViewport = viewport.New(nil)
 	data.TetrisViewport.SetRect(pixel.R(0, 0, world.TileSize*constants.TetrisWidth, world.TileSize*constants.TetrisHeight))
 	data.TetrisViewport.CamPos = pixel.V(world.TileSize*0.5*(constants.TetrisWidth-1), world.TileSize*0.5*(constants.TetrisHeight-1))
@@ -49,6 +56,25 @@ func (s *gameState) Load(done chan struct{}) {
 	data.TetrisBoard.NextShape = systems.NewTetromino()
 	systems.PlaceTetromino()
 
+	data.SBLabels = typeface.New(nil, "main", typeface.NewAlign(typeface.Left, typeface.Top), 1.5, 1., 0, 0)
+	data.SBLabels.Obj.Layer = 12
+	data.SBLabels.SetPos(pixel.V(-21.5*data.MSize, 15.5*data.MSize))
+	data.SBLabels.SetColor(constants.TVTextColor)
+	data.SBLabels.SetSize(0.12)
+	data.SBLabels.SetText("Scores")
+
+	data.SBScores = typeface.New(nil, "main", typeface.NewAlign(typeface.Right, typeface.Top), 1.5, 1., 0, 0)
+	data.SBScores.Obj.Layer = 12
+	data.SBScores.SetPos(pixel.V(-3.5*data.MSize, 15.5*data.MSize))
+	data.SBScores.SetColor(constants.TVTextColor)
+	data.SBScores.SetSize(0.12)
+	data.SBScores.SetText("Scores")
+
+	data.StickyText = typeface.New(nil, "sticky", typeface.NewAlign(typeface.Center, typeface.Center), 1.5, 0.32, 0, 0)
+	data.StickyText.SetPos(pixel.V(0., 0.))
+	data.StickyText.SetColor(constants.BlackColor)
+	data.StickyText.SetText("Paused")
+
 	s.UpdateViews()
 	reanimator.SetFrameRate(16)
 	reanimator.Reset()
@@ -61,90 +87,103 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	if options.Updated {
 		s.UpdateViews()
 	}
-	tetrisInput.Update(win, viewport.MainCamera.Mat)
-	factoryInput.Update(win, viewport.MainCamera.Mat)
-	reanimator.Update()
-	debug.AddText(fmt.Sprintf("Mouse Input: (%d,%d)", int(factoryInput.World.X), int(factoryInput.World.Y)))
-	debug.AddText(fmt.Sprintf("Factory Input: (%d,%d)", int(data.FactoryViewport.Projected(factoryInput.World).X), int(data.FactoryViewport.Projected(factoryInput.World).Y)))
-
-	if tetrisInput.Get("moveDown").JustPressed() || tetrisInput.Get("moveDown").Repeated() {
-		systems.MoveDown = true
-	}
-	if tetrisInput.Get("moveLeft").JustPressed() || (tetrisInput.Get("moveLeft").Pressed() && s.lastLeft) {
-		s.lastLeft = true
-		if tetrisInput.Get("moveRight").JustPressed() {
-			s.lastLeft = false
-			systems.MoveRight = true
-		} else if tetrisInput.Get("moveLeft").JustPressed() || tetrisInput.Get("moveLeft").Repeated() {
-			systems.MoveLeft = true
+	gameInput.Update(win, viewport.MainCamera.Mat)
+	if gameInput.Get("pause").JustPressed() {
+		data.Paused = !data.Paused
+		data.StickyOpen = data.Paused
+		if data.Paused {
+			data.SetStickyMsg(data.PauseMsg)
+			openPauseMenu()
+		} else {
+			closeMenu()
 		}
-	} else if tetrisInput.Get("moveRight").JustPressed() || tetrisInput.Get("moveRight").Pressed() && !s.lastLeft {
-		s.lastLeft = false
-		if tetrisInput.Get("moveLeft").JustPressed() {
+	}
+	if win.Focused() && !data.Paused {
+		reanimator.Update()
+		debug.AddText(fmt.Sprintf("Mouse Input: (%d,%d)", int(gameInput.World.X), int(gameInput.World.Y)))
+		debug.AddText(fmt.Sprintf("Factory Input: (%d,%d)", int(data.FactoryViewport.Projected(gameInput.World).X), int(data.FactoryViewport.Projected(gameInput.World).Y)))
+
+		if gameInput.Get("moveDown").JustPressed() || gameInput.Get("moveDown").Repeated() {
+			systems.MoveDown = true
+		}
+		if gameInput.Get("moveLeft").JustPressed() || (gameInput.Get("moveLeft").Pressed() && s.lastLeft) {
 			s.lastLeft = true
-			systems.MoveLeft = true
-		} else if tetrisInput.Get("moveRight").JustPressed() || tetrisInput.Get("moveRight").Repeated() {
-			systems.MoveRight = true
-		}
-	}
-	if tetrisInput.Get("rotate").JustPressed() {
-		systems.Rotate = true
-	}
-	if tetrisInput.Get("reset").JustPressed() {
-		if systems.FailCondition {
-			systems.FailCondition = false
-			systems.ClearBoard()
-			systems.ClearFactory()
-		}
-	}
-	if tetrisInput.Get("speedUp").JustPressed() {
-		data.TetrisBoard.SpeedUp()
-	}
-	if tetrisInput.Get("speedDown").JustPressed() {
-		data.TetrisBoard.SpeedDown()
-	}
-
-	if factoryInput.Get("generate").JustPressed() {
-		factoryInput.Get("generate").Consume()
-		r1 := rand.Intn(len(data.FactoryPads))
-		pad := data.FactoryPads[r1]
-		r := r1
-		for pad.Tet != nil {
-			r++
-			r %= len(data.FactoryPads)
-			if r == r1 {
-				break
+			if gameInput.Get("moveRight").JustPressed() {
+				s.lastLeft = false
+				systems.MoveRight = true
+			} else if gameInput.Get("moveLeft").JustPressed() || gameInput.Get("moveLeft").Repeated() {
+				systems.MoveLeft = true
 			}
-			pad = data.FactoryPads[r]
+		} else if gameInput.Get("moveRight").JustPressed() || gameInput.Get("moveRight").Pressed() && !s.lastLeft {
+			s.lastLeft = false
+			if gameInput.Get("moveLeft").JustPressed() {
+				s.lastLeft = true
+				systems.MoveLeft = true
+			} else if gameInput.Get("moveRight").JustPressed() || gameInput.Get("moveRight").Repeated() {
+				systems.MoveRight = true
+			}
 		}
-		if pad.Tet == nil {
-
-			tet := systems.CreateFactoryTet(pad.Object.Pos, data.RandColor(), constants.FacUndefined)
-			tet.Object.Hide = false
-			tet.Entity.AddComponent(myecs.ViewPort, data.FactoryViewport)
-
-			tet.Entity.AddComponent(myecs.Input, factoryInput)
-			pad.Tet = tet
-			//tet.Entity.AddComponent(myecs.Click, data.NewFn(func() {
-			//	if tet.Entity.HasComponent(myecs.Drag) {
-			//		tet.Object.Pos = tet.LastPos
-			//		tet.Entity.RemoveComponent(myecs.Drag)
-			//	} else if data.DraggingPiece == nil {
-			//		tet.Entity.AddComponent(myecs.Drag, &factoryInput.World)
-			//	}
-			//}))
+		if gameInput.Get("rotate").JustPressed() {
+			systems.Rotate = true
 		}
+		if gameInput.Get("reset").JustPressed() {
+			if systems.FailCondition {
+				systems.FailCondition = false
+				systems.ClearBoard()
+				systems.ClearFactory()
+			}
+		}
+		if gameInput.Get("speedUp").JustPressed() {
+			data.TetrisBoard.SpeedUp()
+		}
+		if gameInput.Get("speedDown").JustPressed() {
+			data.TetrisBoard.SpeedDown()
+		}
+
+		if gameInput.Get("generate").JustPressed() {
+			gameInput.Get("generate").Consume()
+			r1 := rand.Intn(len(data.FactoryPads))
+			pad := data.FactoryPads[r1]
+			r := r1
+			for pad.Tet != nil {
+				r++
+				r %= len(data.FactoryPads)
+				if r == r1 {
+					break
+				}
+				pad = data.FactoryPads[r]
+			}
+			if pad.Tet == nil {
+
+				tet := systems.CreateFactoryTet(pad.Object.Pos, data.RandColor(), constants.FacUndefined)
+				tet.Object.Hide = false
+				tet.Entity.AddComponent(myecs.ViewPort, data.FactoryViewport)
+
+				tet.Entity.AddComponent(myecs.Input, gameInput)
+				pad.Tet = tet
+				//tet.Entity.AddComponent(myecs.Click, data.NewFn(func() {
+				//	if tet.Entity.HasComponent(myecs.Drag) {
+				//		tet.Object.Pos = tet.LastPos
+				//		tet.Entity.RemoveComponent(myecs.Drag)
+				//	} else if data.DraggingPiece == nil {
+				//		tet.Entity.AddComponent(myecs.Drag, &gameInput.World)
+				//	}
+				//}))
+			}
+		}
+
+		systems.FunctionSystem()
+		systems.BlockSystem()
+		systems.TetrisSystem()
+		systems.FactoryBlockSystem()
+		systems.ClickSystem()
+		systems.DragSystem()
+		systems.ParentSystem()
+		systems.ObjectSystem()
+		systems.AnimationSystem()
+	} else if data.Paused {
+		systems.MenuSystem(gameInput.World, gameInput.Get("click").JustPressed())
 	}
-
-	systems.FunctionSystem()
-	systems.BlockSystem()
-	systems.TetrisSystem()
-	systems.FactoryBlockSystem()
-	systems.ClickSystem()
-	systems.DragSystem()
-	systems.ParentSystem()
-	systems.ObjectSystem()
-	systems.AnimationSystem()
 	debug.AddText(fmt.Sprintf("Global Score: %03d", data.TetrisBoard.Stats.GlobalScore()))
 	debug.AddText(fmt.Sprintf("Tetris Score: %03d", data.TetrisBoard.Stats.Score))
 	debug.AddText(fmt.Sprintf("Line Clearing Points: +%d", data.TetrisBoard.Stats.MyFibScore.FibN-1))
@@ -173,8 +212,18 @@ func (s *gameState) Update(win *pixelgl.Window) {
 		debug.AddText("Game Over, dun dun dun")
 	}
 	debug.AddText(fmt.Sprintf("PieceDone: %t", systems.PieceDone))
+
+	data.SBLabels.SetText("Score:\nBalance Bonus:\nClear Bonus:")
+	data.SBLabels.Obj.Update()
+
+	data.SBScores.SetText(fmt.Sprintf("%05d\n+%d\n+%d", data.TetrisBoard.Stats.GlobalScore(), data.FactoryFloor.Stats.MyFibScore.FibN-1, data.TetrisBoard.Stats.MyFibScore.FibN-1))
+	data.SBScores.Obj.Update()
+
 	data.TetrisViewport.Update()
 	data.FactoryViewport.Update()
+	data.StickyText.Obj.Update()
+	data.StickyObj.Update()
+	data.StickyViewport.Update()
 }
 
 func (s *gameState) Draw(win *pixelgl.Window) {
@@ -186,6 +235,8 @@ func (s *gameState) Draw(win *pixelgl.Window) {
 	img.Batchers[constants.FactoryKey].Draw(data.FactoryViewport.Canvas)
 	img.Batchers[constants.BlockKey].Draw(data.FactoryViewport.Canvas)
 	img.Clear()
+	data.SBLabels.Draw(data.FactoryViewport.Canvas)
+	data.SBScores.Draw(data.FactoryViewport.Canvas)
 	systems.DrawSystem(win, 13)
 	systems.DrawSystem(win, 14)
 	systems.DrawSystem(win, 15)
@@ -210,6 +261,13 @@ func (s *gameState) Draw(win *pixelgl.Window) {
 	img.Batchers[constants.BlockKey].Draw(data.TetrisViewport.Canvas)
 	img.Clear()
 	data.TetrisViewport.Canvas.Draw(win, data.TetrisViewport.Mat)
+	if data.StickyOpen {
+		data.StickyViewport.Canvas.Clear(color.RGBA{})
+		data.StickyNote.Draw(data.StickyViewport.Canvas, data.StickyObj.Mat)
+		data.StickyText.Draw(data.StickyViewport.Canvas)
+		systems.DrawMenuSystem(data.StickyViewport)
+		data.StickyViewport.Canvas.Draw(win, data.StickyViewport.Mat)
+	}
 	systems.TemporarySystem()
 }
 
@@ -233,4 +291,7 @@ func (s *gameState) UpdateViews() {
 	data.FactoryViewport.SetRect(pixel.R(0, 0, viewport.MainCamera.Rect.W(), viewport.MainCamera.Rect.H()))
 	data.FactoryViewport.CamPos.Y = data.MSize * 10.
 	data.FactoryViewport.CamPos.X = data.MSize * -10.
+
+	data.StickyViewport.PortPos = portPos
+	data.StickyViewport.PortSize = pixel.V(0.8, 0.8)
 }

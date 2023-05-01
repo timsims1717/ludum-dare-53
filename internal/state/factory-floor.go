@@ -34,14 +34,14 @@ func BuildFactoryFloor() {
 	data.FactoryFloor.Object.Rect = pixel.R(0., 0., constants.FactoryWidth*constants.FactoryTile, constants.FactoryHeight*world.TileSize)
 	data.FactoryFloor.Entity.AddComponent(myecs.Object, data.FactoryFloor.Object).
 		AddComponent(myecs.ViewPort, data.FactoryViewport).
-		AddComponent(myecs.Input, factoryInput).
+		AddComponent(myecs.Input, gameInput).
 		AddComponent(myecs.Update, data.NewFn(FactoryFloorUpdate())).
 		AddComponent(myecs.Click, data.NewFn(FactoryFloorClicked()))
 }
 
 func FactoryFloorUpdate() func() {
 	return func() {
-		if data.FactoryFloor.Object.PointInside(data.FactoryViewport.Projected(factoryInput.World)) {
+		if data.FactoryFloor.Object.PointInside(data.FactoryViewport.Projected(gameInput.World)) {
 			if data.DraggingPiece != nil {
 				if ActuallyOnFloor() {
 					legal := true
@@ -107,7 +107,7 @@ func FactoryFloorClicked() func() {
 				}
 			}
 		} else {
-			pos := data.FactoryViewport.Projected(factoryInput.World)
+			pos := data.FactoryViewport.Projected(gameInput.World)
 			x, y := world.WorldToMapC(pos.X+constants.FactoryTile*0.5, pos.Y, pixel.V(constants.FactoryTile, world.TileSize))
 			c := world.Coords{X: x, Y: y}
 			if data.FactoryLegal(c) {
@@ -118,9 +118,9 @@ func FactoryFloorClicked() func() {
 					blocks = GetAllColorNeighbors(blockA, blocks)
 					tet := systems.ConstructTetFromBlocks(pos, blocks)
 					tet.Entity.AddComponent(myecs.ViewPort, data.FactoryViewport)
-					tet.Entity.AddComponent(myecs.Input, factoryInput)
+					tet.Entity.AddComponent(myecs.Input, gameInput)
 					data.DraggingPiece = tet
-					data.DraggingPiece.Entity.AddComponent(myecs.Drag, &factoryInput.World)
+					data.DraggingPiece.Entity.AddComponent(myecs.Drag, &gameInput.World)
 					data.DraggingPiece.Object.Layer = 20
 					for _, block := range blocks2 {
 						myecs.Manager.DisposeEntity(block.Entity)

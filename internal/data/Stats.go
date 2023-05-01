@@ -1,6 +1,8 @@
 package data
 
 import (
+	"fmt"
+	"strings"
 	"timsims1717/ludum-dare-53/internal/constants"
 )
 
@@ -179,4 +181,12 @@ func (f *FibScore) fibIter() int {
 func (f *FibScore) reset() {
 	f.FibN = 1
 	f.FibNMinus = 0
+}
+
+func (ts *TetrisStats) ScoreString() string {
+	var sb strings.Builder
+	sb.WriteString(fmt.Sprintf("Score:        %05d\n", ts.GlobalScore()))
+	sb.WriteString(fmt.Sprintf("Balance Bonus: %2d\n", FactoryFloor.Stats.MyFibScore.FibN-1))
+	sb.WriteString(fmt.Sprintf("Clear Bonus:    %2d\n", TetrisBoard.Stats.MyFibScore.FibN-1))
+	return sb.String()
 }
