@@ -31,7 +31,7 @@ func DrawSystem(win *pixelgl.Window, layer int) {
 	count := 0
 	for _, result := range myecs.Manager.Query(myecs.IsDrawable) {
 		obj, okO := result.Components[myecs.Object].(*object.Object)
-		if okO && obj.Layer == layer {
+		if okO && obj.Layer == layer && !obj.Hide {
 			draw := result.Components[myecs.Drawable]
 			if draw == nil {
 				continue

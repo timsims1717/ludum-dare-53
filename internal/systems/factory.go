@@ -9,7 +9,7 @@ import (
 func FactoryBlockSystem() {
 	for _, result := range myecs.Manager.Query(myecs.IsBlock) {
 		obj, okO := result.Components[myecs.Object].(*object.Object)
-		tet, ok := result.Components[myecs.Block].(*data.FacTetronimo)
+		tet, ok := result.Components[myecs.Block].(*data.FacTetromino)
 		if okO && ok {
 			for _, block := range tet.Blocks {
 				block.Object.Layer = obj.Layer

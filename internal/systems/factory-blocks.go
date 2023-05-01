@@ -11,10 +11,11 @@ import (
 	"timsims1717/ludum-dare-53/pkg/world"
 )
 
-func CreateFactoryTet(pos pixel.Vec, col data.TColor, factrominoType constants.FactrominoType) *data.FacTetronimo {
-	t := &data.FacTetronimo{}
+func CreateFactoryTet(pos pixel.Vec, col data.TColor, factrominoType constants.FactrominoType) *data.FacTetromino {
+	t := &data.FacTetromino{}
 	t.LastPos = pos
 	t.Object = object.New().WithID("factory-tet")
+	t.Object.Hide = true
 	t.Object.Pos = pos
 	t.Object.Layer = 12
 	w := constants.FactoryTile
@@ -163,8 +164,8 @@ func CreateFactoryTet(pos pixel.Vec, col data.TColor, factrominoType constants.F
 	return t
 }
 
-func ConstructTetFromBlocks(pos pixel.Vec, blocks []*data.FactoryBlock) *data.FacTetronimo {
-	ft := &data.FacTetronimo{}
+func ConstructTetFromBlocks(pos pixel.Vec, blocks []*data.FactoryBlock) *data.FacTetromino {
+	ft := &data.FacTetromino{}
 	ft.LastPos = pos
 	ft.Object = object.New().WithID("factory-tet")
 	ft.Object.Pos = pos
@@ -210,6 +211,7 @@ func CreateFactoryBlock(pos pixel.Vec, col data.TColor) *data.FactoryBlock {
 		Color:  col,
 	}
 	block.Object = object.New().WithID("factory-block")
+	block.Object.Hide = true
 	block.Object.Pos = pos
 	block.Object.Layer = 12
 	block.Object.Rect = pixel.R(0., 0., constants.FactoryTile, world.TileSize)

@@ -242,7 +242,7 @@ func NewTetromino() *data.Tetromino {
 	}
 	return t
 }
-func FactoTet(f *data.FacTetronimo) {
+func FactoTet(f *data.FacTetromino) {
 	//detect Fac Type
 	if len(f.Blocks) == 4 {
 		var originalCoords [4]world.Coords

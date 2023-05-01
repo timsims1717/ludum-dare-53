@@ -53,7 +53,7 @@ type Tetromino struct {
 	TetType constants.TetronimoType
 }
 
-func FacTetIsanI(f *FacTetronimo) bool {
+func FacTetIsanI(f *FacTetromino) bool {
 	xchange := false
 	ychange := false
 	x := f.Blocks[0].Coords.X
