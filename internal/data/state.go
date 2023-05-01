@@ -15,6 +15,7 @@ var (
 
 	SBLabels *typeface.Text
 	SBScores *typeface.Text
+	ShCounts *typeface.Text
 
 	StickyText *typeface.Text
 

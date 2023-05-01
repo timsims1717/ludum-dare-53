@@ -72,6 +72,13 @@ func (s *gameState) Load(done chan struct{}) {
 	data.SBScores.SetSize(0.12)
 	data.SBScores.SetText("Scores")
 
+	data.ShCounts = typeface.New(nil, "main", typeface.NewAlign(typeface.Center, typeface.Top), 1.5, 1., 0, 0)
+	data.ShCounts.Obj.Layer = 12
+	data.ShCounts.SetPos(pixel.V(-13.*data.MSize, 2.*data.MSize))
+	data.ShCounts.SetColor(constants.TVTextColor)
+	data.ShCounts.SetSize(0.08)
+	data.ShCounts.SetText("Scores")
+
 	data.StickyText = typeface.New(nil, "sticky", typeface.NewAlign(typeface.Center, typeface.Center), 1.5, 0.32, 3.2*constants.TypeFaceSize, 0)
 	data.StickyText.SetPos(pixel.V(0., 0.))
 	data.StickyText.SetColor(constants.BlackColor)
@@ -301,6 +308,10 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	data.SBScores.SetText(fmt.Sprintf("%05d\n+%d\n+%d", data.TetrisBoard.Stats.GlobalScore(), data.FactoryFloor.Stats.MyFibScore.FibN-1, data.TetrisBoard.Stats.MyFibScore.FibN-1))
 	data.SBScores.Obj.Update()
 
+	bs := data.FactoryFloor.Stats.BuiltShapes
+	data.ShCounts.SetText(fmt.Sprintf("%02d %02d %02d %02d %02d %02d %02d", bs[constants.O], bs[constants.S], bs[constants.Z], bs[constants.J], bs[constants.L], bs[constants.T], bs[constants.I]))
+	data.ShCounts.Obj.Update()
+
 	data.TetrisViewport.Update()
 	data.FactoryViewport.Update()
 	data.StickyText.Obj.Update()
@@ -320,6 +331,7 @@ func (s *gameState) Draw(win *pixelgl.Window) {
 	img.Clear()
 	data.SBLabels.Draw(data.FactoryViewport.Canvas)
 	data.SBScores.Draw(data.FactoryViewport.Canvas)
+	data.ShCounts.Draw(data.FactoryViewport.Canvas)
 	systems.DrawSystem(win, 13)
 	systems.DrawSystem(win, 14)
 	systems.DrawSystem(win, 15)

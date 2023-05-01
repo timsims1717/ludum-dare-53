@@ -475,4 +475,12 @@ func LoadImg() {
 	data.PauseButSprs = append(data.PauseButSprs, baseSpr1)
 	data.PauseButSprs = append(data.PauseButSprs, pauseBtn)
 	data.PauseButSprs = append(data.PauseButSprs, baseSpr2)
+	// tetris display
+	data.TVShapes = append(data.TVShapes, img.NewOffsetSprite("O", constants.FactoryKey, pixel.V(-6.*data.MSize, 0.)))
+	data.TVShapes = append(data.TVShapes, img.NewOffsetSprite("S", constants.FactoryKey, pixel.V(-4.*data.MSize, 0.)))
+	data.TVShapes = append(data.TVShapes, img.NewOffsetSprite("Z", constants.FactoryKey, pixel.V(-2.*data.MSize, 0.)))
+	data.TVShapes = append(data.TVShapes, img.NewOffsetSprite("J", constants.FactoryKey, pixel.V(0., 0.)))
+	data.TVShapes = append(data.TVShapes, img.NewOffsetSprite("L", constants.FactoryKey, pixel.V(2.*data.MSize, 0.)))
+	data.TVShapes = append(data.TVShapes, img.NewOffsetSprite("T", constants.FactoryKey, pixel.V(4.*data.MSize, 0.)))
+	data.TVShapes = append(data.TVShapes, img.NewOffsetSprite("I", constants.FactoryKey, pixel.V(6.*data.MSize, 0.)))
 }

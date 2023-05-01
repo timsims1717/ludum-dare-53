@@ -1,6 +1,7 @@
 package state
 
 import (
+	"github.com/faiface/pixel"
 	"timsims1717/ludum-dare-53/internal/data"
 	"timsims1717/ludum-dare-53/internal/myecs"
 	"timsims1717/ludum-dare-53/pkg/object"
@@ -126,4 +127,14 @@ func LoadTileMaps() {
 	myecs.Manager.NewEntity().
 		AddComponent(myecs.Object, objBulb).
 		AddComponent(myecs.Drawable, data.Bulb)
+
+	// TVShapes
+	objTVShapes := object.New()
+	objTVShapes.Pos.X = -13. * data.MSize
+	objTVShapes.Pos.Y = -1. * data.MSize
+	objTVShapes.Sca = pixel.V(2., 2.)
+	objTVShapes.Layer = 11
+	myecs.Manager.NewEntity().
+		AddComponent(myecs.Object, objTVShapes).
+		AddComponent(myecs.Drawable, data.TVShapes)
 }
