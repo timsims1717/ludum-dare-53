@@ -17,9 +17,9 @@ The controls for the block falling game are:
 * **Escape** to pause
 * **F5** to toggle fullscreen
 
-[You're playing the game!](Screenshot2.png)
+![You're playing the game!](Screenshot2.png)
 
-[You've assembled 5 Tetrominos!](Screenshot1.png)
+![You've assembled 5 Tetrominos!](Screenshot1.png)
 
 See if you can find all the sticky notes left by Management.
 
