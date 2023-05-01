@@ -138,9 +138,9 @@ func (fs *FactoryStats) AddToFactoryStats(factromino Factromino) {
 		fs.LastTetromino = factromino.MyTetrominoType
 	}
 	fs.BuiltShapes[factromino.MyTetrominoType]++
-	CheckAchievements()
+	CheckFactoryAchievements()
 }
-func CheckAchievements() {
+func CheckFactoryAchievements() {
 	rawAchievements := funk.Map(constants.Achievements, func(k string, value constants.Achievement) constants.Achievement {
 		return value
 	})
@@ -159,7 +159,17 @@ func CheckAchievements() {
 		}
 	}
 
-	if TetrisBoard.Stats.LinesCleared == 20 {
+	if target, _ := strconv.Atoi(constants.Achievements["FillingTheBoard"].Properties["target"]); target == TetrisBoard.Stats.LinesCleared {
+		temp := constants.Achievements["FillingTheBoard"]
+		temp.Achieved = true
+		constants.Achievements["FillingTheBoard"] = temp
+	}
+
+}
+
+func CheckBoardAchievements() {
+
+	if target, _ := strconv.Atoi(constants.Achievements["FillingTheBoard"].Properties["target"]); target == TetrisBoard.Stats.LinesCleared {
 		temp := constants.Achievements["FillingTheBoard"]
 		temp.Achieved = true
 		constants.Achievements["FillingTheBoard"] = temp
@@ -209,6 +219,7 @@ func (ts *TetrisStats) AddToTetrisStats(clearedRows int) {
 		ts.Score += ts.MyFibScore.fibIter()
 	}
 	ts.IncrementCheckpointAndSpeed()
+	CheckBoardAchievements()
 }
 
 func (ts *TetrisStats) IncrementCheckpointAndSpeed() {

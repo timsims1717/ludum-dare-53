@@ -171,12 +171,12 @@ var (
 			Properties:             map[string]string{"target": "20"},
 		},
 		"FillingTheBoard": {
-			Name:                   "FullBoard",
+			Name:                   "FillingTheBoard",
 			LabelText:              "Excellent, you have consumed an entire board's worth of blocks, we appreciate your business\r\n-Thanks Management",
 			Description:            "Clear 20 Rows",
 			MyFamily:               AchievementFamilies["AFullBoard"],
 			AchievementFamilyOrder: 0,
-			Properties:             map[string]string{"target": "20"},
+			Properties:             map[string]string{"target": "1"},
 		},
 		"WhatDoIDoWithThis5": {
 			Name:                   "WhatDoIDoWithThis",
