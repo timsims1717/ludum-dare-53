@@ -57,16 +57,23 @@ func LoadTileMaps() {
 		AddComponent(myecs.Object, tinyWallObj).
 		AddComponent(myecs.Drawable, data.WallSection)
 	// side wall
-	for y := 0; y < 60; y++ {
+	for y := 0; y < 66; y++ {
 		obj := object.New()
 		obj.Pos.X = 36. * data.MSize
-		obj.Pos.Y = float64(-21+y) * data.MSize
+		obj.Pos.Y = float64(-26+y) * data.MSize
 		obj.Layer = 12
 		myecs.Manager.NewEntity().
 			AddComponent(myecs.Object, obj).
 			AddComponent(myecs.Drawable, data.SideSection)
 	}
+	cornerObj := object.New()
+	cornerObj.Pos.X = 36. * data.MSize
+	cornerObj.Pos.Y = float64(40) * data.MSize
+	cornerObj.Layer = 12
 	// side doors
+	myecs.Manager.NewEntity().
+		AddComponent(myecs.Object, cornerObj).
+		AddComponent(myecs.Drawable, data.CornerSection)
 	for y := 0; y < 2; y++ {
 		obj := object.New()
 		obj.Pos.X = 35. * data.MSize
@@ -103,4 +110,20 @@ func LoadTileMaps() {
 			e.AddComponent(myecs.Drawable, data.ConvMiddle)
 		}
 	}
+	// TV
+	objTV := object.New()
+	objTV.Pos.X = -22. * data.MSize
+	objTV.Pos.Y = -2. * data.MSize
+	objTV.Layer = 10
+	myecs.Manager.NewEntity().
+		AddComponent(myecs.Object, objTV).
+		AddComponent(myecs.Drawable, data.TV)
+	// bulb
+	objBulb := object.New()
+	objBulb.Pos.X = -46. * data.MSize
+	objBulb.Pos.Y = -16. * data.MSize
+	objBulb.Layer = 13
+	myecs.Manager.NewEntity().
+		AddComponent(myecs.Object, objBulb).
+		AddComponent(myecs.Drawable, data.Bulb)
 }

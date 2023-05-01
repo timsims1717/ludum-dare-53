@@ -87,6 +87,7 @@ func ClearBoard() {
 	}
 	data.TetrisBoard.Shape = nil
 	data.TetrisBoard.Speed = constants.DefaultSpeed
+	data.TetrisBoard.ConvSpd = constants.ConvSpdMin
 	data.TetrisBoard.NextShape = NewTetromino()
 	data.TetrisBoard.Stats.FullReset()
 	PlaceTetromino()

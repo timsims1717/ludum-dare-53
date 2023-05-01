@@ -202,12 +202,14 @@ func ConstructTetFromBlocks(pos pixel.Vec, blocks []*data.FactoryBlock) *data.Fa
 	}
 	size := pixel.V(r-l, t-b)
 	center := pixel.V(l+size.X*0.5, b+size.Y*0.5)
+	blocks = OrderBlocks(blocks)
 	for _, block := range blocks {
-		block.Object.Offset = block.Object.Pos.Sub(center)
-		block.Object.Pos = pixel.ZV
-		block.Object.Layer = 20
-		block.Entity.AddComponent(myecs.Parent, ft.Object)
-		ft.Blocks = append(ft.Blocks, block)
+		newBlock := CreateFactoryBlock(pixel.ZV, block.Color)
+		newBlock.Coords = block.Coords
+		newBlock.Object.Offset = block.Object.Pos.Sub(center)
+		newBlock.Object.Layer = 20
+		newBlock.Entity.AddComponent(myecs.Parent, ft.Object)
+		ft.Blocks = append(ft.Blocks, newBlock)
 	}
 	ft.Object.Rect = pixel.R(0., 0., r-l+constants.FactoryTile, t-b+world.TileSize+6.)
 	ft.Entity = myecs.Manager.NewEntity()
@@ -232,4 +234,26 @@ func CreateFactoryBlock(pos pixel.Vec, col data.TColor) *data.FactoryBlock {
 		AddComponent(myecs.Object, block.Object).
 		AddComponent(myecs.Drawable, spr)
 	return block
+}
+
+func OrderBlocks(s []*data.FactoryBlock) []*data.FactoryBlock {
+	var ordered []*data.FactoryBlock
+	l := len(s)
+	for len(ordered) < l && len(s) > 0 {
+		hBlock := world.Coords{X: -1, Y: -1}
+		hi := -1
+		for i, block := range s {
+			if block.Coords.Y >= hBlock.Y {
+				hBlock = block.Coords
+				hi = i
+			}
+		}
+		ordered = append(ordered, s[hi])
+		if len(s) > 1 {
+			s = append(s[:hi], s[hi+1:]...)
+		} else {
+			s = []*data.FactoryBlock{}
+		}
+	}
+	return ordered
 }

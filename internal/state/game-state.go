@@ -33,7 +33,7 @@ func (s *gameState) Load(done chan struct{}) {
 	data.TetrisViewport = viewport.New(nil)
 	data.TetrisViewport.SetRect(pixel.R(0, 0, world.TileSize*constants.TetrisWidth, world.TileSize*constants.TetrisHeight))
 	data.TetrisViewport.CamPos = pixel.V(world.TileSize*0.5*(constants.TetrisWidth-1), world.TileSize*0.5*(constants.TetrisHeight-1))
-	data.NewTetrisBoard(constants.DefaultSpeed)
+	data.NewTetrisBoard()
 	BuildTetrisBG()
 
 	data.FactoryViewport = viewport.New(nil)
@@ -183,6 +183,9 @@ func (s *gameState) Draw(win *pixelgl.Window) {
 	systems.DrawSystem(win, 10) // trucks
 	systems.DrawSystem(win, 11) // walls
 	systems.DrawSystem(win, 12) // tiles
+	img.Batchers[constants.FactoryKey].Draw(data.FactoryViewport.Canvas)
+	img.Batchers[constants.BlockKey].Draw(data.FactoryViewport.Canvas)
+	img.Clear()
 	systems.DrawSystem(win, 13)
 	systems.DrawSystem(win, 14)
 	systems.DrawSystem(win, 15)
@@ -191,6 +194,12 @@ func (s *gameState) Draw(win *pixelgl.Window) {
 	systems.DrawSystem(win, 18)
 	systems.DrawSystem(win, 19)
 	systems.DrawSystem(win, 20) // dragged tile
+	systems.DrawSystem(win, 21)
+	systems.DrawSystem(win, 22)
+	systems.DrawSystem(win, 23)
+	systems.DrawSystem(win, 24)
+	systems.DrawSystem(win, 25)
+	systems.DrawSystem(win, 26)
 	img.Batchers[constants.FactoryKey].Draw(data.FactoryViewport.Canvas)
 	img.Batchers[constants.BlockKey].Draw(data.FactoryViewport.Canvas)
 	img.Clear()
@@ -214,7 +223,8 @@ func (s *gameState) UpdateViews() {
 	hRatio *= 0.8
 	data.TetrisViewport.PortPos = portPos
 	//s.tetrisViewport.PortSize = pixel.V(hRatio, hRatio)
-	data.TetrisViewport.PortPos.X -= 0.25 * viewport.MainCamera.Rect.W()
+	data.TetrisViewport.PortPos.X -= 25 * data.MSize
+	data.TetrisViewport.PortPos.Y -= 3.5 * data.MSize
 	//s.tetrisViewport.SetRect(pixel.R(0, 0, viewport.MainCamera.Rect.W()*0.5, viewport.MainCamera.Rect.H()))
 
 	data.FactoryViewport.PortPos = portPos

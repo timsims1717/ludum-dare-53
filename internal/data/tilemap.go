@@ -15,13 +15,14 @@ var (
 )
 
 var (
-	FloorSection []*img.Sprite
-	PadSection   []*img.Sprite
-	WallSection  []*img.Sprite
-	DoorSection  []*img.Sprite
-	SideSection  []*img.Sprite
-	SideDSection []*img.Sprite
-	BlockSpot    []*img.Sprite
+	FloorSection  []*img.Sprite
+	PadSection    []*img.Sprite
+	WallSection   []*img.Sprite
+	DoorSection   []*img.Sprite
+	SideSection   []*img.Sprite
+	CornerSection []*img.Sprite
+	SideDSection  []*img.Sprite
+	BlockSpot     []*img.Sprite
 
 	ConveyorBase []*img.Sprite
 	BeltSize     = 53
@@ -36,4 +37,7 @@ var (
 	TopTruck []*img.Sprite
 	MidTruck []*img.Sprite
 	BotTruck []*img.Sprite
+
+	TV   []*img.Sprite
+	Bulb []*img.Sprite
 )

@@ -150,9 +150,22 @@ func LoadImg() {
 	// side wall
 	spr := img.NewOffsetSprite("wall_side", constants.FactoryKey, pixel.V(0., 0.))
 	data.SideSection = append(data.SideSection, spr)
-	for x := 1; x < 8; x++ {
+	for x := 1; x < 26; x++ {
 		spr = img.NewOffsetSprite("wall_in", constants.FactoryKey, pixel.V(float64(x)*data.MSize, 0.))
 		data.SideSection = append(data.SideSection, spr)
+	}
+	// corner wall
+	spr = img.NewOffsetSprite("wall_corner", constants.FactoryKey, pixel.V(0., 0.))
+	data.CornerSection = append(data.CornerSection, spr)
+	for x := 1; x < 26; x++ {
+		spr = img.NewOffsetSprite("wall_in", constants.FactoryKey, pixel.V(float64(x)*data.MSize, 0.))
+		data.CornerSection = append(data.CornerSection, spr)
+	}
+	for y := 0; y < 35; y++ {
+		for x := 0; x < 27; x++ {
+			spr = img.NewOffsetSprite("wall_in", constants.FactoryKey, pixel.V(float64(x)*data.MSize, float64(y+1)*data.MSize))
+			data.CornerSection = append(data.CornerSection, spr)
+		}
 	}
 	// side doors
 	for y := 0; y < 12; y++ {
@@ -320,6 +333,126 @@ func LoadImg() {
 			}
 			spr = img.NewOffsetSprite(str, constants.FactoryKey, pixel.V(float64(x-data.TruckWidth/2)*data.MSize, float64(y)*data.MSize))
 			data.TopTruck = append(data.TopTruck, spr)
+		}
+	}
+	// TV
+	h := 18
+	w := 20
+	for y := 0; y < h; y++ {
+		for x := 0; x < w; x++ {
+			str := "tv_m"
+			if y == 0 {
+				str = "tv_b"
+				if x == 0 {
+					str = "tv_bl"
+				} else if x == w-1 {
+					str = "tv_br"
+				}
+			} else if y == h-1 {
+				str = "tv_t"
+				if x == 0 {
+					str = "tv_tl"
+				} else if x == w-1 {
+					str = "tv_tr"
+				}
+			} else {
+				if x == 0 {
+					str = "tv_ml"
+				} else if x == w-1 {
+					str = "tv_mr"
+				}
+			}
+			spr = img.NewOffsetSprite(str, constants.FactoryKey, pixel.V(float64(x)*data.MSize, float64(y)*data.MSize))
+			data.TV = append(data.TV, spr)
+		}
+	}
+	// Platform
+	pw := 23
+	ph := 44
+	tnb := 32
+	tnt := 40
+	for y := 0; y < ph; y++ {
+		for x := 0; x < pw; x++ {
+			var str string
+			if y < 3 {
+				str = fmt.Sprintf("bulb_mb%d", y+1)
+				if x == 0 {
+					str = fmt.Sprintf("bulb_r%dc1", y+1)
+				} else if x == 1 {
+					str = fmt.Sprintf("bulb_r%dc2", y+1)
+				} else if x == pw-2 {
+					str = fmt.Sprintf("bulb_r%dc3", y+1)
+				} else if x == pw-1 {
+					str = fmt.Sprintf("bulb_r%dc4", y+1)
+				}
+			} else if y < tnb {
+				if x == 0 {
+					str = "bulb_r4c1"
+				} else if x == 1 {
+					str = "bulb_r4c2"
+				} else if x == pw-2 {
+					str = "bulb_r4c3"
+				} else if x == pw-1 {
+					str = "bulb_r4c4"
+				}
+			} else if y == tnb {
+				if x == 0 {
+					str = "bulb_r5c1"
+				} else if x == 1 {
+					str = "bulb_r5c2"
+				} else if x == pw-2 {
+					str = "bulb_r5c3"
+				} else if x == pw-1 {
+					str = "bulb_r5c4"
+				}
+			} else if y == tnb+1 {
+				if x == 1 {
+					str = "bulb_r6c2"
+				} else if x == pw-2 {
+					str = "bulb_r6c3"
+				}
+			} else if y > tnb+1 && y < tnt {
+				if x == 1 {
+					str = "bulb_r7c2"
+				} else if x == pw-2 {
+					str = "bulb_r7c3"
+				}
+			} else if y == tnt {
+				if x == 0 {
+					str = "bulb_r8c1"
+				} else if x == 1 {
+					str = "bulb_r8c2"
+				} else if x == pw-2 {
+					str = "bulb_r8c3"
+				} else if x == pw-1 {
+					str = "bulb_r8c4"
+				}
+			} else if y > tnt && y < ph-1 {
+				if x == 0 {
+					str = "bulb_r9c1"
+				} else if x == 1 {
+					str = "bulb_r9c2"
+				} else if x == pw-2 {
+					str = "bulb_r9c3"
+				} else if x == pw-1 {
+					str = "bulb_r9c4"
+				}
+			} else if y == ph-1 {
+				str = "bulb_mt"
+				if x == 0 {
+					str = "bulb_r0c1"
+				} else if x == 1 {
+					str = "bulb_r0c2"
+				} else if x == pw-2 {
+					str = "bulb_r0c3"
+				} else if x == pw-1 {
+					str = "bulb_r0c4"
+				}
+			}
+			if str != "" {
+				spr = img.NewOffsetSprite(str, constants.FactoryKey, pixel.V(float64(x)*data.MSize, float64(y)*data.MSize))
+				data.Bulb = append(data.Bulb, spr)
+			}
 		}
 	}
 }
