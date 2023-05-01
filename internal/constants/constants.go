@@ -21,7 +21,7 @@ const (
 	TileSize         = 32.
 	TetrisWidth      = 10
 	TetrisHeight     = 20
-	DefaultSpeed     = 1
+	DefaultSpeed     = 0.8
 	ScoreCheckPoint  = 5
 	SpeedModifier    = 0.05
 	SpeedMax         = 2

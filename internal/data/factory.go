@@ -13,12 +13,15 @@ var (
 )
 
 type FacTetronimo struct {
-	Blocks  []*FactoryBlock
-	NoRot   bool
-	Object  *object.Object
-	Entity  *ecs.Entity
-	LastPos pixel.Vec
-	Moving  bool
+	Blocks              []*FactoryBlock
+	NoRot               bool
+	Object              *object.Object
+	Entity              *ecs.Entity
+	LastPos             pixel.Vec
+	Moving              bool
+	MyFactronimoType    constants.FactrominoType
+	MyFactronimoVariant constants.FactrominoVariant
+	Color               TColor
 }
 
 type FactoryBlock struct {

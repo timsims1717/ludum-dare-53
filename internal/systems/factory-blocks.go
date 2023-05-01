@@ -12,155 +12,166 @@ import (
 )
 
 func CreateFactoryTet(pos pixel.Vec, col data.TColor, factrominoType constants.FactrominoType) *data.FacTetronimo {
-	t := &data.FacTetronimo{}
+	t := &data.FacTetronimo{MyFactronimoType: factrominoType}
 	t.LastPos = pos
 	t.Object = object.New().WithID("factory-tet")
 	t.Object.Pos = pos
 	t.Object.Layer = 12
+	t.Color = col
 	w := constants.FactoryTile
 	h := world.TileSize + 6.
-	if factrominoType == constants.FacUndefined {
-		factrominoType = constants.RawFactrominoRoll()
+	if t.MyFactronimoType == constants.FacUndefined {
+		t.MyFactronimoType = constants.RawFactrominoRoll()
 	}
-	switch factrominoType {
+	switch t.MyFactronimoType {
 	case constants.FacOne: //1
-		a := CreateFactoryBlock(pixel.ZV, col)
-		a.Entity.AddComponent(myecs.Parent, t.Object)
-		t.Blocks = append(t.Blocks, a)
+		CreateFactrominoSizeOne(t)
 	case constants.FacTwo:
-		FacVariant := constants.FactVariantUndefined
-		FacVariant = constants.GlobalSeededRandom.Intn(2) + 1
-		switch FacVariant {
-		case constants.Horizontal: //2 Horizontal
-			a := CreateFactoryBlock(pixel.ZV, col)
-			b := CreateFactoryBlock(pixel.ZV, col)
-			a.Object.Offset.X -= constants.FactoryTile * 0.5
-			b.Object.Offset.X += constants.FactoryTile * 0.5
-			a.Entity.AddComponent(myecs.Parent, t.Object)
-			b.Entity.AddComponent(myecs.Parent, t.Object)
-			t.Blocks = append(t.Blocks, a)
-			t.Blocks = append(t.Blocks, b)
-			w += constants.FactoryTile
-		case constants.Vertical: //2 Vertical
-			a := CreateFactoryBlock(pixel.ZV, col)
-			b := CreateFactoryBlock(pixel.ZV, col)
-			a.Object.Offset.Y += world.TileSize * 0.5
-			b.Object.Offset.Y -= world.TileSize * 0.5
-			a.Entity.AddComponent(myecs.Parent, t.Object)
-			b.Entity.AddComponent(myecs.Parent, t.Object)
-			t.Blocks = append(t.Blocks, a)
-			t.Blocks = append(t.Blocks, b)
-			h += world.TileSize
-		}
+		CreateFactrominoSizeTwo(t, w, h)
 	case constants.FacThree:
-		FactVariant := constants.FactVariantUndefined
-		FactVariant = int(constants.FactrominoThreeVariationRoll())
-		switch FactVariant {
-		case constants.Horizontal:
-			a := CreateFactoryBlock(pixel.ZV, col)
-			b := CreateFactoryBlock(pixel.ZV, col)
-			c := CreateFactoryBlock(pixel.ZV, col)
-			a.Object.Offset.X += constants.FactoryTile
-			b.Object.Offset.X -= constants.FactoryTile
-			a.Entity.AddComponent(myecs.Parent, t.Object)
-			b.Entity.AddComponent(myecs.Parent, t.Object)
-			c.Entity.AddComponent(myecs.Parent, t.Object)
-			t.Blocks = append(t.Blocks, a)
-			t.Blocks = append(t.Blocks, b)
-			t.Blocks = append(t.Blocks, c)
-			w += constants.FactoryTile * 2.
-		case constants.Vertical:
-			a := CreateFactoryBlock(pixel.ZV, col)
-			b := CreateFactoryBlock(pixel.ZV, col)
-			c := CreateFactoryBlock(pixel.ZV, col)
-			a.Object.Offset.Y += world.TileSize
-			c.Object.Offset.Y -= world.TileSize
-			a.Entity.AddComponent(myecs.Parent, t.Object)
-			b.Entity.AddComponent(myecs.Parent, t.Object)
-			c.Entity.AddComponent(myecs.Parent, t.Object)
-			t.Blocks = append(t.Blocks, a)
-			t.Blocks = append(t.Blocks, b)
-			t.Blocks = append(t.Blocks, c)
-			h += world.TileSize * 2.
-		case constants.BabyR:
-			a := CreateFactoryBlock(pixel.ZV, col)
-			b := CreateFactoryBlock(pixel.ZV, col)
-			c := CreateFactoryBlock(pixel.ZV, col)
-			a.Object.Offset.Y += world.TileSize * 0.5
-			a.Object.Offset.X -= constants.FactoryTile * 0.5
-			b.Object.Offset.Y += world.TileSize * 0.5
-			b.Object.Offset.X += constants.FactoryTile * 0.5
-			c.Object.Offset.Y -= world.TileSize * 0.5
-			c.Object.Offset.X -= constants.FactoryTile * 0.5
-			a.Entity.AddComponent(myecs.Parent, t.Object)
-			b.Entity.AddComponent(myecs.Parent, t.Object)
-			c.Entity.AddComponent(myecs.Parent, t.Object)
-			t.Blocks = append(t.Blocks, a)
-			t.Blocks = append(t.Blocks, b)
-			t.Blocks = append(t.Blocks, c)
-			w += constants.FactoryTile
-			h += world.TileSize
-		case constants.BabySeven:
-			a := CreateFactoryBlock(pixel.ZV, col)
-			b := CreateFactoryBlock(pixel.ZV, col)
-			c := CreateFactoryBlock(pixel.ZV, col)
-			a.Object.Offset.Y += world.TileSize * 0.5
-			a.Object.Offset.X -= constants.FactoryTile * 0.5
-			b.Object.Offset.Y += world.TileSize * 0.5
-			b.Object.Offset.X += constants.FactoryTile * 0.5
-			c.Object.Offset.Y -= world.TileSize * 0.5
-			c.Object.Offset.X += constants.FactoryTile * 0.5
-			a.Entity.AddComponent(myecs.Parent, t.Object)
-			b.Entity.AddComponent(myecs.Parent, t.Object)
-			c.Entity.AddComponent(myecs.Parent, t.Object)
-			t.Blocks = append(t.Blocks, a)
-			t.Blocks = append(t.Blocks, b)
-			t.Blocks = append(t.Blocks, c)
-			w += constants.FactoryTile
-			h += world.TileSize
-		case constants.BabyL:
-			a := CreateFactoryBlock(pixel.ZV, col)
-			b := CreateFactoryBlock(pixel.ZV, col)
-			c := CreateFactoryBlock(pixel.ZV, col)
-			a.Object.Offset.Y += world.TileSize * 0.5
-			a.Object.Offset.X -= constants.FactoryTile * 0.5
-			b.Object.Offset.Y -= world.TileSize * 0.5
-			b.Object.Offset.X += constants.FactoryTile * 0.5
-			c.Object.Offset.Y -= world.TileSize * 0.5
-			c.Object.Offset.X -= constants.FactoryTile * 0.5
-			a.Entity.AddComponent(myecs.Parent, t.Object)
-			b.Entity.AddComponent(myecs.Parent, t.Object)
-			c.Entity.AddComponent(myecs.Parent, t.Object)
-			t.Blocks = append(t.Blocks, a)
-			t.Blocks = append(t.Blocks, b)
-			t.Blocks = append(t.Blocks, c)
-			w += constants.FactoryTile
-			h += world.TileSize
-		case constants.BabyJ:
-			a := CreateFactoryBlock(pixel.ZV, col)
-			b := CreateFactoryBlock(pixel.ZV, col)
-			c := CreateFactoryBlock(pixel.ZV, col)
-			a.Object.Offset.Y += world.TileSize * 0.5
-			a.Object.Offset.X += constants.FactoryTile * 0.5
-			b.Object.Offset.Y -= world.TileSize * 0.5
-			b.Object.Offset.X += constants.FactoryTile * 0.5
-			c.Object.Offset.Y -= world.TileSize * 0.5
-			c.Object.Offset.X -= constants.FactoryTile * 0.5
-			a.Entity.AddComponent(myecs.Parent, t.Object)
-			b.Entity.AddComponent(myecs.Parent, t.Object)
-			c.Entity.AddComponent(myecs.Parent, t.Object)
-			t.Blocks = append(t.Blocks, a)
-			t.Blocks = append(t.Blocks, b)
-			t.Blocks = append(t.Blocks, c)
-			w += constants.FactoryTile
-			h += world.TileSize
-		}
+		CreateFactrominoSizeThree(t, w, h)
 	}
 	t.Object.Rect = pixel.R(0., 0., w, h)
 	t.Entity = myecs.Manager.NewEntity()
 	t.Entity.AddComponent(myecs.Object, t.Object).
 		AddComponent(myecs.Block, t)
 	return t
+}
+func CreateFactrominoSizeOne(t *data.FacTetronimo) {
+	a := CreateFactoryBlock(pixel.ZV, t.Color)
+	a.Entity.AddComponent(myecs.Parent, t.Object)
+	t.Blocks = append(t.Blocks, a)
+}
+func CreateFactrominoSizeTwo(t *data.FacTetronimo, w float64, h float64) {
+	t.MyFactronimoVariant = constants.FactVariantUndefined
+	t.MyFactronimoVariant = constants.FactrominoVariant(constants.GlobalSeededRandom.Intn(2) + 1)
+
+	switch t.MyFactronimoVariant {
+	case constants.Horizontal: //2 Horizontal
+		a := CreateFactoryBlock(pixel.ZV, t.Color)
+		b := CreateFactoryBlock(pixel.ZV, t.Color)
+		a.Object.Offset.X -= constants.FactoryTile * 0.5
+		b.Object.Offset.X += constants.FactoryTile * 0.5
+		a.Entity.AddComponent(myecs.Parent, t.Object)
+		b.Entity.AddComponent(myecs.Parent, t.Object)
+		t.Blocks = append(t.Blocks, a)
+		t.Blocks = append(t.Blocks, b)
+		w += constants.FactoryTile
+	case constants.Vertical: //2 Vertical
+		a := CreateFactoryBlock(pixel.ZV, t.Color)
+		b := CreateFactoryBlock(pixel.ZV, t.Color)
+		a.Object.Offset.Y += world.TileSize * 0.5
+		b.Object.Offset.Y -= world.TileSize * 0.5
+		a.Entity.AddComponent(myecs.Parent, t.Object)
+		b.Entity.AddComponent(myecs.Parent, t.Object)
+		t.Blocks = append(t.Blocks, a)
+		t.Blocks = append(t.Blocks, b)
+		h += world.TileSize
+	}
+}
+func CreateFactrominoSizeThree(t *data.FacTetronimo, w float64, h float64) {
+	t.MyFactronimoVariant = constants.FactVariantUndefined
+	t.MyFactronimoVariant = constants.FactrominoThreeVariationRoll()
+	switch t.MyFactronimoVariant {
+	case constants.Horizontal:
+		a := CreateFactoryBlock(pixel.ZV, t.Color)
+		b := CreateFactoryBlock(pixel.ZV, t.Color)
+		c := CreateFactoryBlock(pixel.ZV, t.Color)
+		a.Object.Offset.X += constants.FactoryTile
+		b.Object.Offset.X -= constants.FactoryTile
+		a.Entity.AddComponent(myecs.Parent, t.Object)
+		b.Entity.AddComponent(myecs.Parent, t.Object)
+		c.Entity.AddComponent(myecs.Parent, t.Object)
+		t.Blocks = append(t.Blocks, a)
+		t.Blocks = append(t.Blocks, b)
+		t.Blocks = append(t.Blocks, c)
+		w += constants.FactoryTile * 2.
+	case constants.Vertical:
+		a := CreateFactoryBlock(pixel.ZV, t.Color)
+		b := CreateFactoryBlock(pixel.ZV, t.Color)
+		c := CreateFactoryBlock(pixel.ZV, t.Color)
+		a.Object.Offset.Y += world.TileSize
+		c.Object.Offset.Y -= world.TileSize
+		a.Entity.AddComponent(myecs.Parent, t.Object)
+		b.Entity.AddComponent(myecs.Parent, t.Object)
+		c.Entity.AddComponent(myecs.Parent, t.Object)
+		t.Blocks = append(t.Blocks, a)
+		t.Blocks = append(t.Blocks, b)
+		t.Blocks = append(t.Blocks, c)
+		h += world.TileSize * 2.
+	case constants.BabyR:
+		a := CreateFactoryBlock(pixel.ZV, t.Color)
+		b := CreateFactoryBlock(pixel.ZV, t.Color)
+		c := CreateFactoryBlock(pixel.ZV, t.Color)
+		a.Object.Offset.Y += world.TileSize * 0.5
+		a.Object.Offset.X -= constants.FactoryTile * 0.5
+		b.Object.Offset.Y += world.TileSize * 0.5
+		b.Object.Offset.X += constants.FactoryTile * 0.5
+		c.Object.Offset.Y -= world.TileSize * 0.5
+		c.Object.Offset.X -= constants.FactoryTile * 0.5
+		a.Entity.AddComponent(myecs.Parent, t.Object)
+		b.Entity.AddComponent(myecs.Parent, t.Object)
+		c.Entity.AddComponent(myecs.Parent, t.Object)
+		t.Blocks = append(t.Blocks, a)
+		t.Blocks = append(t.Blocks, b)
+		t.Blocks = append(t.Blocks, c)
+		w += constants.FactoryTile
+		h += world.TileSize
+	case constants.BabySeven:
+		a := CreateFactoryBlock(pixel.ZV, t.Color)
+		b := CreateFactoryBlock(pixel.ZV, t.Color)
+		c := CreateFactoryBlock(pixel.ZV, t.Color)
+		a.Object.Offset.Y += world.TileSize * 0.5
+		a.Object.Offset.X -= constants.FactoryTile * 0.5
+		b.Object.Offset.Y += world.TileSize * 0.5
+		b.Object.Offset.X += constants.FactoryTile * 0.5
+		c.Object.Offset.Y -= world.TileSize * 0.5
+		c.Object.Offset.X += constants.FactoryTile * 0.5
+		a.Entity.AddComponent(myecs.Parent, t.Object)
+		b.Entity.AddComponent(myecs.Parent, t.Object)
+		c.Entity.AddComponent(myecs.Parent, t.Object)
+		t.Blocks = append(t.Blocks, a)
+		t.Blocks = append(t.Blocks, b)
+		t.Blocks = append(t.Blocks, c)
+		w += constants.FactoryTile
+		h += world.TileSize
+	case constants.BabyL:
+		a := CreateFactoryBlock(pixel.ZV, t.Color)
+		b := CreateFactoryBlock(pixel.ZV, t.Color)
+		c := CreateFactoryBlock(pixel.ZV, t.Color)
+		a.Object.Offset.Y += world.TileSize * 0.5
+		a.Object.Offset.X -= constants.FactoryTile * 0.5
+		b.Object.Offset.Y -= world.TileSize * 0.5
+		b.Object.Offset.X += constants.FactoryTile * 0.5
+		c.Object.Offset.Y -= world.TileSize * 0.5
+		c.Object.Offset.X -= constants.FactoryTile * 0.5
+		a.Entity.AddComponent(myecs.Parent, t.Object)
+		b.Entity.AddComponent(myecs.Parent, t.Object)
+		c.Entity.AddComponent(myecs.Parent, t.Object)
+		t.Blocks = append(t.Blocks, a)
+		t.Blocks = append(t.Blocks, b)
+		t.Blocks = append(t.Blocks, c)
+		w += constants.FactoryTile
+		h += world.TileSize
+	case constants.BabyJ:
+		a := CreateFactoryBlock(pixel.ZV, t.Color)
+		b := CreateFactoryBlock(pixel.ZV, t.Color)
+		c := CreateFactoryBlock(pixel.ZV, t.Color)
+		a.Object.Offset.Y += world.TileSize * 0.5
+		a.Object.Offset.X += constants.FactoryTile * 0.5
+		b.Object.Offset.Y -= world.TileSize * 0.5
+		b.Object.Offset.X += constants.FactoryTile * 0.5
+		c.Object.Offset.Y -= world.TileSize * 0.5
+		c.Object.Offset.X -= constants.FactoryTile * 0.5
+		a.Entity.AddComponent(myecs.Parent, t.Object)
+		b.Entity.AddComponent(myecs.Parent, t.Object)
+		c.Entity.AddComponent(myecs.Parent, t.Object)
+		t.Blocks = append(t.Blocks, a)
+		t.Blocks = append(t.Blocks, b)
+		t.Blocks = append(t.Blocks, c)
+		w += constants.FactoryTile
+		h += world.TileSize
+	}
 }
 
 func ConstructTetFromBlocks(pos pixel.Vec, blocks []*data.FactoryBlock) *data.FacTetronimo {
