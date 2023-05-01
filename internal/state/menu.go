@@ -10,6 +10,18 @@ import (
 	"timsims1717/ludum-dare-53/pkg/typeface"
 )
 
+func OpenSticky(msg *data.StickyMsg) {
+	data.StickyText.SetText(msg.Message)
+	data.StickyText.Obj.Pos = msg.Offset
+	data.Paused = true
+	data.StickyOpen = true
+}
+
+func CloseSticky() {
+	data.Paused = false
+	data.StickyOpen = false
+}
+
 var (
 	resumeItem = &data.MenuItem{}
 	quitItem   = &data.MenuItem{}

@@ -46,6 +46,7 @@ const (
 )
 
 var (
+	TitleText          = "LD53"
 	GlobalSeededRandom = rand.New(rand.NewSource(time.Now().UnixNano()))
 	BlackColor         = color.RGBA{
 		R: 19,
@@ -102,7 +103,8 @@ var (
 )
 
 func RandomTitle() string {
-	return TitleVariants[GlobalSeededRandom.Intn(len(TitleVariants))]
+	TitleText = TitleVariants[GlobalSeededRandom.Intn(len(TitleVariants))]
+	return TitleText
 }
 
 type FailCondition int

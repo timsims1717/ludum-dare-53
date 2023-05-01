@@ -17,6 +17,7 @@ var (
 	StickyText *typeface.Text
 
 	Paused     bool
+	PauseMenu  bool
 	StickyOpen bool
 )
 
@@ -25,13 +26,8 @@ type StickyMsg struct {
 	Offset  pixel.Vec
 }
 
-func SetStickyMsg(msg StickyMsg) {
-	StickyText.SetText(msg.Message)
-	StickyText.Obj.Pos = msg.Offset
-}
-
 var (
-	PauseMsg = StickyMsg{
+	PauseMsg = &StickyMsg{
 		Message: "Paused",
 		Offset:  pixel.V(-6., 293.),
 	}

@@ -39,6 +39,7 @@ var (
 			"rightClick": pxginput.NewJoyless(pixelgl.MouseButtonRight),
 			"generate":   pxginput.NewJoyless(pixelgl.KeyKPEnter),
 			"pause":      pxginput.NewJoyless(pixelgl.KeyEscape),
+			"showTitle":  pxginput.NewJoyless(pixelgl.KeyT),
 		},
 		Mode: pxginput.KeyboardMouse,
 	}
