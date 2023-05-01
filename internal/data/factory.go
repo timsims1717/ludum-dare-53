@@ -62,6 +62,11 @@ func NewConveyor() {
 
 var (
 	FactoryPads  []*FactoryPad
+	SouthPad     *FactoryPad
+	SouthEastPad *FactoryPad
+	EastPad      *FactoryPad
+	NorthEastPad *FactoryPad
+	NorthPad     *FactoryPad
 	GarbagePad   *FactoryPad
 	QueuePad     *FactoryPad
 	FactoryFloor *factoryFloor

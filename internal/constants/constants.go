@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	Title   = "LD53"
+	Title   = "Have you ever played a block falling game and thought, 'I like this game but wouldn't it be great if it was more stressful?'"
 	Release = 0
 	Version = 1
 	Build   = 20230428

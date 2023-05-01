@@ -29,4 +29,11 @@ var (
 	ConvLeftEdge  []*reanimator.Tree
 	ConvRightEdge []*reanimator.Tree
 	ConvMiddle    []*reanimator.Tree
+
+	TruckWidth  = 10
+	TruckHeight = 10
+
+	TopTruck []*img.Sprite
+	MidTruck []*img.Sprite
+	BotTruck []*img.Sprite
 )

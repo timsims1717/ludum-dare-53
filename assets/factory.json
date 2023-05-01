@@ -420,6 +420,131 @@
    "anim": true,
    "x": 176,
    "y": 112
+  },
+  {
+   "key": "truck_roof_top_edge",
+   "x": 16,
+   "y": 224
+  },
+  {
+   "key": "truck_roof_bot_edge",
+   "x": 0,
+   "y": 224
+  },
+  {
+   "key": "truck_roof",
+   "x": 0,
+   "y": 240
+  },
+  {
+   "key": "truck_side_b_end",
+   "x": 80,
+   "y": 128
+  },
+  {
+   "key": "truck_side_b_mid",
+   "x": 96,
+   "y": 128
+  },
+  {
+   "key": "truck_side_end",
+   "x": 80,
+   "y": 144
+  },
+  {
+   "key": "truck_side_mid",
+   "x": 96,
+   "y": 144
+  },
+  {
+   "key": "truck_side_roof_b_end",
+   "x": 80,
+   "y": 160
+  },
+  {
+   "key": "truck_side_roof_b_mid",
+   "x": 96,
+   "y": 160
+  },
+  {
+   "key": "truck_side_roof_m_end",
+   "x": 80,
+   "y": 176
+  },
+  {
+   "key": "truck_side_roof_m_mid",
+   "x": 96,
+   "y": 176
+  },
+  {
+   "key": "truck_side_roof_t_end",
+   "x": 80,
+   "y": 192
+  },
+  {
+   "key": "truck_side_roof_t_mid",
+   "x": 96,
+   "y": 192
+  },
+  {
+   "key": "truck_back_bl",
+   "x": 0,
+   "y": 128
+  },
+  {
+   "key": "truck_back_bf",
+   "x": 16,
+   "y": 128
+  },
+  {
+   "key": "truck_back_br",
+   "x": 32,
+   "y": 128
+  },
+  {
+   "key": "truck_back_b",
+   "x": 48,
+   "y": 128
+  },
+  {
+   "key": "truck_back_l",
+   "x": 0,
+   "y": 144
+  },
+  {
+   "key": "truck_back",
+   "x": 16,
+   "y": 144
+  },
+  {
+   "key": "truck_back_r",
+   "x": 32,
+   "y": 144
+  },
+  {
+   "key": "truck_back_tr",
+   "x": 48,
+   "y": 144
+  },
+  {
+   "key": "truck_back_tl",
+   "x": 0,
+   "y": 160
+  },
+  {
+   "key": "truck_back_t",
+   "x": 16,
+   "y": 160
+  },
+  {
+   "key": "truck_back_thl",
+   "x": 32,
+   "y": 160
+  },
+  {
+   "key": "truck_back_thr",
+   "x": 48,
+   "y": 160
   }
  ]
 }

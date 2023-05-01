@@ -29,7 +29,7 @@ func LoadTileMaps() {
 		if obj.Pos.X > 0. {
 			continue
 		}
-		obj.Layer = 11
+		obj.Layer = 12
 		myecs.Manager.NewEntity().
 			AddComponent(myecs.Object, obj).
 			AddComponent(myecs.Drawable, data.WallSection)
@@ -38,21 +38,21 @@ func LoadTileMaps() {
 	door1Obj := object.New()
 	door1Obj.Pos.Y = wallHeight
 	door1Obj.Pos.X = 2. * data.MSize
-	door1Obj.Layer = 11
+	door1Obj.Layer = 12
 	myecs.Manager.NewEntity().
 		AddComponent(myecs.Object, door1Obj).
 		AddComponent(myecs.Drawable, data.DoorSection)
 	door2Obj := object.New()
 	door2Obj.Pos.Y = wallHeight
 	door2Obj.Pos.X = 18. * data.MSize
-	door2Obj.Layer = 11
+	door2Obj.Layer = 12
 	myecs.Manager.NewEntity().
 		AddComponent(myecs.Object, door2Obj).
 		AddComponent(myecs.Drawable, data.DoorSection)
 	tinyWallObj := object.New()
 	tinyWallObj.Pos.Y = wallHeight
 	tinyWallObj.Pos.X = 34. * data.MSize
-	tinyWallObj.Layer = 11
+	tinyWallObj.Layer = 12
 	myecs.Manager.NewEntity().
 		AddComponent(myecs.Object, tinyWallObj).
 		AddComponent(myecs.Drawable, data.WallSection)
@@ -61,7 +61,7 @@ func LoadTileMaps() {
 		obj := object.New()
 		obj.Pos.X = 36. * data.MSize
 		obj.Pos.Y = float64(-21+y) * data.MSize
-		obj.Layer = 11
+		obj.Layer = 12
 		myecs.Manager.NewEntity().
 			AddComponent(myecs.Object, obj).
 			AddComponent(myecs.Drawable, data.SideSection)
@@ -75,7 +75,7 @@ func LoadTileMaps() {
 		} else {
 			obj.Pos.Y = data.MSize * 3.
 		}
-		obj.Layer = 11
+		obj.Layer = 12
 		myecs.Manager.NewEntity().
 			AddComponent(myecs.Object, obj).
 			AddComponent(myecs.Drawable, data.SideDSection)
