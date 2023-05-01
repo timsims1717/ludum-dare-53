@@ -70,7 +70,7 @@ func (s *gameState) Load(done chan struct{}) {
 	data.SBScores.SetSize(0.12)
 	data.SBScores.SetText("Scores")
 
-	data.StickyText = typeface.New(nil, "sticky", typeface.NewAlign(typeface.Center, typeface.Center), 1.5, 0.32, 0, 0)
+	data.StickyText = typeface.New(nil, "sticky", typeface.NewAlign(typeface.Center, typeface.Center), 1.5, 0.32, 3.2*constants.TypeFaceSize, 0)
 	data.StickyText.SetPos(pixel.V(0., 0.))
 	data.StickyText.SetColor(constants.BlackColor)
 	data.StickyText.SetText("Paused")
@@ -88,13 +88,20 @@ func (s *gameState) Update(win *pixelgl.Window) {
 		s.UpdateViews()
 	}
 	gameInput.Update(win, viewport.MainCamera.Mat)
+	if !data.PauseMenu && data.StickyOpen && gameInput.Get("click").JustPressed() {
+		if !data.StickyObj.PointInside(data.StickyViewport.Projected(gameInput.World)) {
+			CloseSticky()
+		}
+	}
 	if gameInput.Get("pause").JustPressed() {
 		data.Paused = !data.Paused
+		data.PauseMenu = data.Paused
 		data.StickyOpen = data.Paused
 		if data.Paused {
-			data.SetStickyMsg(data.PauseMsg)
+			OpenSticky(data.PauseMsg)
 			openPauseMenu()
 		} else {
+			CloseSticky()
 			closeMenu()
 		}
 	}
@@ -171,6 +178,12 @@ func (s *gameState) Update(win *pixelgl.Window) {
 				//}))
 			}
 		}
+		if gameInput.Get("showTitle").JustPressed() {
+			OpenSticky(&data.StickyMsg{
+				Message: constants.TitleText,
+				Offset:  pixel.V(40., 55.),
+			})
+		}
 
 		systems.FunctionSystem()
 		systems.BlockSystem()
@@ -181,8 +194,9 @@ func (s *gameState) Update(win *pixelgl.Window) {
 		systems.ParentSystem()
 		systems.ObjectSystem()
 		systems.AnimationSystem()
-	} else if data.Paused {
-		systems.MenuSystem(gameInput.World, gameInput.Get("click").JustPressed())
+	}
+	if data.Paused {
+		systems.MenuSystem(gameInput)
 	}
 	debug.AddText(fmt.Sprintf("Global Score: %03d", data.TetrisBoard.Stats.GlobalScore()))
 	debug.AddText(fmt.Sprintf("Tetris Score: %03d", data.TetrisBoard.Stats.Score))

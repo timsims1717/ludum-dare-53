@@ -32,6 +32,7 @@ func LoadImg() {
 	}
 	data.StickyNote = pixel.NewSprite(stickyNote, stickyNote.Bounds())
 	data.StickyObj = object.New()
+	data.StickyObj.Rect = stickyNote.Bounds()
 
 	// tilemaps
 	// floor section
