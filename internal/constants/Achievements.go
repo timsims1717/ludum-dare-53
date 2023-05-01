@@ -76,7 +76,7 @@ var (
 	Achievements = map[string]Achievement{
 		"Create5Tetrominos": {
 			Name:                   "Create5Tetrominos",
-			LabelText:              "You have met the initial quota of 5 Tetrominos, training's over, now don't fall behind\n-Thanks Management",
+			LabelText:              "You have met the initial quota of 5 Tetrominos, training's over, now don't fall behind!\n-Management",
 			Description:            "Construct 5 Valid Tetrominos and deliver them to the Board",
 			MyFamily:               AchievementFamilies["CreateTetrominos"],
 			AchievementFamilyOrder: 0,
@@ -84,7 +84,7 @@ var (
 		},
 		"Create8Tetrominos": {
 			Name:                   "Create8Tetrominos",
-			LabelText:              "Congrats on completing 8 Tetrominos, your new quota is 13\r\n-Thanks Management",
+			LabelText:              "Congrats on completing 8 Tetrominos, your new quota is 13.\r\n-Management",
 			Description:            "Construct 8 Valid Tetrominos and deliver them to the Board",
 			MyFamily:               AchievementFamilies["CreateTetrominos"],
 			AchievementFamilyOrder: 1,
@@ -92,7 +92,7 @@ var (
 		},
 		"Create13Tetrominos": {
 			Name:                   "Create13Tetrominos",
-			LabelText:              "Only 13 Tetrominos? Your quota is 21 didn't you get the memo\r\n-Thanks Management",
+			LabelText:              "Only 13 Tetrominos? Your quota is 21 didn't you get the memo?\r\n-Management",
 			Description:            "Construct 13 Valid Tetrominos and deliver them to the Board",
 			MyFamily:               AchievementFamilies["CreateTetrominos"],
 			AchievementFamilyOrder: 2,
@@ -100,7 +100,7 @@ var (
 		},
 		"Create21Tetrominos": {
 			Name:                   "Create21Tetrominos",
-			LabelText:              "Thanks for 21 Tetrominos, try for 34\n-Thanks Management",
+			LabelText:              "Thank you for 21 Tetrominos, can you do 34?\n-Management",
 			Description:            "Construct 21 Valid Tetrominos and deliver them to the Board",
 			MyFamily:               AchievementFamilies["CreateTetrominos"],
 			AchievementFamilyOrder: 3,
@@ -108,7 +108,7 @@ var (
 		},
 		"Create34Tetrominos": {
 			Name:                   "Create34Tetrominos",
-			LabelText:              "Yay, managemement has worked very hard to get you to 34 Tetrominos, now do 55\r\n-Thanks Management",
+			LabelText:              "Great work! Management has worked very hard to get you to 34 Tetrominos. Now do 55.\r\n-Management",
 			Description:            "Construct 34 Valid Tetrominos and deliver them to the Board",
 			MyFamily:               AchievementFamilies["CreateTetrominos"],
 			AchievementFamilyOrder: 4,
@@ -116,7 +116,7 @@ var (
 		},
 		"Create55Tetrominos": {
 			Name:                   "Create55Tetrominos",
-			LabelText:              "Excellent you have done 55 Tetrominos, this earns us a bonus. Management that is. We can see when you get to 89.\n-Thanks Management",
+			LabelText:              "Excellent. You have done 55 Tetrominos, earning a bonus. For Management, that is. We'll see once you get to 89.\n-Management",
 			Description:            "Construct 55 Valid Tetrominos and deliver them to the Board",
 			MyFamily:               AchievementFamilies["CreateTetrominos"],
 			AchievementFamilyOrder: 5,
@@ -124,7 +124,7 @@ var (
 		},
 		"Create89Tetrominos": {
 			Name:                   "Create89Tetrominos",
-			LabelText:              "As promised you have reached 89 Tetrominos, here is a company pen. We'll do more at 144...\n-Thanks Management",
+			LabelText:              "You have reached 89 Tetrominos. As promised, here is a company pen. Next stop, 144.\n-Management",
 			Description:            "Construct 89 Valid Tetrominos and deliver them to the Board",
 			MyFamily:               AchievementFamilies["CreateTetrominos"],
 			AchievementFamilyOrder: 6,
@@ -132,7 +132,7 @@ var (
 		},
 		"Create144Tetrominos": {
 			Name:                   "Create144Tetrominos",
-			LabelText:              "144 Tetrominos, go for 233\n-Thanks Management",
+			LabelText:              "144 Tetrominos, go for 233.\n-Management",
 			Description:            "Construct 144 Valid Tetrominos and deliver them to the Board",
 			MyFamily:               AchievementFamilies["CreateTetrominos"],
 			AchievementFamilyOrder: 7,
@@ -140,7 +140,7 @@ var (
 		},
 		"Create233Tetrominos": {
 			Name:                   "Create233Tetrominos",
-			LabelText:              "This was a good shift of 233 Tetrominos, I fully expect you to hit 377 before lunch next time\r\n-Thanks Management",
+			LabelText:              "This was a good shift of 233 Tetrominos. I fully expect you to hit 377 before lunch next time.\r\n-Management",
 			Description:            "Construct 233 Valid Tetrominos and deliver them to the Board",
 			MyFamily:               AchievementFamilies["CreateTetrominos"],
 			AchievementFamilyOrder: 8,
@@ -148,7 +148,7 @@ var (
 		},
 		"Trash5": {
 			Name:                   "Trash5",
-			LabelText:              "You have wasted 5 Factromino shapes, please be more careful\r\n-Thanks Management",
+			LabelText:              "You have wasted 5 Factromino shapes, please be more careful\r\n-Management",
 			Description:            "Put 5 Factromino shapes in the recycle",
 			MyFamily:               AchievementFamilies["TrashingTheCamp"],
 			AchievementFamilyOrder: 0,
@@ -156,7 +156,7 @@ var (
 		},
 		"Trash10": {
 			Name:                   "Trash10",
-			LabelText:              "Current waste 10: Factromino shapes, please be better\r\n-Thanks Management",
+			LabelText:              "Current waste 10: Factromino shapes, please be better\r\n-Management",
 			Description:            "Put 10 Factromino shapes in the recycle",
 			MyFamily:               AchievementFamilies["TrashingTheCamp"],
 			AchievementFamilyOrder: 1,
@@ -164,23 +164,23 @@ var (
 		},
 		"Trash20": {
 			Name:                   "Trash20",
-			LabelText:              "Current waste 20: Factromino shapes, this is coming from your paycheck!\r\n-Thanks Management",
+			LabelText:              "Current waste 20: Factromino shapes, this is coming from your paycheck!\r\n-Management",
 			Description:            "Put 20 Factromino shapes in the recycle",
 			MyFamily:               AchievementFamilies["TrashingTheCamp"],
 			AchievementFamilyOrder: 2,
 			Properties:             map[string]string{"target": "20"},
 		},
 		"FillingTheBoard": {
-			Name:                   "FillingTheBoard",
-			LabelText:              "Excellent, you have consumed an entire board's worth of blocks, we appreciate your business\r\n-Thanks Management",
+			Name:                   "FullBoard",
+			LabelText:              "Excellent, you've consumed an entire board's worth of blocks, we appreciate your business.\r\n-Management",
 			Description:            "Clear 20 Rows",
 			MyFamily:               AchievementFamilies["AFullBoard"],
-			AchievementFamilyOrder: 0,
-			Properties:             map[string]string{"target": "1"},
+			AchievementFamilyOrder: 10,
+			Properties:             map[string]string{"target": "20"},
 		},
 		"WhatDoIDoWithThis5": {
 			Name:                   "WhatDoIDoWithThis",
-			LabelText:              "That Tetromino was too big, try not to do that again.\r\n-Thanks Management",
+			LabelText:              "That Tetromino was too big, try not to do that again.\r\n-Management",
 			Description:            "Trash a Factromino with >4 Blocks",
 			MyFamily:               AchievementFamilies["WhatDoIDoWithThis"],
 			AchievementFamilyOrder: 0,
@@ -188,7 +188,7 @@ var (
 		},
 		"WhatDoIDoWithThis10": {
 			Name:                   "WhatDoIDoWithThis",
-			LabelText:              "Look, if you build them all too big we won't ever meet our goals.\r\n-Thanks Management",
+			LabelText:              "Look, if you build them all too big we won't ever meet our goals.\r\n-Management",
 			Description:            "Trash a Factromino with >9 Blocks",
 			MyFamily:               AchievementFamilies["WhatDoIDoWithThis"],
 			AchievementFamilyOrder: 1,
@@ -196,7 +196,7 @@ var (
 		},
 		"WhatDoIDoWithThis20": {
 			Name:                   "WhatDoIDoWithThis",
-			LabelText:              "Wow, I'm actually impressed you fit that thing in the dumpster.\r\n-Thanks Management",
+			LabelText:              "Wow, I'm actually impressed you fit that thing in the dumpster.\r\n-Management",
 			Description:            "Trash a Factromino with >19 Blocks",
 			MyFamily:               AchievementFamilies["WhatDoIDoWithThis"],
 			AchievementFamilyOrder: 2,
@@ -204,7 +204,7 @@ var (
 		},
 		"WhatDoIDoWithThis35": {
 			Name:                   "WhatDoIDoWithThis",
-			LabelText:              "If you build them all like that we will never be able to meet our goals\r\n-Thanks Management",
+			LabelText:              "You know, I'm beginning to think this job may not be the right fit for you.\r\n-Management",
 			Description:            "Trash a Factromino with 35 Blocks",
 			MyFamily:               AchievementFamilies["WhatDoIDoWithThis"],
 			AchievementFamilyOrder: 2,
@@ -212,7 +212,7 @@ var (
 		},
 		"GridFullOBlocks": {
 			Name:                   "GridFullOBlocks",
-			LabelText:              "Please clean up your workspace, this is a health and safety issue\r\n-Thanks Management",
+			LabelText:              "Please clean up your workspace, this is a health and safety issue.\r\n-Management",
 			Description:            "Fill the workspace with blocks",
 			MyFamily:               AchievementFamilies["GridFullOBlocks"],
 			AchievementFamilyOrder: 0,

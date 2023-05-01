@@ -86,6 +86,7 @@ var (
 		[4]world.Coords{{0, 0}, {1, 0}, {1, 1}, {1, 2}}: J, //flat right point left
 	}
 	TitleVariants = []string{
+		"Overtime at the Tetromino Factory",
 		"42 Days Accident Free",
 		"Have you ever played a block falling game and thought, 'I like this game but wouldn't it be great if it was more stressful?'",
 		"We need more Blocks! Everyone's working weekends!",
