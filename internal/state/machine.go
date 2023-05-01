@@ -9,6 +9,7 @@ import (
 	"timsims1717/ludum-dare-53/pkg/debug"
 	"timsims1717/ludum-dare-53/pkg/img"
 	"timsims1717/ludum-dare-53/pkg/options"
+	"timsims1717/ludum-dare-53/pkg/sfx"
 	"timsims1717/ludum-dare-53/pkg/state"
 	"timsims1717/ludum-dare-53/pkg/timing"
 	"timsims1717/ludum-dare-53/pkg/viewport"
@@ -95,6 +96,7 @@ func Draw(win *pixelgl.Window) {
 		cState.Draw(win)
 	}
 	debug.Draw(win)
+	sfx.MusicPlayer.Update()
 	win.Update()
 }
 

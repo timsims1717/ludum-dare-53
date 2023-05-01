@@ -16,6 +16,7 @@ import (
 	"timsims1717/ludum-dare-53/pkg/object"
 	"timsims1717/ludum-dare-53/pkg/options"
 	"timsims1717/ludum-dare-53/pkg/reanimator"
+	"timsims1717/ludum-dare-53/pkg/sfx"
 	"timsims1717/ludum-dare-53/pkg/state"
 	"timsims1717/ludum-dare-53/pkg/typeface"
 	"timsims1717/ludum-dare-53/pkg/viewport"
@@ -127,6 +128,7 @@ func (s *gameState) Load(done chan struct{}) {
 		}))
 
 	s.UpdateViews()
+	sfx.MusicPlayer.PlayMusic("song")
 	reanimator.SetFrameRate(16)
 	reanimator.Reset()
 	done <- struct{}{}
