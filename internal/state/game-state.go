@@ -136,6 +136,7 @@ func (s *gameState) Update(win *pixelgl.Window) {
 		if gameInput.Get("reset").JustPressed() {
 			if systems.FailCondition {
 				systems.FailCondition = false
+				systems.WasFail = false
 				systems.ClearBoard()
 				systems.ClearFactory()
 			}
@@ -224,7 +225,13 @@ func (s *gameState) Update(win *pixelgl.Window) {
 		debug.AddText(fmt.Sprintf("Num of Blocks on Conveyor: %d", count))
 	}
 	if systems.FailCondition {
-		debug.AddText("Game Over, done done done")
+		if !systems.WasFail {
+			OpenSticky(&data.StickyMsg{
+				Message: systems.FailReason.String(),
+				Offset:  pixel.V(40., 55.),
+			})
+			systems.WasFail = true
+		}
 	}
 	debug.AddText(fmt.Sprintf("PieceDone: %t", systems.PieceDone))
 

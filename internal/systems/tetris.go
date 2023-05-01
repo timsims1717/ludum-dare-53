@@ -11,6 +11,7 @@ import (
 var (
 	PieceDone     bool
 	FailCondition bool
+	WasFail       bool
 	FailReason    constants.FailCondition
 )
 
