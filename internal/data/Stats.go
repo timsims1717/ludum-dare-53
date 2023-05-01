@@ -106,7 +106,18 @@ func (fs *FactoryStats) AddToFactoryStats(factromino Factromino) {
 		fs.ShapeStreak = 0
 		fs.LastTetromino = factromino.MyTetrominoType
 	}
+	CheckAchievements()
 }
+func CheckAchievements() {
+	//TODO Make a better Achievement Engine
+	switch FactoryFloor.Stats.Factrominos {
+	case 5:
+		tAchieve := constants.Achievements["Create5Tetronimos"]
+		tAchieve.Achieved = true
+		constants.Achievements["Create5Tetronimos"] = tAchieve
+	}
+}
+
 func (fs *FactoryStats) ResetFactoryBalanceStreak() {
 	fs.BalanceStreak = 0
 	fs.MyFibScore.reset()

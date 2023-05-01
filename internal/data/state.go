@@ -2,6 +2,7 @@ package data
 
 import (
 	"github.com/faiface/pixel"
+	"timsims1717/ludum-dare-53/pkg/img"
 	"timsims1717/ludum-dare-53/pkg/typeface"
 	"timsims1717/ludum-dare-53/pkg/viewport"
 )
@@ -19,6 +20,7 @@ var (
 	Paused     bool
 	PauseMenu  bool
 	StickyOpen bool
+	TinyNote   *img.Sprite
 )
 
 type StickyMsg struct {

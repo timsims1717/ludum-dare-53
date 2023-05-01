@@ -32,7 +32,7 @@ func ClickSystem() {
 		vp, ok := result.Components[myecs.ViewPort].(*viewport.ViewPort)
 		click, okC := result.Components[myecs.Click].(*data.Funky)
 		in, okI := result.Components[myecs.Input].(*pxginput.Input)
-		if okO && ok && okC && okI {
+		if okO && ok && okC && okI && !obj.Hide {
 			pos := in.World
 			if vp != nil {
 				pos = vp.Projected(pos)

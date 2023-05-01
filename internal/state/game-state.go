@@ -13,6 +13,7 @@ import (
 	"timsims1717/ludum-dare-53/internal/systems"
 	"timsims1717/ludum-dare-53/pkg/debug"
 	"timsims1717/ludum-dare-53/pkg/img"
+	"timsims1717/ludum-dare-53/pkg/object"
 	"timsims1717/ludum-dare-53/pkg/options"
 	"timsims1717/ludum-dare-53/pkg/reanimator"
 	"timsims1717/ludum-dare-53/pkg/state"
@@ -74,6 +75,17 @@ func (s *gameState) Load(done chan struct{}) {
 	data.StickyText.SetPos(pixel.V(0., 0.))
 	data.StickyText.SetColor(constants.BlackColor)
 	data.StickyText.SetText("Paused")
+
+	for i, achFam := range constants.AchievementFamilies {
+		achFam.StickyNote = object.New().WithID(achFam.Name)
+		achFam.StickyNote.Pos = achFam.StickyNotePosition
+		achFam.StickyNote.Layer = 12
+		achFam.StickyNote.Hide = true
+		achFam.StickyNote.Rect = pixel.R(0, 0, 32, 32)
+		constants.AchievementFamilies[i] = achFam
+		myecs.Manager.NewEntity().AddComponent(myecs.Object, constants.AchievementFamilies[i].StickyNote).AddComponent(myecs.Drawable, data.TinyNote).
+			AddComponent(myecs.ViewPort, data.FactoryViewport).AddComponent(myecs.Input, gameInput).AddComponent(myecs.Click, data.NewFn(ClickAchievement(&achFam)))
+	}
 
 	s.UpdateViews()
 	reanimator.SetFrameRate(16)
@@ -246,6 +258,7 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	data.StickyText.Obj.Update()
 	data.StickyObj.Update()
 	data.StickyViewport.Update()
+	UnhideAchievements()
 }
 
 func (s *gameState) Draw(win *pixelgl.Window) {
@@ -316,4 +329,21 @@ func (s *gameState) UpdateViews() {
 
 	data.StickyViewport.PortPos = portPos
 	data.StickyViewport.PortSize = pixel.V(0.8, 0.8)
+}
+
+func UnhideAchievements() {
+	for _, value := range constants.AchievementFamilies {
+		if value.StickyNote != nil && value.Achieved() {
+			value.StickyNote.Hide = false
+		}
+	}
+}
+
+func ClickAchievement(a *constants.AchievementFamily) func() {
+	return func() {
+		OpenSticky(&data.StickyMsg{
+			Message: a.String(),
+			Offset:  pixel.Vec{},
+		})
+	}
 }
