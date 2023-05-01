@@ -22,11 +22,11 @@ type Factromino struct {
 	MyFactronimoType    constants.FactrominoType
 	MyFactronimoVariant constants.FactrominoVariant
 	Color               TColor
-	MyTetronimoType     constants.TetronimoType
+	MyTetrominoType     constants.TetronimoType
 }
 
 func (f *Factromino) RefreshState() {
-	if f.MyTetronimoType == constants.UndefinedTetronimoType {
+	if f.MyTetrominoType == constants.UndefinedTetronimoType {
 		f.DetectTetrominoType()
 	}
 	if f.Color == 0 && len(f.Blocks) > 0 {
@@ -42,12 +42,12 @@ func (f *Factromino) DetectTetrominoType() {
 		newCoords := Normalize(originalCoords)
 		for i, kv := range constants.NormalizedTetronimos {
 			if TetronimoCoordsEqual(i, newCoords) {
-				f.MyTetronimoType = kv
+				f.MyTetrominoType = kv
 				return
 			}
 		}
 	}
-	f.MyTetronimoType = constants.UndefinedTetronimoType
+	f.MyTetrominoType = constants.UndefinedTetronimoType
 }
 
 type FactoryBlock struct {

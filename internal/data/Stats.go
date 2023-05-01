@@ -56,7 +56,7 @@ func (fs *FactoryStats) AddToFactoryStats(factromino Factromino) {
 	fs.Factrominos++
 	timeSinceLastShape := 0
 	for key, value := range fs.TimesSinceLastShape {
-		if key == factromino.MyTetronimoType {
+		if key == factromino.MyTetrominoType {
 			timeSinceLastShape = value
 			fs.TimesSinceLastShape[key] = 0
 		} else {
@@ -70,7 +70,7 @@ func (fs *FactoryStats) AddToFactoryStats(factromino Factromino) {
 		fs.ResetFactoryBalanceStreak()
 		fs.Score += 1
 	}
-	if factromino.Color == fs.CurrentColor || factromino.MyTetronimoType == fs.LastTetromino {
+	if factromino.Color == fs.CurrentColor || factromino.MyTetrominoType == fs.LastTetromino {
 		fs.UnoStreak++
 	} else {
 		fs.UnoStreak = 0
@@ -84,14 +84,14 @@ func (fs *FactoryStats) AddToFactoryStats(factromino Factromino) {
 		fs.ColorStreak = 0
 		fs.CurrentColor = factromino.Color
 	}
-	if factromino.MyTetronimoType == fs.LastTetromino {
+	if factromino.MyTetrominoType == fs.LastTetromino {
 		fs.ShapeStreak++
 	} else {
 		if fs.ShapeStreak > fs.LongestShapeStreak {
 			fs.LongestShapeStreak = fs.ShapeStreak
 		}
 		fs.ShapeStreak = 0
-		fs.LastTetromino = factromino.MyTetronimoType
+		fs.LastTetromino = factromino.MyTetrominoType
 	}
 }
 func (fs *FactoryStats) ResetFactoryBalanceStreak() {

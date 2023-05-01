@@ -144,6 +144,14 @@ func AddToQueuePad() {
 				data.DraggingPiece.Object.Layer = 12
 				data.DraggingPiece.Object.Pos = data.QueuePad.Object.Pos
 				data.DraggingPiece.RefreshState()
+				if data.DraggingPiece.MyTetrominoType == constants.I {
+					for _, block := range data.DraggingPiece.Blocks {
+						if block.Object.Offset.Y != 0 {
+							block.Object.Offset.X = (block.Object.Offset.Y / world.TileSize) * constants.FactoryTile
+							block.Object.Offset.Y = 0
+						}
+					}
+				}
 				data.Conveyor.Tets[data.ConveyorLength-1] = data.DraggingPiece
 				data.FactoryFloor.Stats.AddToFactoryStats(*data.DraggingPiece)
 				data.DraggingPiece = nil
