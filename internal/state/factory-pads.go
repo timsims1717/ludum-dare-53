@@ -101,6 +101,7 @@ func BuildFactoryPads() {
 					myecs.Manager.DisposeEntity(block.Entity)
 				}
 				myecs.Manager.DisposeEntity(data.DraggingPiece.Entity)
+				data.FactoryFloor.Stats.TrashAShape(*data.DraggingPiece)
 				data.DraggingPiece = nil
 			}
 		})).

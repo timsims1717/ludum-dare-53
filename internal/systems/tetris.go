@@ -11,6 +11,7 @@ import (
 var (
 	PieceDone     bool
 	FailCondition bool
+	FailReason    constants.FailCondition
 )
 
 func TetrisSystem() {
@@ -60,6 +61,7 @@ func TetrisSystem() {
 				PieceDone = false
 			} else {
 				FailCondition = true
+				FailReason = constants.BoardFull
 			}
 		} else {
 			PieceDone = true
@@ -71,6 +73,9 @@ func TetrisSystem() {
 					}
 				}
 				FailCondition = empty
+				if FailCondition {
+					FailReason = constants.ConveyorBeltEmpty
+				}
 			}
 		}
 	}

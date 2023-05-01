@@ -84,11 +84,30 @@ var (
 		"We killed a bug, YAY!!!",
 		"Stop everything! We need a full factory reset!",
 		"Where did you think the blocks you mined in minecraft went?!?",
+		"There are two fail conditions, either you don't produce, or you can't consume",
+		"My nose feels bigger",
 	}
 )
 
 func RandomTitle() string {
 	return TitleVariants[GlobalSeededRandom.Intn(len(TitleVariants))]
+}
+
+type FailCondition int
+
+const (
+	BoardFull = iota
+	ConveyorBeltEmpty
+)
+
+func (fc FailCondition) String() string {
+	switch fc {
+	case BoardFull:
+		return "You cannot consume anymore of our products, the board is full"
+	case ConveyorBeltEmpty:
+		return "You did not meet your quota, the conveyor belt is empty"
+	}
+	return ""
 }
 
 type TetronimoType int
