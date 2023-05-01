@@ -75,7 +75,7 @@ func FactoryFloorUpdate() func() {
 
 func FactoryFloorClicked() func() {
 	return func() {
-		if data.DraggingPiece != nil {
+		if data.DraggingPiece != nil && !systems.FailCondition {
 			if ActuallyOnFloor() {
 				legal := true
 				for _, block := range data.DraggingPiece.Blocks {
@@ -104,6 +104,7 @@ func FactoryFloorClicked() func() {
 					myecs.Manager.DisposeEntity(data.DraggingPiece.Entity)
 					data.DraggingPiece.Blocks = []*data.FactoryBlock{}
 					data.DraggingPiece = nil
+					PlayPlaceSound()
 				}
 			}
 		} else {
@@ -126,6 +127,7 @@ func FactoryFloorClicked() func() {
 						myecs.Manager.DisposeEntity(block.Entity)
 						data.FactoryFloor.Set(block.Coords, nil)
 					}
+					PlayPickupSound()
 				}
 			}
 		}

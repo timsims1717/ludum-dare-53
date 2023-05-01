@@ -2,12 +2,14 @@ package state
 
 import (
 	"github.com/faiface/pixel"
+	"math/rand"
 	"timsims1717/ludum-dare-53/internal/constants"
 	"timsims1717/ludum-dare-53/internal/data"
 	"timsims1717/ludum-dare-53/internal/myecs"
 	"timsims1717/ludum-dare-53/internal/systems"
 	"timsims1717/ludum-dare-53/pkg/img"
 	"timsims1717/ludum-dare-53/pkg/object"
+	"timsims1717/ludum-dare-53/pkg/sfx"
 	"timsims1717/ludum-dare-53/pkg/world"
 )
 
@@ -51,12 +53,14 @@ func BuildFactoryPads() {
 						data.DraggingPiece.Entity.AddComponent(myecs.Drag, &gameInput.World)
 						data.DraggingPiece.Object.Layer = 20
 						pad.Tet = nil
+						PlayPickupSound()
 					} else if pad.Tet == nil && data.DraggingPiece != nil {
 						pad.Tet = data.DraggingPiece
 						data.DraggingPiece.Entity.RemoveComponent(myecs.Drag)
 						data.DraggingPiece.Object.Layer = 12
 						data.DraggingPiece.Object.Pos = pad.Object.Pos
 						data.DraggingPiece = nil
+						PlayPlaceSound()
 					}
 				}
 			})).
@@ -106,6 +110,7 @@ func BuildFactoryPads() {
 					myecs.Manager.DisposeEntity(data.DraggingPiece.Entity)
 					data.FactoryFloor.Stats.TrashAShape(*data.DraggingPiece)
 					data.DraggingPiece = nil
+					PlayTrashSound()
 				}
 			}
 		})).
@@ -161,6 +166,7 @@ func AddToQueuePad() {
 				data.Conveyor.Tets[data.ConveyorLength-1] = data.DraggingPiece
 				data.FactoryFloor.Stats.AddToFactoryStats(*data.DraggingPiece)
 				data.DraggingPiece = nil
+				PlayPlaceSound()
 			}
 		}
 	}
@@ -175,4 +181,20 @@ func PadHighlight(pos pixel.Vec) {
 		AddComponent(myecs.Object, obj).
 		AddComponent(myecs.Drawable, spr).
 		AddComponent(myecs.Temp, myecs.ClearFlag(true))
+}
+
+func PlayPlaceSound() {
+	if rand.Intn(2) == 0 {
+		sfx.SoundPlayer.PlaySound("place", 1.)
+	} else {
+		sfx.SoundPlayer.PlaySound("place2", 1.)
+	}
+}
+
+func PlayPickupSound() {
+	sfx.SoundPlayer.PlaySound("pickup", 1.)
+}
+
+func PlayTrashSound() {
+	sfx.SoundPlayer.PlaySound("trash", -1.)
 }

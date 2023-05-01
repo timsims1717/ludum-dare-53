@@ -65,7 +65,7 @@ type FactoryPad struct {
 
 const (
 	ConveyorLength = 5
-	ConveyorHeight = 20.5 * MSize
+	ConveyorHeight = 20. * MSize
 )
 
 type conveyor struct {

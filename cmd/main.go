@@ -53,6 +53,14 @@ func run() {
 	sfx.MusicPlayer.RegisterMusicTrack("assets/thesong.wav", "song")
 	sfx.MusicPlayer.NewSet("song", []string{"song"}, sfx.Repeat, 0., 2.)
 
+	sfx.SoundPlayer.RegisterSound("assets/alarm.wav", "alarm")
+	sfx.SoundPlayer.RegisterSound("assets/buttonpress.wav", "buttonpress")
+	sfx.SoundPlayer.RegisterSound("assets/conveyor.wav", "conveyor")
+	sfx.SoundPlayer.RegisterSound("assets/pickup.wav", "pickup")
+	sfx.SoundPlayer.RegisterSound("assets/place.wav", "place")
+	sfx.SoundPlayer.RegisterSound("assets/place2.wav", "place2")
+	sfx.SoundPlayer.RegisterSound("assets/trash.wav", "trash")
+
 	debug.Initialize(&viewport.MainCamera.PostCamPos, &viewport.MainCamera.PostCamPos)
 
 	state.InitMenu(win)
