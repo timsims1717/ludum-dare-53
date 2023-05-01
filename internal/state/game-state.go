@@ -105,6 +105,7 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	}
 
 	if factoryInput.Get("generate").JustPressed() {
+		factoryInput.Get("generate").Consume()
 		r1 := rand.Intn(len(data.FactoryPads))
 		pad := data.FactoryPads[r1]
 		r := r1
@@ -117,8 +118,10 @@ func (s *gameState) Update(win *pixelgl.Window) {
 			pad = data.FactoryPads[r]
 		}
 		if pad.Tet == nil {
-			tet := systems.CreateFactoryTet(pad.Object.Pos, data.RandColor(), 0)
+
+			tet := systems.CreateFactoryTet(pad.Object.Pos, data.RandColor(), constants.FacUndefined)
 			tet.Entity.AddComponent(myecs.ViewPort, data.FactoryViewport)
+
 			tet.Entity.AddComponent(myecs.Input, factoryInput)
 			pad.Tet = tet
 			//tet.Entity.AddComponent(myecs.Click, data.NewFn(func() {

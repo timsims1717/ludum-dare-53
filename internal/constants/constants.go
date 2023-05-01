@@ -2,6 +2,8 @@ package constants
 
 import (
 	"image/color"
+	"math/rand"
+	"time"
 	"timsims1717/ludum-dare-53/pkg/world"
 )
 
@@ -35,7 +37,8 @@ const (
 )
 
 var (
-	BlackColor = color.RGBA{
+	GlobalSeededRandom = rand.New(rand.NewSource(time.Now().UnixNano()))
+	BlackColor         = color.RGBA{
 		R: 19,
 		G: 19,
 		B: 19,
@@ -53,10 +56,10 @@ var (
 		[4]world.Coords{{0, 0}, {0, 1}, {0, 2}, {1, 1}}: T, //Point Right, Flat Left
 		[4]world.Coords{{1, 0}, {0, 1}, {1, 1}, {2, 1}}: T, //Point Left, Flat Right
 		[4]world.Coords{{1, 0}, {1, 1}, {1, 2}, {0, 1}}: T, //Point Down, Flat Up
-		[4]world.Coords{{0, 1}, {1, 1}, {1, 0}, {0, 2}}: Z,
-		[4]world.Coords{{0, 0}, {0, 1}, {1, 1}, {1, 2}}: Z,
-		[4]world.Coords{{0, 0}, {1, 0}, {1, 1}, {2, 1}}: S,
-		[4]world.Coords{{1, 0}, {2, 0}, {0, 1}, {1, 1}}: S,
+		[4]world.Coords{{0, 1}, {1, 0}, {1, 1}, {2, 0}}: Z, //Horizontal
+		[4]world.Coords{{0, 0}, {0, 1}, {1, 1}, {1, 2}}: Z, //Vertical
+		[4]world.Coords{{0, 0}, {1, 0}, {1, 1}, {2, 1}}: S, //Horizonal
+		[4]world.Coords{{0, 1}, {0, 2}, {1, 0}, {1, 1}}: S, //Vertical
 		[4]world.Coords{{0, 0}, {1, 0}, {2, 0}, {2, 1}}: L, //flat down point up
 		[4]world.Coords{{0, 0}, {0, 1}, {0, 2}, {1, 0}}: L, //flat left point right
 		[4]world.Coords{{0, 0}, {0, 1}, {1, 1}, {2, 1}}: L, //flat up point down
@@ -96,6 +99,61 @@ func (t TetronimoType) String() string {
 		return "J"
 	case T:
 		return "T"
+	}
+	return ""
+}
+
+type FactrominoType int
+
+const (
+	FacUndefined = 0
+	FacOne       = 1
+	FacTwo       = 2
+	FacThree     = 3
+)
+
+func (f FactrominoType) String() string {
+	switch f {
+	case FacUndefined:
+		return "Undefined Factromino"
+	case FacOne:
+		return "One Block Factromino"
+	case FacTwo:
+		return "Two Block Factromino"
+	case FacThree:
+		return "Three Block Factromino"
+	}
+	return ""
+}
+
+type FactrominoVariant int
+
+const (
+	FactVariantUndefined = iota
+	Vertical
+	Horizontal
+	BabyR
+	BabySeven
+	BabyL
+	BabyJ
+)
+
+func (f FactrominoVariant) String() string {
+	switch f {
+	case FactVariantUndefined:
+		return "Undefined"
+	case Vertical:
+		return "Vertical"
+	case Horizontal:
+		return "Horizontal"
+	case BabyR:
+		return "Baby R"
+	case BabySeven:
+		return "Baby Seven"
+	case BabyL:
+		return "Baby L"
+	case BabyJ:
+		return "Baby J"
 	}
 	return ""
 }
