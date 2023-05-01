@@ -1,29 +1,58 @@
 package constants
 
-type Achievement struct {
-	Name              string
-	LabelText         string
-	Description       string
-	Achieved          bool
-	AchievementFamily AchievementFamilies
-}
-
-type AchievementFamilies int
-
-const (
-	CreateFactronimos = iota //3,2,1,1
-	ClearedRows
+import (
+	"github.com/faiface/pixel"
+	"timsims1717/ludum-dare-53/pkg/object"
 )
 
+type Achievement struct {
+	Name                   string
+	LabelText              string
+	Description            string
+	Achieved               bool
+	MyFamily               AchievementFamily
+	AchievementFamilyOrder int
+}
+
+type AchievementFamily struct {
+	Name               string
+	StickyNote         *object.Object
+	StickyNotePosition pixel.Vec
+}
+
+func (af *AchievementFamily) String() string {
+	maxIter := -1
+	message := ""
+	for _, value := range Achievements {
+		if value.MyFamily.Name == af.Name && value.Achieved && value.AchievementFamilyOrder > maxIter {
+			maxIter = value.AchievementFamilyOrder
+			message = value.LabelText
+		}
+	}
+	return message
+}
+func (af *AchievementFamily) Achieved() bool {
+	for _, value := range Achievements {
+		if value.MyFamily.Name == af.Name && value.Achieved {
+			return true
+		}
+	}
+	return false
+}
+
 var (
+	AchievementFamilies = map[string]AchievementFamily{
+		"CreateTetronimos": AchievementFamily{Name: "CreateTetronimos", StickyNote: nil, StickyNotePosition: pixel.V(-40, 510)},
+	}
+
 	Achievements = map[string]Achievement{
-		"Create5Factronimos":   Achievement{Name: "Create5Factronimos", LabelText: "Congrats on completing 5 Factronimos", Description: "Construct 5 Valid Factronimos and deliver them to the Board", AchievementFamily: CreateFactronimos, Achieved: false},
-		"Create8Factronimos":   Achievement{Name: "Create8Factronimos", LabelText: "Congrats on completing 8 Factronimos", Description: "Construct 8 Valid Factronimos and deliver them to the Board", AchievementFamily: CreateFactronimos, Achieved: false},
-		"Create13Factronimos":  Achievement{Name: "Create13Factronimos", LabelText: "Congrats on completing 13 Factronimos", Description: "Construct 13 Valid Factronimos and deliver them to the Board", AchievementFamily: CreateFactronimos, Achieved: false},
-		"Create21Factronimos":  Achievement{Name: "Create21Factronimos", LabelText: "Congrats on completing 21 Factronimos", Description: "Construct 21 Valid Factronimos and deliver them to the Board", AchievementFamily: CreateFactronimos, Achieved: false},
-		"Create55Factronimos":  Achievement{Name: "Create55Factronimos", LabelText: "Congrats on completing 55 Factronimos", Description: "Construct 55 Valid Factronimos and deliver them to the Board", AchievementFamily: CreateFactronimos, Achieved: false},
-		"Create89Factronimos":  Achievement{Name: "Create89Factronimos", LabelText: "Congrats on completing 89 Factronimos", Description: "Construct 89 Valid Factronimos and deliver them to the Board", AchievementFamily: CreateFactronimos, Achieved: false},
-		"Create144Factronimos": Achievement{Name: "Create144Factronimos", LabelText: "Congrats on completing 144 Factronimos", Description: "Construct 144 Valid Factronimos and deliver them to the Board", AchievementFamily: CreateFactronimos, Achieved: false},
-		"Create233Factronimos": Achievement{Name: "Create233Factronimos", LabelText: "Congrats on completing 233 Factronimos", Description: "Construct 233 Valid Factronimos and deliver them to the Board", AchievementFamily: CreateFactronimos, Achieved: false},
+		"Create5Tetronimos":   Achievement{Name: "Create5Tetronimos", LabelText: "You have met the initial quota of 5 Tetronimos, now don't fall behind", Description: "Construct 5 Valid Tetronimos and deliver them to the Board", MyFamily: AchievementFamilies["CreateTetronimos"], Achieved: false, AchievementFamilyOrder: 0},
+		"Create8Tetronimos":   Achievement{Name: "Create8Tetronimos", LabelText: "Congrats on completing 8 Tetronimos", Description: "Construct 8 Valid Tetronimos and deliver them to the Board", MyFamily: AchievementFamilies["CreateTetronimos"], Achieved: false, AchievementFamilyOrder: 1},
+		"Create13Tetronimos":  Achievement{Name: "Create13Tetronimos", LabelText: "Congrats on completing 13 Tetronimos", Description: "Construct 13 Valid Tetronimos and deliver them to the Board", MyFamily: AchievementFamilies["CreateTetronimos"], Achieved: false, AchievementFamilyOrder: 2},
+		"Create21Tetronimos":  Achievement{Name: "Create21Tetronimos", LabelText: "Congrats on completing 21 Tetronimos", Description: "Construct 21 Valid Tetronimos and deliver them to the Board", MyFamily: AchievementFamilies["CreateTetronimos"], Achieved: false, AchievementFamilyOrder: 3},
+		"Create55Tetronimos":  Achievement{Name: "Create55Tetronimos", LabelText: "Congrats on completing 55 Tetronimos", Description: "Construct 55 Valid Tetronimos and deliver them to the Board", MyFamily: AchievementFamilies["CreateTetronimos"], Achieved: false, AchievementFamilyOrder: 4},
+		"Create89Tetronimos":  Achievement{Name: "Create89Tetronimos", LabelText: "Congrats on completing 89 Tetronimos", Description: "Construct 89 Valid Tetronimos and deliver them to the Board", MyFamily: AchievementFamilies["CreateTetronimos"], Achieved: false, AchievementFamilyOrder: 5},
+		"Create144Tetronimos": Achievement{Name: "Create144Tetronimos", LabelText: "Congrats on completing 144 Tetronimos", Description: "Construct 144 Valid Tetronimos and deliver them to the Board", MyFamily: AchievementFamilies["CreateTetronimos"], Achieved: false, AchievementFamilyOrder: 6},
+		"Create233Tetronimos": Achievement{Name: "Create233Tetronimos", LabelText: "Congrats on completing 233 Tetronimos", Description: "Construct 233 Valid Tetronimos and deliver them to the Board", MyFamily: AchievementFamilies["CreateTetronimos"], Achieved: false, AchievementFamilyOrder: 7},
 	}
 )

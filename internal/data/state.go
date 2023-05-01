@@ -21,6 +21,7 @@ var (
 	Paused     bool
 	PauseMenu  bool
 	StickyOpen bool
+	TinyNote   *img.Sprite
 )
 
 type StickyMsg struct {
