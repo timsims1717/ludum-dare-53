@@ -104,6 +104,24 @@ func FactoryFloorClicked() func() {
 					myecs.Manager.DisposeEntity(data.DraggingPiece.Entity)
 					data.DraggingPiece.Blocks = []*data.FactoryBlock{}
 					data.DraggingPiece = nil
+					if !constants.Achievements["GridFullOBlocks"].Achieved {
+						total := 0
+					empty:
+						for _, row := range data.FactoryFloor.Blocks {
+							for _, block := range row {
+								if block != nil {
+									total++
+								} else {
+									break empty
+								}
+							}
+						}
+						if total == 35 {
+							temp := constants.Achievements["GridFullOBlocks"]
+							temp.Achieved = true
+							constants.Achievements["GridFullOBlocks"] = temp
+						}
+					}
 				}
 			}
 		} else {
