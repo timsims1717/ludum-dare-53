@@ -114,6 +114,7 @@ func FactoryFloorClicked() func() {
 				blockA := data.FactoryFloor.Get(c)
 				if blockA != nil {
 					blocks := []*data.FactoryBlock{blockA}
+					blocks2 := GetAllColorNeighbors(blockA, blocks)
 					blocks = GetAllColorNeighbors(blockA, blocks)
 					tet := systems.ConstructTetFromBlocks(pos, blocks)
 					tet.Entity.AddComponent(myecs.ViewPort, data.FactoryViewport)
@@ -121,7 +122,8 @@ func FactoryFloorClicked() func() {
 					data.DraggingPiece = tet
 					data.DraggingPiece.Entity.AddComponent(myecs.Drag, &factoryInput.World)
 					data.DraggingPiece.Object.Layer = 20
-					for _, block := range blocks {
+					for _, block := range blocks2 {
+						myecs.Manager.DisposeEntity(block.Entity)
 						data.FactoryFloor.Set(block.Coords, nil)
 					}
 				}
