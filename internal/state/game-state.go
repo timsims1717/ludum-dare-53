@@ -91,10 +91,7 @@ func (s *gameState) Load(done chan struct{}) {
 					data.PauseButSprs[1].Offset.Y = 0
 				}
 				if gameInput.Get("click").JustReleased() {
-					data.Paused = !data.Paused
-					data.PauseMenu = data.Paused
-					data.StickyOpen = data.Paused
-					OpenSticky(data.PauseMsg)
+					data.Paused = true
 					openPauseMenu()
 				}
 			} else {
@@ -149,13 +146,9 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	}
 	if gameInput.Get("pause").JustPressed() {
 		data.Paused = !data.Paused
-		data.PauseMenu = data.Paused
-		data.StickyOpen = data.Paused
 		if data.Paused {
-			OpenSticky(data.PauseMsg)
 			openPauseMenu()
 		} else {
-			CloseSticky()
 			closeMenu()
 		}
 	}

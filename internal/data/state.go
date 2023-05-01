@@ -33,6 +33,10 @@ var (
 		Message: "Paused",
 		Offset:  pixel.V(-6., 293.),
 	}
+	CreditsMsg = &StickyMsg{
+		Message: "Credits\n\nEverything by Ben and Tim Sims\nGet back to work.",
+		Offset:  pixel.V(40., 115.),
+	}
 )
 
 var (
