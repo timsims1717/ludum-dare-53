@@ -199,6 +199,7 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	}
 	debug.AddText(fmt.Sprintf("Tetrominos: %d", data.TetrisBoard.Stats.Tetrominos))
 	debug.AddText(fmt.Sprintf("Factrominos: %d", data.FactoryFloor.Stats.Factrominos))
+	debug.AddText(fmt.Sprintf("Total Trashed Shapes: %d", data.FactoryFloor.Stats.TotalTrashedShapes()))
 	if data.Conveyor != nil {
 		count := 0
 		for _, block := range data.Conveyor.Tets {
@@ -209,7 +210,7 @@ func (s *gameState) Update(win *pixelgl.Window) {
 		debug.AddText(fmt.Sprintf("Num of Blocks on Conveyor: %d", count))
 	}
 	if systems.FailCondition {
-		debug.AddText("Game Over, dun dun dun")
+		debug.AddText("Game Over, done done done")
 	}
 	debug.AddText(fmt.Sprintf("PieceDone: %t", systems.PieceDone))
 

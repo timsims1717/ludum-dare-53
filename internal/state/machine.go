@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/faiface/pixel/pixelgl"
 	"timsims1717/ludum-dare-53/internal/constants"
-	"timsims1717/ludum-dare-53/internal/data"
 	"timsims1717/ludum-dare-53/internal/myecs"
 	"timsims1717/ludum-dare-53/internal/systems"
 	"timsims1717/ludum-dare-53/pkg/debug"
@@ -65,14 +64,12 @@ func Update(win *pixelgl.Window) {
 			systems.ClearBoard()
 			systems.ClearFactory()
 		}
-		if debugInput.Get("debugTruckGeneration").JustPressed() {
-			debugInput.Get("debugTruckGeneration").Consume()
-			t := data.Truck{}
-			systems.GenerateLoad(&t)
-			debug.AddText(fmt.Sprintf("Generated Truck Load: %s", t.MyBatchType.String()))
-		}
 		if debugInput.Get("debugIgnoreConv").JustPressed() {
 			constants.IgnoreEmptyConv = !constants.IgnoreEmptyConv
+		}
+		if debugInput.Get("debugAutoGenMode").JustPressed() {
+			debugInput.Get("debugAutoGenMode").Consume()
+			constants.AutoGenTetrominos = !constants.AutoGenTetrominos
 		}
 
 		if cState, ok := States[currState]; ok {

@@ -24,7 +24,7 @@ const (
 	TetrisWidth         = 10
 	TetrisHeight        = 20
 	DefaultSpeed        = 0.8
-	ScoreCheckPoint     = 5
+	ScoreCheckPoint     = 10
 	SpeedModifier       = 0.05
 	SpeedMax            = 2
 	SpeedMin            = 0.1
@@ -61,8 +61,8 @@ var (
 	}
 	TetrisStart = world.Coords{X: 4, Y: 19}
 
-	IgnoreEmptyConv = false
-
+	IgnoreEmptyConv      = false
+	AutoGenTetrominos    = false
 	NormalizedTetronimos = map[[4]world.Coords]TetronimoType{
 		[4]world.Coords{{0, 0}, {1, 0}, {2, 0}, {3, 0}}: I,
 		[4]world.Coords{{0, 0}, {0, 1}, {0, 2}, {0, 3}}: I,
@@ -93,11 +93,33 @@ var (
 		"Stop everything! We need a full factory reset!",
 		"Where did you think the blocks you mined in minecraft went?!?",
 		"Don't forget to spend your hard earned dollars at the company store!",
+		"There are two fail conditions, either you don't produce, or you can't consume",
+		"My nose feels bigger",
+		"Why do we even have that lever!?!",
+		"This is an allegory for Capitalism",
+		"Ain’t no fellow who regretted giving it one extra shake, but you can bet every guy has regretted giving one too few.",
 	}
 )
 
 func RandomTitle() string {
 	return TitleVariants[GlobalSeededRandom.Intn(len(TitleVariants))]
+}
+
+type FailCondition int
+
+const (
+	BoardFull = iota
+	ConveyorBeltEmpty
+)
+
+func (fc FailCondition) String() string {
+	switch fc {
+	case BoardFull:
+		return "You cannot consume anymore of our products, the board is full"
+	case ConveyorBeltEmpty:
+		return "You did not meet your quota, the conveyor belt is empty"
+	}
+	return ""
 }
 
 type TetronimoType int

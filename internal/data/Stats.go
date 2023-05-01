@@ -37,6 +37,7 @@ type FactoryStats struct {
 	LargestShape         int
 	MyFibScore           FibScore
 	TimesSinceLastShape  map[constants.TetronimoType]int
+	TrashedShapes        map[int]int
 }
 
 func newFactoryStats() *FactoryStats {
@@ -50,10 +51,20 @@ func newFactoryStats() *FactoryStats {
 		constants.J: 0,
 		constants.L: 0,
 	}
+	tScore.TrashedShapes = map[int]int{}
 	tScore.MyFibScore = *newFibScore()
 	return tScore
 }
-
+func (fs *FactoryStats) TrashAShape(factromino Factromino) {
+	fs.TrashedShapes[len(factromino.Blocks)]++
+}
+func (fs *FactoryStats) TotalTrashedShapes() int {
+	total := 0
+	for _, value := range fs.TrashedShapes {
+		total += value
+	}
+	return total
+}
 func (fs *FactoryStats) AddToFactoryStats(factromino Factromino) {
 	fs.Factrominos++
 	timeSinceLastShape := 0
@@ -142,7 +153,7 @@ func (ts *TetrisStats) AddToTetrisStats(clearedRows int) {
 
 func (ts *TetrisStats) IncrementCheckpointAndSpeed() {
 	var checkpointtarget int
-	checkpointtarget = ts.Score / constants.ScoreCheckPoint
+	checkpointtarget = ts.GlobalScore() / constants.ScoreCheckPoint
 	for i := ts.Checkpoint; i < checkpointtarget; i++ {
 		ts.Checkpoint++
 		TetrisBoard.SpeedUp()
