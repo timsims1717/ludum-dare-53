@@ -247,8 +247,8 @@ func FactoTet(f *data.Factromino) {
 	//detect Fac Type
 	if len(f.Blocks) == 4 {
 		f.RefreshState()
-		if f.MyTetronimoType != constants.UndefinedTetronimoType {
-			switch f.MyTetronimoType {
+		if f.MyTetrominoType != constants.UndefinedTetronimoType {
+			switch f.MyTetrominoType {
 			case constants.O:
 				data.TetrisBoard.NextShape = CreateOTetronimo(f.Blocks[0].Color)
 				return
