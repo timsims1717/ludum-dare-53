@@ -40,7 +40,7 @@ var (
 		Offset:  pixel.V(40., 115.),
 	}
 	OptionsMsg = &StickyMsg{
-		Message: "Options\n\n\n\nMusic Volume",
+		Message: "Options\n\n\n\n Music Volume\nSound Volume",
 		Offset:  pixel.V(-40., 135.),
 	}
 )

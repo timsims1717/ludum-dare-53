@@ -19,6 +19,7 @@ import (
 	"timsims1717/ludum-dare-53/pkg/reanimator"
 	"timsims1717/ludum-dare-53/pkg/sfx"
 	"timsims1717/ludum-dare-53/pkg/state"
+	"timsims1717/ludum-dare-53/pkg/timing"
 	"timsims1717/ludum-dare-53/pkg/typeface"
 	"timsims1717/ludum-dare-53/pkg/viewport"
 	"timsims1717/ludum-dare-53/pkg/world"
@@ -28,6 +29,8 @@ type gameState struct {
 	*state.AbstractState
 
 	lastLeft bool
+
+	sfxTimer *timing.Timer
 }
 
 func (s *gameState) Unload() {
@@ -114,6 +117,7 @@ func (s *gameState) Load(done chan struct{}) {
 				if gameInput.Get("click").JustReleased() {
 					data.Paused = true
 					openPauseMenu()
+					sfx.SoundPlayer.PlaySound("buttonpress", 0.)
 				}
 			} else {
 				data.PauseButSprs[1].Offset.Y = 0
@@ -141,6 +145,7 @@ func (s *gameState) Load(done chan struct{}) {
 						systems.ClearBoard()
 						systems.ClearFactory()
 					}
+					sfx.SoundPlayer.PlaySound("buttonpress", 0.)
 				}
 			} else {
 				data.RestartButSprs[1].Offset.Y = 0
@@ -151,6 +156,7 @@ func (s *gameState) Load(done chan struct{}) {
 	sfx.MusicPlayer.PlayMusic("song")
 	reanimator.SetFrameRate(16)
 	reanimator.Reset()
+	s.sfxTimer = timing.New(rand.Float64()*20. + 5.)
 	done <- struct{}{}
 }
 
@@ -304,10 +310,10 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	}
 	debug.AddText(fmt.Sprintf("PieceDone: %t", systems.PieceDone))
 
-	data.SBLabels.SetText("Score:\nBalance Bonus:\nClear Bonus:")
+	data.SBLabels.SetText("Score:\nDeliveries:\nBalance Bonus:\nLines Cleared:\nClear Bonus:")
 	data.SBLabels.Obj.Update()
 
-	data.SBScores.SetText(fmt.Sprintf("%05d\n+%d\n+%d", data.TetrisBoard.Stats.GlobalScore(), data.FactoryFloor.Stats.MyFibScore.FibN-1, data.TetrisBoard.Stats.MyFibScore.FibN-1))
+	data.SBScores.SetText(fmt.Sprintf("%05d\n%03d\n+%d\n%03d\n+%d", data.TetrisBoard.Stats.GlobalScore(), data.FactoryFloor.Stats.Factrominos, data.FactoryFloor.Stats.MyFibScore.FibN-1, data.TetrisBoard.Stats.LinesCleared, data.TetrisBoard.Stats.MyFibScore.FibN-1))
 	data.SBScores.Obj.Update()
 
 	bs := data.FactoryFloor.Stats.BuiltShapes
@@ -319,6 +325,15 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	data.StickyText.Obj.Update()
 	data.StickyObj.Update()
 	data.StickyViewport.Update()
+	if s.sfxTimer.UpdateDone() {
+		switch rand.Intn(2) {
+		case 0:
+			sfx.SoundPlayer.PlaySound("conveyor", -2.)
+		case 1:
+			sfx.SoundPlayer.PlaySound("alarm", 0.)
+		}
+		s.sfxTimer = timing.New(rand.Float64()*20. + 5.)
+	}
 	UpdateAchievements()
 }
 
@@ -411,6 +426,8 @@ func UpdateAchievements() {
 						Message: value.String(),
 						Offset:  pixel.Vec{},
 					})
+					achievement.Presented = true
+					constants.Achievements[achievement.Name] = achievement
 				}
 			}
 			value.StickyNote.Hide = false
