@@ -59,7 +59,11 @@ func BuildFactoryPads() {
 				}
 			})).
 			AddComponent(myecs.Update, data.NewFn(func() {
-				// todo: add hover shine
+				if ((data.DraggingPiece != nil && pad.Tet == nil) ||
+					(data.DraggingPiece == nil && pad.Tet != nil)) &&
+					obj.PointInside(data.FactoryViewport.Projected(factoryInput.World)) {
+					PadHighlight(obj.Pos)
+				}
 			}))
 		pad.Entity = e
 		FactoryBGEntities = append(FactoryBGEntities, e)
@@ -101,27 +105,31 @@ func BuildFactoryPads() {
 			}
 		})).
 		AddComponent(myecs.Update, data.NewFn(func() {
-			// todo: add hover shine
+			if data.DraggingPiece != nil &&
+				obj.PointInside(data.FactoryViewport.Projected(factoryInput.World)) {
+				PadHighlight(obj.Pos)
+			}
 		}))
 	data.GarbagePad.Entity = e
 	FactoryBGEntities = append(FactoryBGEntities, e)
 	// queue pad
 	data.QueuePad = &data.FactoryPad{}
 	objQ := object.New()
-	objQ.Pos.Y = 19.5 * data.MSize
+	objQ.Pos.Y = data.ConveyorHeight
 	objQ.Pos.X = -5. * data.MSize
 	objQ.Layer = 11
 	objQ.Rect = pixel.R(0., 0., constants.FactoryTile*2.8, world.TileSize*2.8)
 	data.QueuePad.Object = objQ
-	sprQ := img.NewSprite("green_circle", constants.BlockKey)
 	eQ := myecs.Manager.NewEntity()
 	eQ.AddComponent(myecs.Object, data.QueuePad.Object).
-		AddComponent(myecs.Drawable, sprQ).
 		AddComponent(myecs.Input, factoryInput).
 		AddComponent(myecs.ViewPort, data.FactoryViewport).
 		AddComponent(myecs.Click, data.NewFn(AddToQueuePad)).
 		AddComponent(myecs.Update, data.NewFn(func() {
-			// todo: add hover shine
+			if data.DraggingPiece != nil && len(data.DraggingPiece.Blocks) == 4 &&
+				objQ.PointInside(data.FactoryViewport.Projected(factoryInput.World)) {
+				PadHighlight(objQ.Pos)
+			}
 		}))
 	data.QueuePad.Entity = eQ
 	FactoryBGEntities = append(FactoryBGEntities, eQ)
@@ -158,4 +166,15 @@ func AddToQueue() {
 			data.DraggingPiece = nil
 		}
 	}
+}
+
+func PadHighlight(pos pixel.Vec) {
+	obj := object.New()
+	obj.Pos = pos
+	obj.Layer = 19
+	spr := img.NewSprite("highlight", constants.BlockKey)
+	myecs.Manager.NewEntity().
+		AddComponent(myecs.Object, obj).
+		AddComponent(myecs.Drawable, spr).
+		AddComponent(myecs.Temp, myecs.ClearFlag(true))
 }

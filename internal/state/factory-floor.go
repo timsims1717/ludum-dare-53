@@ -56,7 +56,7 @@ func FactoryFloorUpdate() func() {
 						}
 						obj := object.New()
 						obj.Pos = mPos
-						obj.Layer = 11
+						obj.Layer = 19
 						myecs.Manager.NewEntity().
 							AddComponent(myecs.Object, obj).
 							AddComponent(myecs.Drawable, spr).
