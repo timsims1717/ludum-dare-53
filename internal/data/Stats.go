@@ -151,7 +151,7 @@ func (ts *TetrisStats) AddToTetrisStats(clearedRows int) {
 
 func (ts *TetrisStats) IncrementCheckpointAndSpeed() {
 	var checkpointtarget int
-	checkpointtarget = ts.Score / constants.ScoreCheckPoint
+	checkpointtarget = ts.GlobalScore() / constants.ScoreCheckPoint
 	for i := ts.Checkpoint; i < checkpointtarget; i++ {
 		ts.Checkpoint++
 		TetrisBoard.SpeedUp()

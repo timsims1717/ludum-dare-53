@@ -53,8 +53,8 @@ var (
 	}
 	TetrisStart = world.Coords{X: 4, Y: 19}
 
-	IgnoreEmptyConv = false
-
+	IgnoreEmptyConv      = false
+	AutoGenTetrominos    = true
 	NormalizedTetronimos = map[[4]world.Coords]TetronimoType{
 		[4]world.Coords{{0, 0}, {1, 0}, {2, 0}, {3, 0}}: I,
 		[4]world.Coords{{0, 0}, {0, 1}, {0, 2}, {0, 3}}: I,
@@ -86,6 +86,9 @@ var (
 		"Where did you think the blocks you mined in minecraft went?!?",
 		"There are two fail conditions, either you don't produce, or you can't consume",
 		"My nose feels bigger",
+		"Why do we even have that lever!?!",
+		"This is an allegory for Capitalism",
+		"Ain’t no fellow who regretted giving it one extra shake, but you can bet every guy has regretted giving one too few.",
 	}
 )
 

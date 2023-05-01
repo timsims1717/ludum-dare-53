@@ -56,6 +56,11 @@ func TetrisSystem() {
 			}
 		}
 		// create new piece
+		if constants.AutoGenTetrominos {
+			if !HasTetromino() {
+				data.TetrisBoard.NextShape = NewTetromino()
+			}
+		}
 		if HasTetromino() {
 			if PlaceTetromino() {
 				PieceDone = false
@@ -132,4 +137,5 @@ func ClearFactory() {
 			data.Conveyor.Tets[i] = nil
 		}
 	}
+	data.FactoryFloor.Stats.FullFactoryStatReset()
 }

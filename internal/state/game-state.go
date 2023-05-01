@@ -145,11 +145,6 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	systems.ParentSystem()
 	systems.ObjectSystem()
 	systems.AnimationSystem()
-	debug.AddText(fmt.Sprintf("Global Score: %03d", data.TetrisBoard.Stats.GlobalScore()))
-	debug.AddText(fmt.Sprintf("Tetris Score: %03d", data.TetrisBoard.Stats.Score))
-	debug.AddText(fmt.Sprintf("Clear Line Bonus: +%d", data.TetrisBoard.Stats.MyFibScore.FibN-1))
-	debug.AddText(fmt.Sprintf("Factory Score: %03d", data.FactoryFloor.Stats.Score))
-	debug.AddText(fmt.Sprintf("Factory Balance Bonus: +%d", data.FactoryFloor.Stats.MyFibScore.FibN-1))
 	debug.AddText(fmt.Sprintf("Current Speed: %f", data.TetrisBoard.Speed))
 	debug.AddText(fmt.Sprintf("Current Level: %d", data.TetrisBoard.Stats.Checkpoint))
 	if data.TetrisBoard.Shape != nil {
