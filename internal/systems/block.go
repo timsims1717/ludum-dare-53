@@ -243,7 +243,19 @@ func NewTetromino() *data.Tetromino {
 	return t
 }
 func DetectTetrominoTypeFromFactromino(f *data.Factromino) {
-	
+	if len(f.Blocks) == 4 {
+		var originalCoords [4]world.Coords
+		for i, block := range f.Blocks {
+			originalCoords[i] = world.Coords{block.Coords.X, block.Coords.Y}
+		}
+		newCoords := data.Normalize(originalCoords)
+		for i, kv := range constants.NormalizedTetronimos {
+			if data.TetronimoCoordsEqual(i, newCoords) {
+				f.MyTetronimoType = kv
+				break
+			}
+		}
+	}
 }
 func FactoTet(f *data.Factromino) {
 	//detect Fac Type
