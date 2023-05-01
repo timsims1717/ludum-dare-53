@@ -100,6 +100,7 @@ func CoordsIn(c world.Coords, list [4]world.Coords) bool {
 	}
 	return false
 }
+
 func TetronimoCoordsRotate(coords []world.Coords) []world.Coords {
 	rotated := make([]world.Coords, len(coords))
 	for i, coord := range coords {
@@ -132,12 +133,14 @@ type tetrisBoard struct {
 	NextShape *Tetromino
 	Timer     *timing.Timer
 	Speed     float64
+	ConvSpd   float64
 	Stats     *TetrisStats
 }
 
 func (t *tetrisBoard) Get(c world.Coords) *TetrisBlock {
 	return t.Board[c.Y][c.X]
 }
+
 func (t *tetrisBoard) SpeedUp() {
 	if t.Speed > constants.SpeedMin {
 		if t.Speed <= constants.HighSpeedMark {
@@ -146,13 +149,28 @@ func (t *tetrisBoard) SpeedUp() {
 			t.Speed = t.Speed - constants.SpeedModifier
 		}
 	}
+	if t.ConvSpd < constants.ConvSpdMax {
+		if t.ConvSpd >= constants.HighConvSpdMark {
+			t.ConvSpd = t.ConvSpd + constants.HighConvSpdModifer
+		} else {
+			t.ConvSpd = t.ConvSpd + constants.ConvSpdModifier
+		}
+	}
 }
+
 func (t *tetrisBoard) SpeedDown() {
 	if t.Speed < constants.SpeedMax {
 		if t.Speed <= constants.HighSpeedMark {
 			t.Speed = t.Speed + constants.HighSpeedModifer
 		} else {
 			t.Speed = t.Speed + constants.SpeedModifier
+		}
+	}
+	if t.ConvSpd > constants.ConvSpdMin {
+		if t.ConvSpd <= constants.HighConvSpdMark {
+			t.ConvSpd = t.ConvSpd - constants.HighConvSpdModifer
+		} else {
+			t.ConvSpd = t.ConvSpd - constants.ConvSpdModifier
 		}
 	}
 }
@@ -165,12 +183,13 @@ func (t *tetrisBoard) ResetTimer() {
 	t.Timer = timing.New(t.Speed)
 }
 
-func NewTetrisBoard(spd float64) {
+func NewTetrisBoard() {
 	TetrisBoard = &tetrisBoard{
-		Board: [constants.TetrisHeight][constants.TetrisWidth]*TetrisBlock{},
-		Shape: nil,
-		Timer: timing.New(spd),
-		Speed: spd,
-		Stats: newTetrisStats(),
+		Board:   [constants.TetrisHeight][constants.TetrisWidth]*TetrisBlock{},
+		Shape:   nil,
+		Timer:   timing.New(constants.DefaultSpeed),
+		Speed:   constants.DefaultSpeed,
+		ConvSpd: constants.ConvSpdMin,
+		Stats:   newTetrisStats(),
 	}
 }

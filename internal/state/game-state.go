@@ -33,7 +33,7 @@ func (s *gameState) Load(done chan struct{}) {
 	data.TetrisViewport = viewport.New(nil)
 	data.TetrisViewport.SetRect(pixel.R(0, 0, world.TileSize*constants.TetrisWidth, world.TileSize*constants.TetrisHeight))
 	data.TetrisViewport.CamPos = pixel.V(world.TileSize*0.5*(constants.TetrisWidth-1), world.TileSize*0.5*(constants.TetrisHeight-1))
-	data.NewTetrisBoard(constants.DefaultSpeed)
+	data.NewTetrisBoard()
 	BuildTetrisBG()
 
 	data.FactoryViewport = viewport.New(nil)

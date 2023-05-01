@@ -41,7 +41,7 @@ func UpdateConveyor() {
 				next := data.Conveyor.Tets[i-1]
 				if next == nil || next.Moving {
 					t.Moving = true
-					t.Object.Pos.X -= timing.DT * data.ConveyorSpeed
+					t.Object.Pos.X -= timing.DT * data.TetrisBoard.ConvSpd
 					if t.Object.Pos.X < data.Conveyor.Slots[i-1].X {
 						if next == nil {
 							data.Conveyor.Tets[i-1] = t

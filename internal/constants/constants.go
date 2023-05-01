@@ -34,6 +34,12 @@ const (
 	FactoryTile   = 48.
 	FactoryWidth  = 5
 	FactoryHeight = 7
+
+	ConvSpdModifier    = 5.
+	ConvSpdMax         = 150.
+	ConvSpdMin         = 50.
+	HighConvSpdModifer = 1.
+	HighConvSpdMark    = 125.
 )
 
 var (
