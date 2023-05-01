@@ -83,6 +83,11 @@ func (fs *FactoryStats) TrashAShape(factromino Factromino) {
 			constants.Achievements[value.Name] = temp
 		}
 	}
+	if len(factromino.Blocks) > 4 {
+		temp := constants.Achievements["WhatDoIDoWithThis"]
+		temp.Achieved = true
+		constants.Achievements["WhatDoIDoWithThis"] = temp
+	}
 }
 func (fs *FactoryStats) TotalTrashedShapes() int {
 	total := 0
@@ -152,6 +157,12 @@ func CheckAchievements() {
 
 			constants.Achievements[value.Name] = temp
 		}
+	}
+
+	if TetrisBoard.Stats.LinesCleared == 20 {
+		temp := constants.Achievements["FillingTheBoard"]
+		temp.Achieved = true
+		constants.Achievements["FillingTheBoard"] = temp
 	}
 
 }

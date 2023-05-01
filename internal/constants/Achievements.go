@@ -44,8 +44,11 @@ func (af *AchievementFamily) Achieved() bool {
 
 var (
 	AchievementFamilies = map[string]AchievementFamily{
-		"CreateTetronimos": AchievementFamily{Name: "CreateTetronimos", StickyNote: nil, StickyNotePosition: pixel.V(-40, 510)},
-		"TrashingTheCamp":  AchievementFamily{Name: "TrashingTheCamp", StickyNote: nil, StickyNotePosition: pixel.V(-80, 500)},
+		"CreateTetronimos":  AchievementFamily{Name: "CreateTetronimos", StickyNote: nil, StickyNotePosition: pixel.V(-40, 510)},
+		"TrashingTheCamp":   AchievementFamily{Name: "TrashingTheCamp", StickyNote: nil, StickyNotePosition: pixel.V(-80, 500)},
+		"AFullBoard":        AchievementFamily{Name: "AFullBoard", StickyNote: nil, StickyNotePosition: pixel.V(-120, 520)},
+		"WhatDoIDoWithThis": AchievementFamily{Name: "WhatDoIDoWithThis", StickyNote: nil, StickyNotePosition: pixel.V(-140, 510)},
+		"GridFullOBlocks":   AchievementFamily{Name: "GridFullOBlocks", StickyNote: nil, StickyNotePosition: pixel.V(-180, 500)},
 	}
 
 	Achievements = map[string]Achievement{
@@ -60,5 +63,9 @@ var (
 		"Create233Tetronimos": Achievement{Name: "Create233Tetronimos", LabelText: "This was a good shift of 233 Tetronimos, I fully expect you to hit 377 before lunch next time\r\n-Thanks Management", Description: "Construct 233 Valid Tetronimos and deliver them to the Board", MyFamily: AchievementFamilies["CreateTetronimos"], Achieved: false, AchievementFamilyOrder: 8, Properties: map[string]string{"target": "233"}},
 		"Trash5":              Achievement{Name: "Trash5", LabelText: "You have wasted 5 Factromino shapes, please be more careful\r\n-Thanks Management", Description: "Put 5 Factromino shapes in the recycle", MyFamily: AchievementFamilies["TrashingTheCamp"], Achieved: false, AchievementFamilyOrder: 0, Properties: map[string]string{"target": "5"}},
 		"Trash10":             Achievement{Name: "Trash10", LabelText: "Current waste 10: Factromino shapes, please be better\r\n-Thanks Management", Description: "Put 10 Factromino shapes in the recycle", MyFamily: AchievementFamilies["TrashingTheCamp"], Achieved: false, AchievementFamilyOrder: 1, Properties: map[string]string{"target": "10"}},
+		"Trash20":             Achievement{Name: "Trash20", LabelText: "Current waste 20: Factromino shapes, this is coming from your paycheck!\r\n-Thanks Management", Description: "Put 20 Factromino shapes in the recycle", MyFamily: AchievementFamilies["TrashingTheCamp"], Achieved: false, AchievementFamilyOrder: 2, Properties: map[string]string{"target": "20"}},
+		"FillingTheBoard":     Achievement{Name: "FullBoard", LabelText: "Excellent, you have consumed an entire board's worth of blocks, we appreciate your business\r\n-Thanks Management", Description: "Clear 20 Rows", MyFamily: AchievementFamilies["AFullBoard"], Achieved: false, AchievementFamilyOrder: 0, Properties: map[string]string{"target": "20"}},
+		"WhatDoIDoWithThis":   Achievement{Name: "WhatDoIDoWithThis", LabelText: "If you build them all like that we will never be able to meet our goals\r\n-Thanks Management", Description: "Trash a Factromino with >4 Blocks", MyFamily: AchievementFamilies["WhatDoIDoWithThis"], Achieved: false, AchievementFamilyOrder: 0, Properties: map[string]string{"target": "5"}},
+		"GridFullOBlocks":     Achievement{Name: "GridFullOBlocks", LabelText: "Please clean up your workspace, this is a health and safety issue\r\n-Thanks Management", Description: "Fill the workspace with blocks", MyFamily: AchievementFamilies["GridfulOBlocks"], Achieved: false, AchievementFamilyOrder: 0, Properties: map[string]string{"target": "35"}},
 	}
 )

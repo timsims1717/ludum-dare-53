@@ -451,7 +451,6 @@ func (s *gameState) UpdateViews() {
 func UpdateAchievements() {
 	for _, value := range constants.AchievementFamilies {
 		if value.StickyNote != nil && value.Achieved() {
-			//TODO loop through family and see if there is a new one
 			rawAchievements := funk.Map(constants.Achievements, func(k string, value constants.Achievement) constants.Achievement {
 				return value
 			})
@@ -461,6 +460,8 @@ func UpdateAchievements() {
 
 			for _, achievement := range filteredAchievements {
 				if achievement.Achieved && !achievement.Presented {
+					achievement.Presented = true
+					constants.Achievements[achievement.Name] = achievement
 					OpenSticky(&data.StickyMsg{
 						Message: value.String(),
 						Offset:  pixel.Vec{},
