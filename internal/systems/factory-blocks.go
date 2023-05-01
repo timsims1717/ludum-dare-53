@@ -11,8 +11,8 @@ import (
 	"timsims1717/ludum-dare-53/pkg/world"
 )
 
-func CreateFactoryTet(pos pixel.Vec, col data.TColor, factrominoType constants.FactrominoType) *data.FacTetronimo {
-	t := &data.FacTetronimo{MyFactronimoType: factrominoType}
+func CreateFactoryTet(pos pixel.Vec, col data.TColor, factrominoType constants.FactrominoType) *data.Factromino {
+	t := &data.Factromino{MyFactronimoType: factrominoType}
 	t.LastPos = pos
 	t.Object = object.New().WithID("factory-tet")
 	t.Object.Pos = pos
@@ -37,12 +37,12 @@ func CreateFactoryTet(pos pixel.Vec, col data.TColor, factrominoType constants.F
 		AddComponent(myecs.Block, t)
 	return t
 }
-func CreateFactrominoSizeOne(t *data.FacTetronimo) {
+func CreateFactrominoSizeOne(t *data.Factromino) {
 	a := CreateFactoryBlock(pixel.ZV, t.Color)
 	a.Entity.AddComponent(myecs.Parent, t.Object)
 	t.Blocks = append(t.Blocks, a)
 }
-func CreateFactrominoSizeTwo(t *data.FacTetronimo, w float64, h float64) {
+func CreateFactrominoSizeTwo(t *data.Factromino, w float64, h float64) {
 	t.MyFactronimoVariant = constants.FactVariantUndefined
 	t.MyFactronimoVariant = constants.FactrominoVariant(constants.GlobalSeededRandom.Intn(2) + 1)
 
@@ -69,7 +69,7 @@ func CreateFactrominoSizeTwo(t *data.FacTetronimo, w float64, h float64) {
 		h += world.TileSize
 	}
 }
-func CreateFactrominoSizeThree(t *data.FacTetronimo, w float64, h float64) {
+func CreateFactrominoSizeThree(t *data.Factromino, w float64, h float64) {
 	t.MyFactronimoVariant = constants.FactVariantUndefined
 	t.MyFactronimoVariant = constants.FactrominoThreeVariationRoll()
 	switch t.MyFactronimoVariant {
@@ -174,8 +174,8 @@ func CreateFactrominoSizeThree(t *data.FacTetronimo, w float64, h float64) {
 	}
 }
 
-func ConstructTetFromBlocks(pos pixel.Vec, blocks []*data.FactoryBlock) *data.FacTetronimo {
-	ft := &data.FacTetronimo{}
+func ConstructTetFromBlocks(pos pixel.Vec, blocks []*data.FactoryBlock) *data.Factromino {
+	ft := &data.Factromino{}
 	ft.LastPos = pos
 	ft.Object = object.New().WithID("factory-tet")
 	ft.Object.Pos = pos

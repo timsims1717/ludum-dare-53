@@ -5,6 +5,6 @@ import (
 )
 
 type Truck struct {
-	DeliveryLoad []*FacTetronimo
+	DeliveryLoad []*Factromino
 	MyBatchType  constants.DeliveryLoadBatchTypes
 }
