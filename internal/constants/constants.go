@@ -18,17 +18,18 @@ const (
 	FactoryKey = "factory"
 
 	// Tetris
-	TileSize         = 32.
-	TetrisWidth      = 10
-	TetrisHeight     = 20
-	DefaultSpeed     = 0.8
-	ScoreCheckPoint  = 5
-	SpeedModifier    = 0.05
-	SpeedMax         = 2
-	SpeedMin         = 0.1
-	HighSpeedModifer = 0.01
-	HighSpeedMark    = 0.3
-	MinPiecesToFail  = 5
+	TileSize            = 32.
+	TetrisWidth         = 10
+	TetrisHeight        = 20
+	DefaultSpeed        = 0.8
+	ScoreCheckPoint     = 5
+	SpeedModifier       = 0.05
+	SpeedMax            = 2
+	SpeedMin            = 0.1
+	HighSpeedModifer    = 0.01
+	HighSpeedMark       = 0.3
+	MinPiecesToFail     = 5
+	BalanceStreakTarget = 5
 
 	// Factory
 	FactoryTile   = 48.
@@ -74,6 +75,9 @@ var (
 		"Have you ever played a block falling game and thought, 'I like this game but wouldn't it be great if it was more stressful?'",
 		"We need more Blocks! Everyone's working weekends!",
 		"Your truck just barfed all over the factory floor, clean it up!",
+		"We killed a bug, YAY!!!",
+		"Stop everything! We need a full factory reset!",
+		"Where did you think the blocks you mined in minecraft went?!?",
 	}
 )
 

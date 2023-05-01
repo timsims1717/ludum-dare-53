@@ -145,8 +145,11 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	systems.ParentSystem()
 	systems.ObjectSystem()
 	systems.AnimationSystem()
+	debug.AddText(fmt.Sprintf("Global Score: %03d", data.TetrisBoard.Stats.GlobalScore()))
 	debug.AddText(fmt.Sprintf("Tetris Score: %03d", data.TetrisBoard.Stats.Score))
-	debug.AddText(fmt.Sprintf("Current Streak: %d", data.TetrisBoard.Stats.Streak))
+	debug.AddText(fmt.Sprintf("Line Clearing Points: +%d", data.TetrisBoard.Stats.MyFibScore.FibN-1))
+	debug.AddText(fmt.Sprintf("Factory Score: %03d", data.FactoryFloor.Stats.Score))
+	debug.AddText(fmt.Sprintf("Factory Balance Bonus: +%d", data.FactoryFloor.Stats.MyFibScore.FibN-1))
 	debug.AddText(fmt.Sprintf("Current Speed: %f", data.TetrisBoard.Speed))
 	debug.AddText(fmt.Sprintf("Current Level: %d", data.TetrisBoard.Stats.Checkpoint))
 	if data.TetrisBoard.Shape != nil {
@@ -155,6 +158,8 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	if data.TetrisBoard.NextShape != nil {
 		debug.AddText(fmt.Sprintf("Next Piece: %s", data.TetrisBoard.NextShape.TetType.String()))
 	}
+	debug.AddText(fmt.Sprintf("Tetrominos: %d", data.TetrisBoard.Stats.Tetrominos))
+	debug.AddText(fmt.Sprintf("Factrominos: %d", data.FactoryFloor.Stats.Factrominos))
 	if data.Conveyor != nil {
 		count := 0
 		for _, block := range data.Conveyor.Tets {

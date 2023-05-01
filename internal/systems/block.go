@@ -242,39 +242,13 @@ func NewTetromino() *data.Tetromino {
 	}
 	return t
 }
-func DetectTetrominoTypeFromFactromino(f *data.Factromino) {
-	if len(f.Blocks) == 4 {
-		var originalCoords [4]world.Coords
-		for i, block := range f.Blocks {
-			originalCoords[i] = world.Coords{block.Coords.X, block.Coords.Y}
-		}
-		newCoords := data.Normalize(originalCoords)
-		for i, kv := range constants.NormalizedTetronimos {
-			if data.TetronimoCoordsEqual(i, newCoords) {
-				f.MyTetronimoType = kv
-				break
-			}
-		}
-	}
-}
 
 func FactoTet(f *data.Factromino) {
 	//detect Fac Type
 	if len(f.Blocks) == 4 {
-		var originalCoords [4]world.Coords
-		for i, block := range f.Blocks {
-			originalCoords[i] = world.Coords{block.Coords.X, block.Coords.Y}
-		}
-		newCoords := data.Normalize(originalCoords)
-		var tetType *constants.TetronimoType
-		for i, kv := range constants.NormalizedTetronimos {
-			if data.TetronimoCoordsEqual(i, newCoords) {
-				tetType = &kv
-				break
-			}
-		}
-		if tetType != nil {
-			switch *tetType {
+		f.RefreshState()
+		if f.MyTetronimoType != constants.UndefinedTetronimoType {
+			switch f.MyTetronimoType {
 			case constants.O:
 				data.TetrisBoard.NextShape = CreateOTetronimo(f.Blocks[0].Color)
 				return

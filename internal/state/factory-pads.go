@@ -135,7 +135,9 @@ func AddToQueuePad() {
 				data.DraggingPiece.Entity.RemoveComponent(myecs.Drag)
 				data.DraggingPiece.Object.Layer = 12
 				data.DraggingPiece.Object.Pos = data.QueuePad.Object.Pos
+				data.DraggingPiece.RefreshState()
 				data.Conveyor.Tets[data.ConveyorLength-1] = data.DraggingPiece
+				data.FactoryFloor.Stats.AddToFactoryStats(*data.DraggingPiece)
 				data.DraggingPiece = nil
 			}
 		}

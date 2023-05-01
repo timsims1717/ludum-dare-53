@@ -30,7 +30,7 @@ func TetrisSystem() {
 			}
 			if full {
 				fullRows = append(fullRows, y)
-				data.TetrisBoard.Stats.AddToScore()
+				data.TetrisBoard.Stats.AddToTetrisStats(1)
 			}
 		}
 		if len(fullRows) == 0 {

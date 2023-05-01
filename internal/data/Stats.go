@@ -5,19 +5,123 @@ import (
 )
 
 type TetrisStats struct {
-	Score      int
-	Tetrominos int
-	Streak     int
-	Checkpoint int
-	MyFibScore *FibScore
-}
-type FactoryStats struct {
 	Score         int
-	Factrominos   int
-	ColorStreak   int
-	CurrentColor  TColor
-	ShapeStreak   int
-	LastTetromino constants.TetronimoType
+	LinesCleared  int
+	Tetrominos    int
+	Streak        int
+	LongestStreak int
+	Checkpoint    int
+	MyFibScore    *FibScore
+}
+
+func (ts *TetrisStats) GlobalScore() int {
+	return TetrisBoard.Stats.Score + FactoryFloor.Stats.Score
+}
+
+type FactoryStats struct {
+	Score                int
+	Factrominos          int
+	ColorStreak          int
+	CurrentColor         TColor
+	ShapeStreak          int
+	LastTetromino        constants.TetronimoType
+	LongestColorStreak   int
+	LongestShapeStreak   int
+	UnoStreak            int
+	BalanceStreak        int
+	LongestBalanceStreak int
+	LongestUnoSteak      int
+	ShapesTrashed        int
+	LargestShape         int
+	MyFibScore           FibScore
+	TimesSinceLastShape  map[constants.TetronimoType]int
+}
+
+func newFactoryStats() *FactoryStats {
+	tScore := &FactoryStats{Score: 0, Factrominos: 0, ColorStreak: 0, CurrentColor: 0, ShapeStreak: 0, LastTetromino: constants.UndefinedTetronimoType}
+	tScore.TimesSinceLastShape = map[constants.TetronimoType]int{
+		constants.I: 0,
+		constants.O: 0,
+		constants.T: 0,
+		constants.S: 0,
+		constants.Z: 0,
+		constants.J: 0,
+		constants.L: 0,
+	}
+	tScore.MyFibScore = *newFibScore()
+	return tScore
+}
+
+func (fs *FactoryStats) AddToFactoryStats(factromino Factromino) {
+	fs.Factrominos++
+	timeSinceLastShape := 0
+	for key, value := range fs.TimesSinceLastShape {
+		if key == factromino.MyTetronimoType {
+			timeSinceLastShape = value
+			fs.TimesSinceLastShape[key] = 0
+		} else {
+			fs.TimesSinceLastShape[key]++
+		}
+	}
+	if timeSinceLastShape >= constants.BalanceStreakTarget {
+		fs.BalanceStreak++
+		fs.Score += fs.MyFibScore.fibIter()
+	} else {
+		fs.ResetFactoryBalanceStreak()
+		fs.Score += 1
+	}
+	if factromino.Color == fs.CurrentColor || factromino.MyTetronimoType == fs.LastTetromino {
+		fs.UnoStreak++
+	} else {
+		fs.UnoStreak = 0
+	}
+	if factromino.Color == fs.CurrentColor {
+		fs.ColorStreak++
+	} else {
+		if fs.ColorStreak > fs.LongestColorStreak {
+			fs.LongestColorStreak = fs.ColorStreak
+		}
+		fs.ColorStreak = 0
+		fs.CurrentColor = factromino.Color
+	}
+	if factromino.MyTetronimoType == fs.LastTetromino {
+		fs.ShapeStreak++
+	} else {
+		if fs.ShapeStreak > fs.LongestShapeStreak {
+			fs.LongestShapeStreak = fs.ShapeStreak
+		}
+		fs.ShapeStreak = 0
+		fs.LastTetromino = factromino.MyTetronimoType
+	}
+}
+func (fs *FactoryStats) ResetFactoryBalanceStreak() {
+	fs.BalanceStreak = 0
+	fs.MyFibScore.reset()
+}
+
+func (fs *FactoryStats) FullFactoryStatReset() {
+	fs.Score = 0
+	fs.Factrominos = 0
+	fs.ColorStreak = 0
+	fs.CurrentColor = 0
+	fs.ShapeStreak = 0
+	fs.LastTetromino = constants.UndefinedTetronimoType
+	fs.LongestColorStreak = 0
+	fs.LongestShapeStreak = 0
+	fs.ResetFactoryBalanceStreak()
+	fs.UnoStreak = 0
+	fs.LongestUnoSteak = 0
+	fs.ShapesTrashed = 0
+	fs.LargestShape = 0
+	fs.TimesSinceLastShape = map[constants.TetronimoType]int{
+		constants.I: 0,
+		constants.O: 0,
+		constants.T: 0,
+		constants.S: 0,
+		constants.Z: 0,
+		constants.J: 0,
+		constants.L: 0,
+	}
 }
 
 func newTetrisStats() *TetrisStats {
@@ -25,9 +129,12 @@ func newTetrisStats() *TetrisStats {
 	return tScore
 }
 
-func (ts *TetrisStats) AddToScore() {
+func (ts *TetrisStats) AddToTetrisStats(clearedRows int) {
 	ts.Streak++
-	ts.Score = ts.Score + ts.MyFibScore.fibIter(1)
+	ts.LinesCleared += clearedRows
+	for itr := 0; itr < clearedRows; itr++ {
+		ts.Score += ts.MyFibScore.fibIter()
+	}
 	ts.IncrementCheckpointAndSpeed()
 }
 
@@ -61,14 +168,11 @@ func newFibScore() *FibScore {
 	return tFibScore
 }
 
-func (f *FibScore) fibIter(cycles int) int {
-	score := 0
-	for i := 0; i < cycles; i++ {
-		fibf := f.FibNMinus + f.FibN
-		f.FibNMinus = f.FibN
-		f.FibN = fibf
-		score = score + fibf
-	}
+func (f *FibScore) fibIter() int {
+	score := f.FibN
+	fibf := f.FibNMinus + f.FibN
+	f.FibNMinus = f.FibN
+	f.FibN = fibf
 	return score
 }
 

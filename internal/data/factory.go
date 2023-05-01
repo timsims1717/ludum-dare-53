@@ -25,6 +25,31 @@ type Factromino struct {
 	MyTetronimoType     constants.TetronimoType
 }
 
+func (f *Factromino) RefreshState() {
+	if f.MyTetronimoType == constants.UndefinedTetronimoType {
+		f.DetectTetrominoType()
+	}
+	if f.Color == 0 && len(f.Blocks) > 0 {
+		f.Color = f.Blocks[0].Color
+	}
+}
+func (f *Factromino) DetectTetrominoType() {
+	if len(f.Blocks) == 4 {
+		var originalCoords [4]world.Coords
+		for i, block := range f.Blocks {
+			originalCoords[i] = world.Coords{block.Coords.X, block.Coords.Y}
+		}
+		newCoords := Normalize(originalCoords)
+		for i, kv := range constants.NormalizedTetronimos {
+			if TetronimoCoordsEqual(i, newCoords) {
+				f.MyTetronimoType = kv
+				return
+			}
+		}
+	}
+	f.MyTetronimoType = constants.UndefinedTetronimoType
+}
+
 type FactoryBlock struct {
 	Coords world.Coords
 	Color  TColor
@@ -78,6 +103,7 @@ type factoryFloor struct {
 	Blocks [constants.FactoryHeight][constants.FactoryWidth]*FactoryBlock
 	Object *object.Object
 	Entity *ecs.Entity
+	Stats  *FactoryStats
 }
 
 func (f *factoryFloor) Get(c world.Coords) *FactoryBlock {
@@ -91,6 +117,7 @@ func (f *factoryFloor) Set(c world.Coords, b *FactoryBlock) {
 func NewFactoryFloor() {
 	FactoryFloor = &factoryFloor{
 		Blocks: [constants.FactoryHeight][constants.FactoryWidth]*FactoryBlock{},
+		Stats:  newFactoryStats(),
 	}
 }
 
