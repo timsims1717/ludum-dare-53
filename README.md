@@ -8,6 +8,8 @@ Hundreds of individual blocks are being delivered to the Tetromino factory, and 
 
 Use the mouse to contruct tetrominos on the factory floor. Only shapes with four blocks can be put on the conveyor belt. If you make one too big, you'll have to throw it in the trash.
 
+This game can easily be played by two players, one controlling the factory, and one playing tetris.
+
 The controls for the block falling game are:
 
 * **A** to move the block left
@@ -22,6 +24,8 @@ The controls for the block falling game are:
 ![You've assembled 5 Tetrominos!](Screenshot1.png)
 
 See if you can find all the sticky notes left by Management.
+
+Made by Ben and Tim Sims
 
 ## Links:
 
