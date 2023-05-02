@@ -83,10 +83,22 @@ func (fs *FactoryStats) TrashAShape(factromino Factromino) {
 			constants.Achievements[value.Name] = temp
 		}
 	}
-	if len(factromino.Blocks) > 4 {
-		temp := constants.Achievements["WhatDoIDoWithThis"]
+
+	filteredAchievements = funk.Filter(rawAchievements, func(x constants.Achievement) bool {
+		return x.MyFamily.Name == "WhatDoIDoWithThis"
+	}).([]constants.Achievement)
+
+	for _, value := range filteredAchievements {
+		if i, _ := strconv.Atoi(value.Properties["target"]); i <= len(factromino.Blocks) {
+			temp := constants.Achievements[value.Name]
+			temp.Achieved = true
+			constants.Achievements[value.Name] = temp
+		}
+	}
+	if target, _ := strconv.Atoi(constants.Achievements["ThrowAwayATetromino"].Properties["target"]); target == len(factromino.Blocks) {
+		temp := constants.Achievements["ThrowAwayATetromino"]
 		temp.Achieved = true
-		constants.Achievements["WhatDoIDoWithThis"] = temp
+		constants.Achievements["ThrowAwayATetromino"] = temp
 	}
 }
 func (fs *FactoryStats) TotalTrashedShapes() int {
@@ -169,10 +181,22 @@ func CheckFactoryAchievements() {
 
 func CheckBoardAchievements() {
 
-	if target, _ := strconv.Atoi(constants.Achievements["FillingTheBoard"].Properties["target"]); target == TetrisBoard.Stats.LinesCleared {
-		temp := constants.Achievements["FillingTheBoard"]
-		temp.Achieved = true
-		constants.Achievements["FillingTheBoard"] = temp
+	rawAchievements := funk.Map(constants.Achievements, func(k string, value constants.Achievement) constants.Achievement {
+		return value
+	})
+	filteredAchievements := funk.Filter(rawAchievements, func(x constants.Achievement) bool {
+		return x.MyFamily.Name == "AFullBoard"
+	}).([]constants.Achievement)
+
+	for _, value := range filteredAchievements {
+		if i, _ := strconv.Atoi(value.Properties["target"]); i <= TetrisBoard.Stats.LinesCleared {
+			temp := constants.Achievements[value.Name]
+			if !temp.Achieved {
+				temp.Achieved = true
+			}
+
+			constants.Achievements[value.Name] = temp
+		}
 	}
 
 }
