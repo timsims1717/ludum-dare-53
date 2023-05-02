@@ -8,6 +8,7 @@ import (
 	"golang.org/x/image/colornames"
 	"image/color"
 	"math/rand"
+	"strconv"
 	"timsims1717/ludum-dare-53/internal/constants"
 	"timsims1717/ludum-dare-53/internal/data"
 	"timsims1717/ludum-dare-53/internal/myecs"
@@ -449,6 +450,36 @@ func (s *gameState) UpdateViews() {
 }
 
 func UpdateAchievements() {
+	rawAchievementsForCalc := funk.Map(constants.Achievements, func(k string, value constants.Achievement) constants.Achievement {
+		return value
+	}).([]constants.Achievement)
+	filteredTotalAchievements := funk.Filter(rawAchievementsForCalc, func(x constants.Achievement) bool {
+		return x.MyFamily.Name != "AchievementProgress" && x.MyFamily.Name != "CompletedAchievements"
+	}).([]constants.Achievement)
+	Total := len(filteredTotalAchievements)
+	filteredAchievementsCompleted := funk.Filter(rawAchievementsForCalc, func(x constants.Achievement) bool {
+		return x.Achieved && x.MyFamily.Name != "AchievementProgress" && x.MyFamily.Name != "CompletedAchievements"
+	}).([]constants.Achievement)
+	Percent := float64(len(filteredAchievementsCompleted)) / float64(Total)
+
+	filteredPercentAchievements := funk.Filter(rawAchievementsForCalc, func(x constants.Achievement) bool {
+		return x.MyFamily.Name == "AchievementProgress"
+	}).([]constants.Achievement)
+	for _, value := range filteredPercentAchievements {
+		if i, _ := strconv.ParseFloat(value.Properties["target"], 64); i <= Percent {
+			temp := constants.Achievements[value.Name]
+			if !temp.Achieved {
+				temp.Achieved = true
+			}
+			constants.Achievements[value.Name] = temp
+		}
+	}
+	if Total == len(filteredAchievementsCompleted) {
+		temp := constants.Achievements["CompletedAchievements"]
+		temp.Achieved = true
+		constants.Achievements["CompletedAchievements"] = temp
+	}
+
 	for _, value := range constants.AchievementFamilies {
 		if value.StickyNote != nil && value.Achieved() {
 			rawAchievements := funk.Map(constants.Achievements, func(k string, value constants.Achievement) constants.Achievement {
