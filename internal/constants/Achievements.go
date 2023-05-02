@@ -175,7 +175,7 @@ var (
 			LabelText:              "Excellent, you've consumed an entire board's worth of blocks, we appreciate your business.\r\n-Management",
 			Description:            "Clear 20 Rows",
 			MyFamily:               AchievementFamilies["AFullBoard"],
-			AchievementFamilyOrder: 0,
+			AchievementFamilyOrder: 10,
 			Properties:             map[string]string{"target": "20"},
 		},
 		"WhatDoIDoWithThis5": {
