@@ -29,9 +29,8 @@ import (
 type gameState struct {
 	*state.AbstractState
 
-	lastLeft bool
-
 	sfxTimer *timing.Timer
+	start    bool
 }
 
 func (s *gameState) Unload() {
@@ -84,7 +83,7 @@ func (s *gameState) Load(done chan struct{}) {
 	data.ShCounts.SetSize(0.08)
 	data.ShCounts.SetText("Scores")
 
-	data.StickyText = typeface.New(nil, "sticky", typeface.NewAlign(typeface.Center, typeface.Center), 1.5, 0.32, 3.2*constants.TypeFaceSize, 0)
+	data.StickyText = typeface.New(nil, "sticky", typeface.NewAlign(typeface.Center, typeface.Center), 1.5, 0.28, 3.5*constants.TypeFaceSize, 0)
 	data.StickyText.SetPos(pixel.V(0., 0.))
 	data.StickyText.SetColor(constants.BlackColor)
 	data.StickyText.SetText("Paused")
@@ -164,12 +163,30 @@ func (s *gameState) Load(done chan struct{}) {
 			}
 		}))
 
+	stickyTutObj := object.New().WithID("sticky-tutorial")
+	stickyTutObj.Pos = pixel.V(540., 480)
+	stickyTutObj.Layer = 12
+	stickyTutObj.Rect = pixel.R(0, 0, 32, 32)
+	myecs.Manager.NewEntity().AddComponent(myecs.Object, stickyTutObj).
+		AddComponent(myecs.Drawable, data.TinyNote).
+		AddComponent(myecs.ViewPort, data.FactoryViewport).
+		AddComponent(myecs.Input, gameInput).
+		AddComponent(myecs.Click, data.NewFn(func() {
+			OpenSticky(data.Instructions)
+		})).
+		AddComponent(myecs.Update, data.NewFn(func() {
+			if stickyTutObj.PointInside(data.FactoryViewport.Projected(gameInput.World)) {
+				data.HandState = 1
+			}
+		}))
+
 	s.UpdateViews()
 	sfx.MusicPlayer.PlayMusic("song")
 	data.HandObj = object.New()
 	reanimator.SetFrameRate(16)
 	reanimator.Reset()
 	s.sfxTimer = timing.New(rand.Float64()*20. + 5.)
+	s.start = true
 	done <- struct{}{}
 }
 
@@ -202,29 +219,34 @@ func (s *gameState) Update(win *pixelgl.Window) {
 		}
 	}
 	if win.Focused() && !data.Paused {
+		if s.start {
+			s.start = false
+			OpenSticky(data.Instructions)
+		}
 		reanimator.Update()
 		debug.AddText(fmt.Sprintf("Mouse Input: (%d,%d)", int(gameInput.World.X), int(gameInput.World.Y)))
 		debug.AddText(fmt.Sprintf("Factory Input: (%d,%d)", int(data.FactoryViewport.Projected(gameInput.World).X), int(data.FactoryViewport.Projected(gameInput.World).Y)))
 
-		if gameInput.Get("moveDown").JustPressed() || gameInput.Get("moveDown").Repeated() {
-			systems.MoveDown = true
+		if systems.HoldDown {
+			if gameInput.Get("moveDown").Pressed() {
+				if systems.HoldDownT.UpdateDone() {
+					systems.MoveDown = true
+				}
+			} else {
+				systems.HoldDown = false
+			}
 		}
-		if gameInput.Get("moveLeft").JustPressed() || (gameInput.Get("moveLeft").Pressed() && s.lastLeft) {
-			s.lastLeft = true
-			if gameInput.Get("moveRight").JustPressed() {
-				s.lastLeft = false
-				systems.MoveRight = true
-			} else if gameInput.Get("moveLeft").JustPressed() || gameInput.Get("moveLeft").Repeated() {
-				systems.MoveLeft = true
-			}
-		} else if gameInput.Get("moveRight").JustPressed() || gameInput.Get("moveRight").Pressed() && !s.lastLeft {
-			s.lastLeft = false
-			if gameInput.Get("moveLeft").JustPressed() {
-				s.lastLeft = true
-				systems.MoveLeft = true
-			} else if gameInput.Get("moveRight").JustPressed() || gameInput.Get("moveRight").Repeated() {
-				systems.MoveRight = true
-			}
+		if gameInput.Get("moveDown").JustPressed() {
+			systems.MoveDown = true
+			systems.HoldDown = true
+			systems.HoldDownT = timing.New(0.25)
+		}
+		if gameInput.Get("moveLeft").JustPressed() {
+			gameInput.Get("moveLeft").Consume()
+			systems.MoveLeft = true
+		} else if gameInput.Get("moveRight").JustPressed() {
+			gameInput.Get("moveRight").Consume()
+			systems.MoveRight = true
 		}
 		if gameInput.Get("rotate").JustPressed() {
 			systems.Rotate = true
@@ -334,7 +356,7 @@ func (s *gameState) Update(win *pixelgl.Window) {
 	data.SBLabels.SetText("Score:\nLevel:\nDeliveries:\nBalance Bonus:\nLines Cleared:\nClear Bonus:")
 	data.SBLabels.Obj.Update()
 
-	data.SBScores.SetText(fmt.Sprintf("%d\n%05d\n%03d\n+%d\n%03d\n+%d", data.TetrisBoard.Stats.Checkpoint, data.TetrisBoard.Stats.GlobalScore(), data.FactoryFloor.Stats.Factrominos, data.FactoryFloor.Stats.MyFibScore.FibN-1, data.TetrisBoard.Stats.LinesCleared, data.TetrisBoard.Stats.MyFibScore.FibN-1))
+	data.SBScores.SetText(fmt.Sprintf("%05d\n%d\n%03d\n+%d\n%03d\n+%d", data.TetrisBoard.Stats.GlobalScore(), data.TetrisBoard.Stats.Checkpoint, data.FactoryFloor.Stats.Factrominos, data.FactoryFloor.Stats.MyFibScore.FibN-1, data.TetrisBoard.Stats.LinesCleared, data.TetrisBoard.Stats.MyFibScore.FibN-1))
 	data.SBScores.Obj.Update()
 
 	bs := data.FactoryFloor.Stats.BuiltShapes

@@ -6,9 +6,14 @@ The gaming industry has made some cuts recently, and in order to play the latest
 
 Hundreds of individual blocks are being delivered to the Tetromino factory, and you must construct the Tetrominos and deliver them to the playing field.
 
-Use the mouse to contruct tetrominos on the factory floor. Only shapes with four blocks can be put on the conveyor belt. If you make one too big, you'll have to throw it in the trash.
+Use the mouse to construct tetrominos on the factory floor. Only shapes with four blocks can be put on the conveyor belt. If you make one too big, you'll have to throw it in the trash.
 
-This game can easily be played by two players, one controlling the factory, and one playing tetris.
+This game is singleplayer, but can also easily be played by two players, one controlling the factory, and one playing tetris.
+
+The controls for the factory are:
+
+* **Mouse Left Click** to pick up and drop blocks on the grid and conveyor
+* Blocks are automatically combined with other blocks of the same color they connect to on the grid.
 
 The controls for the block falling game are:
 
@@ -37,3 +42,13 @@ Made by Ben and Tim Sims
 * [Pixel Library](https://github.com/faiface/pixel)
 * [Beep Library](https://github.com/faiface/beep)
 * [Aseprite](https://aseprite.itch.io/)
+
+## Post Jam Change Log
+
+* Added Instruction Sticky Note to beginning of the game
+* Achievement language update
+* Bug fixes
+  * Moving a piece down can occasionally cause a crash
+  * The first block after a reset can't be controlled
+  * Switched Level and Score to be correct
+  * Moved Sticky notes around to remove overlap

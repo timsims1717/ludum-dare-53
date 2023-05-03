@@ -7,12 +7,15 @@ import (
 	"timsims1717/ludum-dare-53/internal/myecs"
 	"timsims1717/ludum-dare-53/pkg/img"
 	"timsims1717/ludum-dare-53/pkg/object"
+	"timsims1717/ludum-dare-53/pkg/timing"
 	"timsims1717/ludum-dare-53/pkg/world"
 )
 
 var (
 	BlockUpdate bool
 	MoveDown    bool
+	HoldDown    bool
+	HoldDownT   *timing.Timer
 	MoveRight   bool
 	MoveLeft    bool
 	Rotate      bool
@@ -173,6 +176,10 @@ func BlockSystem() {
 	Rotate = false
 	if data.TetrisBoard.Timer.Done() {
 		data.TetrisBoard.ResetTimer()
+	}
+	if PieceDone {
+		MoveDown = false
+		HoldDown = false
 	}
 }
 

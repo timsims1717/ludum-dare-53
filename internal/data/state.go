@@ -49,6 +49,10 @@ var (
 		Message: "Options\n\n\n\n Music Volume\nSound Volume",
 		Offset:  pixel.V(-40., 135.),
 	}
+	Instructions = &StickyMsg{
+		Message: "Welcome to the factory floor. You must build your Tetrominos on the factory floor using the mouse, then place the block on the conveyor.\n-Management",
+		Offset:  pixel.V(40., 115.),
+	}
 )
 
 var (

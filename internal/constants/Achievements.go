@@ -54,27 +54,27 @@ var (
 		"TrashingTheCamp": {
 			Name:               "TrashingTheCamp",
 			StickyNote:         nil,
-			StickyNotePosition: pixel.V(-80, 500),
+			StickyNotePosition: pixel.V(-75, 500),
 		},
 		"AFullBoard": {
 			Name:               "AFullBoard",
 			StickyNote:         nil,
-			StickyNotePosition: pixel.V(-120, 520),
+			StickyNotePosition: pixel.V(-125, 520),
 		},
 		"WhatDoIDoWithThis": {
 			Name:               "WhatDoIDoWithThis",
 			StickyNote:         nil,
-			StickyNotePosition: pixel.V(-140, 510),
+			StickyNotePosition: pixel.V(-140, 560),
 		},
 		"GridFullOBlocks": {
 			Name:               "GridFullOBlocks",
 			StickyNote:         nil,
-			StickyNotePosition: pixel.V(-180, 500),
+			StickyNotePosition: pixel.V(-170, 500),
 		},
 		"AchievementProgress": {
 			Name:               "AchievementProgress",
 			StickyNote:         nil,
-			StickyNotePosition: pixel.V(-220, 490),
+			StickyNotePosition: pixel.V(-225, 490),
 		},
 		"CompletedAchievements": {
 			Name:               "CompletedAchievements",
@@ -84,14 +84,14 @@ var (
 		"ThrowAwayATetromino": {
 			Name:               "ThrowAwayATetromino",
 			StickyNote:         nil,
-			StickyNotePosition: pixel.V(-240, 500),
+			StickyNotePosition: pixel.V(-260, 505),
 		},
 	}
 
 	Achievements = map[string]Achievement{
 		"Create5Tetrominos": {
 			Name:                   "Create5Tetrominos",
-			LabelText:              "You have met the initial quota of 5 Tetrominos, training's over, now don't fall behind!\n-Management",
+			LabelText:              "You have met the initial quota of 5 Tetrominos, if you fall behind, it's game over!\n-Management",
 			Description:            "Construct 5 Valid Tetrominos and deliver them to the Board",
 			MyFamily:               AchievementFamilies["CreateTetrominos"],
 			AchievementFamilyOrder: 0,
@@ -164,7 +164,7 @@ var (
 		//},
 		"Trash5": {
 			Name:                   "Trash5",
-			LabelText:              "You have wasted 5 Factromino shapes, please be more careful\r\n-Management",
+			LabelText:              "You have wasted 5 shapes, please be more careful\r\n-Management",
 			Description:            "Put 5 Factromino shapes in the recycle",
 			MyFamily:               AchievementFamilies["TrashingTheCamp"],
 			AchievementFamilyOrder: 0,
@@ -172,7 +172,7 @@ var (
 		},
 		"Trash10": {
 			Name:                   "Trash10",
-			LabelText:              "Current waste 10: Factromino shapes, please be better\r\n-Management",
+			LabelText:              "You've now wasted 10 shapes, please be better\r\n-Management",
 			Description:            "Put 10 Factromino shapes in the recycle",
 			MyFamily:               AchievementFamilies["TrashingTheCamp"],
 			AchievementFamilyOrder: 1,
@@ -180,7 +180,7 @@ var (
 		},
 		"Trash20": {
 			Name:                   "Trash20",
-			LabelText:              "Current waste 20: Factromino shapes, this is coming from your paycheck!\r\n-Management",
+			LabelText:              "20 shapes thrown away! This is coming from your paycheck!\r\n-Management",
 			Description:            "Put 20 Factromino shapes in the recycle",
 			MyFamily:               AchievementFamilies["TrashingTheCamp"],
 			AchievementFamilyOrder: 2,
@@ -188,7 +188,7 @@ var (
 		},
 		"Trash100": {
 			Name:                   "Trash100",
-			LabelText:              "Current waste 100: Factromino shapes, SERIOUSLY DO YOU DO ANY WORK!?!?!\r\n-Management",
+			LabelText:              "DO YOU DO ANY WORK!?!?! 100 shapes thrown away! They don't grow on trees, you know!\r\n-Management",
 			Description:            "Put 100 Factromino shapes in the recycle",
 			MyFamily:               AchievementFamilies["TrashingTheCamp"],
 			AchievementFamilyOrder: 2,
@@ -196,7 +196,7 @@ var (
 		},
 		"FillingTheBoard1": {
 			Name:                   "FillingTheBoard1",
-			LabelText:              "Good Job, it looks like you've got it, you shouldn't need the safety glasses though\r\n-Management",
+			LabelText:              "Hey, you completed a line! Great job and keep it up.\r\n-Management",
 			Description:            "Clear 1 Rows",
 			MyFamily:               AchievementFamilies["AFullBoard"],
 			AchievementFamilyOrder: 0,
@@ -204,7 +204,7 @@ var (
 		},
 		"FillingTheBoard10": {
 			Name:                   "FillingTheBoard10",
-			LabelText:              "You are well on your way to making me millions!\r\n-Management",
+			LabelText:              "Ten lines cleared, what a great start!\r\n-Management",
 			Description:            "Clear 10 Rows",
 			MyFamily:               AchievementFamilies["AFullBoard"],
 			AchievementFamilyOrder: 5,
@@ -212,7 +212,7 @@ var (
 		},
 		"FillingTheBoard20": {
 			Name:                   "FillingTheBoard20",
-			LabelText:              "Excellent, you've consumed an entire board's worth of blocks, we appreciate your business.\r\n-Management",
+			LabelText:              "Excellent, 20 lines cleared. We appreciate your business.\r\n-Management",
 			Description:            "Clear 20 Rows",
 			MyFamily:               AchievementFamilies["AFullBoard"],
 			AchievementFamilyOrder: 10,
@@ -220,7 +220,7 @@ var (
 		},
 		"FillingTheBoard50": {
 			Name:                   "FillingTheBoard50",
-			LabelText:              "I'm clocking out, make sure to stay for your full shift...\r\n-Management",
+			LabelText:              "50 lines cleared? Nice. I'm clocking out, make sure to stay for your full shift.\r\n-Management",
 			Description:            "Clear 50 Rows",
 			MyFamily:               AchievementFamilies["AFullBoard"],
 			AchievementFamilyOrder: 20,
@@ -228,7 +228,7 @@ var (
 		},
 		"FillingTheBoard100": {
 			Name:                   "FillingTheBoard100",
-			LabelText:              "Good Morning, you were here all night, right? Excellent, no sleeping on the job\r\n-Management",
+			LabelText:              "Good Morning, you've cleared 100 lines? Were you here all night? No sleeping on the job.\r\n-Management",
 			Description:            "Clear 100 Rows",
 			MyFamily:               AchievementFamilies["AFullBoard"],
 			AchievementFamilyOrder: 30,
@@ -348,7 +348,7 @@ var (
 		},
 		"ThrowAwayATetromino": {
 			Name:                   "ThrowAwayATetromino",
-			LabelText:              "That was a perfectly good piece, are you trying to get fired?!?\r\n-Management",
+			LabelText:              "That was a perfectly good piece, are you trying to get fired?\r\n-Management",
 			Description:            "Throwaway a Tetromino",
 			MyFamily:               AchievementFamilies["ThrowAwayATetromino"],
 			AchievementFamilyOrder: 0,

@@ -108,6 +108,7 @@ func ClearBoard() {
 	data.TetrisBoard.ConvSpd = constants.ConvSpdMin
 	data.TetrisBoard.NextShape = NewTetromino()
 	data.TetrisBoard.Stats.FullReset()
+	PieceDone = false
 	PlaceTetromino()
 }
 

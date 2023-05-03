@@ -3,6 +3,8 @@ package state
 import (
 	"fmt"
 	"github.com/faiface/pixel/pixelgl"
+	"github.com/thoas/go-funk"
+	"math/rand"
 	"timsims1717/ludum-dare-53/internal/constants"
 	"timsims1717/ludum-dare-53/internal/myecs"
 	"timsims1717/ludum-dare-53/internal/systems"
@@ -69,6 +71,21 @@ func Update(win *pixelgl.Window) {
 		if debugInput.Get("debugIgnoreConv").JustPressed() {
 			constants.IgnoreEmptyConv = !constants.IgnoreEmptyConv
 		}
+		if debugInput.Get("debugCompleteAchievement").JustPressed() {
+			rawAchievements := funk.Map(constants.Achievements, func(k string, value constants.Achievement) constants.Achievement {
+				return value
+			})
+			filteredAchievements := funk.Filter(rawAchievements, func(x constants.Achievement) bool {
+				return !x.Achieved
+			}).([]constants.Achievement)
+			if len(filteredAchievements) > 0 {
+				temp := filteredAchievements[rand.Intn(len(filteredAchievements))]
+				if !temp.Achieved {
+					temp.Achieved = true
+				}
+				constants.Achievements[temp.Name] = temp
+			}
+		}
 		if debugInput.Get("debugAutoGenMode").JustPressed() {
 			debugInput.Get("debugAutoGenMode").Consume()
 			constants.AutoGenTetrominos = !constants.AutoGenTetrominos
@@ -80,6 +97,7 @@ func Update(win *pixelgl.Window) {
 	}
 	viewport.MainCamera.Update()
 	myecs.UpdateManager()
+	debug.AddText(fmt.Sprintf("Total Entities: %d", myecs.FullCount))
 }
 
 func Draw(win *pixelgl.Window) {
